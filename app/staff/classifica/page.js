@@ -5,7 +5,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import StaffHeader from "@/app/components/StaffHeader";
-import { getTornei, getGironi } from "@/app/utils/db";
+import { getTornei, getGironi, getBracket } from "@/app/utils/db";
 
 function ClassificaContent() {
   const router = useRouter();
@@ -16,10 +16,11 @@ function ClassificaContent() {
   const [selectedTorneo, setSelectedTorneo] = useState("");
   const [activeGirone, setActiveGirone] = useState("A");
   const [config, setConfig] = useState(null);
+  const [bracketConfig, setBracketConfig] = useState(null);
 
   useEffect(() => {
     getTornei().then(parsed => {
-      const attivi = parsed.filter(t => t.stato === "Iscrizioni Aperte" || t.stato === "In Programmazione");
+      const attivi = parsed.filter(t => t.stato === "Iscrizioni Aperte" || t.stato === "In Programmazione" || t.stato === "Concluso");
       setTornei(attivi);
       
       if (urlTour && attivi.some(t => t.nome === urlTour)) {
@@ -35,6 +36,9 @@ function ClassificaContent() {
     const slug = selectedTorneo.toLowerCase().trim().replace(/\s+/g, '_');
     getGironi(slug).then(savedConfig => {
       setConfig(savedConfig);
+    });
+    getBracket(slug).then(data => {
+      setBracketConfig(data);
     });
   }, [selectedTorneo]);
 
@@ -169,6 +173,155 @@ function ClassificaContent() {
   const rankings = calculateRanking();
   const gironiDisponibili = config ? Array.from({ length: config.numGironi || 0 }, (_, i) => String.fromCharCode(65 + i)) : [];
 
+  const selectedTorneoObj = tornei.find(t => t.nome === selectedTorneo);
+  const isConcluso = selectedTorneoObj?.stato === "Concluso";
+
+  const getWinnerOfMatch = (matchId) => {
+    const assignments = bracketConfig?.bracketAssignments || {};
+    const metadata = bracketConfig?.bracketMetadata || {};
+    const meta = metadata[matchId] || {};
+    const scoreL = parseInt(meta.scoreL || 0);
+    const scoreR = parseInt(meta.scoreR || 0);
+    if (scoreL === 0 && scoreR === 0) return null;
+    return scoreL > scoreR ? assignments[`${matchId}-L`] : assignments[`${matchId}-R`];
+  };
+
+  const getLoserOfMatch = (matchId) => {
+    const assignments = bracketConfig?.bracketAssignments || {};
+    const metadata = bracketConfig?.bracketMetadata || {};
+    const meta = metadata[matchId] || {};
+    const scoreL = parseInt(meta.scoreL || 0);
+    const scoreR = parseInt(meta.scoreR || 0);
+    if (scoreL === 0 && scoreR === 0) return null;
+    return scoreL > scoreR ? assignments[`${matchId}-R`] : assignments[`${matchId}-L`];
+  };
+
+  const renderFinalStandings = () => {
+    const isGoldSilver = bracketConfig?.phaseType === "gold_silver";
+
+    if (isGoldSilver) {
+      const goldRank = [
+        getWinnerOfMatch("gold-f1") || "Da determinare",
+        getLoserOfMatch("gold-f1") || "Da determinare",
+        getWinnerOfMatch("gold-f3") || "Da determinare",
+        getLoserOfMatch("gold-f3") || "Da determinare",
+      ];
+      
+      const silverRank = [
+        getWinnerOfMatch("silver-f1") || "Da determinare",
+        getLoserOfMatch("silver-f1") || "Da determinare",
+        getWinnerOfMatch("silver-f3") || "Da determinare",
+        getLoserOfMatch("silver-f3") || "Da determinare",
+      ];
+      
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+          {/* Gold Standings Card */}
+          <div className="bg-white rounded-[2.5rem] shadow-xl p-8 border-t-8 border-yellow-400">
+            <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter mb-6 flex items-center gap-2">
+              🏆 Classifica Finale GOLD
+            </h3>
+            <div className="space-y-4">
+              {goldRank.map((team, idx) => {
+                const colors = [
+                  "bg-yellow-400 text-white shadow-sm", // 1st
+                  "bg-gray-300 text-white shadow-sm", // 2nd
+                  "bg-amber-600 text-white shadow-sm", // 3rd
+                  "bg-gray-100 text-gray-400" // 4th
+                ];
+                const labels = ["1° Classificato", "2° Classificato", "3° Classificato", "4° Classificato"];
+                return (
+                  <div key={idx} className="flex items-center justify-between p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
+                    <div className="flex items-center gap-4">
+                      <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm ${colors[idx]}`}>
+                        {idx + 1}
+                      </span>
+                      <div>
+                        <p className="font-black text-lg text-[#0a1628]">{team}</p>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">{labels[idx]}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Silver Standings Card */}
+          <div className="bg-white rounded-[2.5rem] shadow-xl p-8 border-t-8 border-gray-400">
+            <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter mb-6 flex items-center gap-2">
+              🥈 Classifica Finale SILVER
+            </h3>
+            <div className="space-y-4">
+              {silverRank.map((team, idx) => {
+                const colors = [
+                  "bg-gray-400 text-white shadow-sm", // 1st
+                  "bg-gray-300 text-white shadow-sm", // 2nd
+                  "bg-amber-600 text-white shadow-sm", // 3rd
+                  "bg-gray-100 text-gray-400" // 4th
+                ];
+                const labels = ["1° Silver", "2° Silver", "3° Silver", "4° Silver"];
+                return (
+                  <div key={idx} className="flex items-center justify-between p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
+                    <div className="flex items-center gap-4">
+                      <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm ${colors[idx]}`}>
+                        {idx + 1}
+                      </span>
+                      <div>
+                        <p className="font-black text-lg text-[#0a1628]">{team}</p>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">{labels[idx]}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      // Double Elimination Standings
+      const doubleRank = [
+        getWinnerOfMatch("grand-final") || "Da determinare",
+        getLoserOfMatch("grand-final") || "Da determinare",
+        getLoserOfMatch("lb-f") || "Da determinare",
+        getLoserOfMatch("lb-s2") || "Da determinare",
+      ];
+
+      return (
+        <div className="bg-white rounded-[2.5rem] shadow-xl p-8 border-t-8 border-blue-600 max-w-2xl mx-auto mt-6">
+          <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter mb-6 flex items-center gap-2 justify-center">
+            🏆 Classifica Finale
+          </h3>
+          <div className="space-y-4">
+            {doubleRank.map((team, idx) => {
+              const colors = [
+                "bg-yellow-400 text-white shadow-sm", // 1st
+                "bg-gray-300 text-white shadow-sm", // 2nd
+                "bg-amber-600 text-white shadow-sm", // 3rd
+                "bg-gray-100 text-gray-400" // 4th
+              ];
+              const labels = ["1° Classificato", "2° Classificato", "3° Classificato", "4° Classificato"];
+              return (
+                <div key={idx} className="flex items-center justify-between p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
+                  <div className="flex items-center gap-4">
+                    <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm ${colors[idx]}`}>
+                      {idx + 1}
+                    </span>
+                    <div>
+                      <p className="font-black text-lg text-[#0a1628]">{team}</p>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">{labels[idx]}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+  };
+
   return (
     <main className="min-h-screen pb-20 bg-[#f8faff]">
       <StaffHeader />
@@ -188,75 +341,79 @@ function ClassificaContent() {
             </select>
         </div>
 
-        <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-white">
-            <div className="bg-gray-50/50 p-4 border-b flex gap-2 overflow-x-auto no-scrollbar">
-                {gironiDisponibili.map(g => (
-                    <button
-                        key={g}
-                        onClick={() => setActiveGirone(g)}
-                        className={`px-6 py-3 rounded-2xl font-black text-xs transition-all whitespace-nowrap ${activeGirone === g ? 'bg-[#0a1628] text-white shadow-lg' : 'bg-white text-gray-400 border border-gray-100 hover:text-gray-600'}`}
-                    >
-                        GIRONE {g}
-                    </button>
-                ))}
-            </div>
+        {isConcluso ? (
+          renderFinalStandings()
+        ) : (
+          <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-white">
+              <div className="bg-gray-50/50 p-4 border-b flex gap-2 overflow-x-auto no-scrollbar">
+                  {gironiDisponibili.map(g => (
+                      <button
+                          key={g}
+                          onClick={() => setActiveGirone(g)}
+                          className={`px-6 py-3 rounded-2xl font-black text-xs transition-all whitespace-nowrap ${activeGirone === g ? 'bg-[#0a1628] text-white shadow-lg' : 'bg-white text-gray-400 border border-gray-100 hover:text-gray-600'}`}
+                      >
+                          GIRONE {g}
+                      </button>
+                  ))}
+              </div>
 
-            <div className="overflow-x-auto no-scrollbar">
-                <table className="w-full text-left min-w-[800px] md:min-w-0">
-                    <thead className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b bg-white">
-                        <tr>
-                            <th className="px-6 py-6">Pos</th>
-                            <th className="px-6 py-6">Squadra</th>
-                            <th className="px-4 py-6 text-center">G</th>
-                            <th className="px-4 py-6 text-center">V / P</th>
-                            <th className="px-4 py-6 text-center">PF</th>
-                            <th className="px-4 py-6 text-center">PS</th>
-                            <th className="px-4 py-6 text-center bg-gray-50/30">Quoz.</th>
-                            <th className="px-6 py-6 text-right">Punti</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-50">
-                        {rankings.map((team, idx) => {
-                            const quotient = team.puntiSubiti === 0 ? team.puntiFatti : (team.puntiFatti / team.puntiSubiti).toFixed(3);
-                            return (
-                                <tr key={team.nome} className={`hover:bg-blue-50/20 transition-all ${idx < 2 ? 'bg-yellow-50/30' : ''}`}>
-                                    <td className="px-6 py-6">
-                                        <span className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-xs shadow-sm ${idx < 2 ? 'bg-yellow-400 text-white' : 'bg-gray-100 text-gray-400'}`}>
-                                            {idx + 1}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-6">
-                                        <p className="font-black text-[#0a1628] text-lg leading-none mb-1">{team.nome}</p>
-                                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">
-                                            {idx < 2 ? "Qualificato Gold" : "Qualificato Silver"}
-                                        </p>
-                                    </td>
-                                    <td className="px-4 py-6 text-center font-bold text-gray-400">{team.giocate}</td>
-                                    <td className="px-4 py-6 text-center whitespace-nowrap">
-                                        <span className="text-green-600 font-black">{team.vinte}</span>
-                                        <span className="mx-1 text-gray-200">/</span>
-                                        <span className="text-red-500 font-black">{team.perse}</span>
-                                    </td>
-                                    <td className="px-4 py-6 text-center font-bold text-gray-600">{team.puntiFatti}</td>
-                                    <td className="px-4 py-6 text-center font-bold text-gray-400">{team.puntiSubiti}</td>
-                                    <td className="px-4 py-6 text-center font-black text-[#0a1628] bg-gray-50/30">{quotient}</td>
-                                    <td className="px-6 py-6 text-right">
-                                        <span className="text-3xl font-black text-[#0a1628]">{team.score}</span>
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                        {rankings.length === 0 && (
-                            <tr>
-                                <td colSpan="8" className="py-20 text-center text-gray-400 font-bold italic">
-                                    Nessun dato disponibile. Inserisci i risultati nei gironi.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+              <div className="overflow-x-auto no-scrollbar">
+                  <table className="w-full text-left min-w-[800px] md:min-w-0">
+                      <thead className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b bg-white">
+                          <tr>
+                              <th className="px-6 py-6">Pos</th>
+                              <th className="px-6 py-6">Squadra</th>
+                              <th className="px-4 py-6 text-center">G</th>
+                              <th className="px-4 py-6 text-center">V / P</th>
+                              <th className="px-4 py-6 text-center">PF</th>
+                              <th className="px-4 py-6 text-center">PS</th>
+                              <th className="px-4 py-6 text-center bg-gray-50/30">Quoz.</th>
+                              <th className="px-6 py-6 text-right">Punti</th>
+                          </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-50">
+                          {rankings.map((team, idx) => {
+                              const quotient = team.puntiSubiti === 0 ? team.puntiFatti : (team.puntiFatti / team.puntiSubiti).toFixed(3);
+                              return (
+                                  <tr key={team.nome} className={`hover:bg-blue-50/20 transition-all ${idx < 2 ? 'bg-yellow-50/30' : ''}`}>
+                                      <td className="px-6 py-6">
+                                          <span className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-xs shadow-sm ${idx < 2 ? 'bg-yellow-400 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                                              {idx + 1}
+                                          </span>
+                                      </td>
+                                      <td className="px-6 py-6">
+                                          <p className="font-black text-[#0a1628] text-lg leading-none mb-1">{team.nome}</p>
+                                          <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                                              {idx < 2 ? "Qualificato Gold" : "Qualificato Silver"}
+                                          </p>
+                                      </td>
+                                      <td className="px-4 py-6 text-center font-bold text-gray-400">{team.giocate}</td>
+                                      <td className="px-4 py-6 text-center whitespace-nowrap">
+                                          <span className="text-green-600 font-black">{team.vinte}</span>
+                                          <span className="mx-1 text-gray-200">/</span>
+                                          <span className="text-red-500 font-black">{team.perse}</span>
+                                      </td>
+                                      <td className="px-4 py-6 text-center font-bold text-gray-600">{team.puntiFatti}</td>
+                                      <td className="px-4 py-6 text-center font-bold text-gray-400">{team.puntiSubiti}</td>
+                                      <td className="px-4 py-6 text-center font-black text-[#0a1628] bg-gray-50/30">{quotient}</td>
+                                      <td className="px-6 py-6 text-right">
+                                          <span className="text-3xl font-black text-[#0a1628]">{team.score}</span>
+                                      </td>
+                                  </tr>
+                              );
+                          })}
+                          {rankings.length === 0 && (
+                              <tr>
+                                  <td colSpan="8" className="py-20 text-center text-gray-400 font-bold italic">
+                                      Nessun dato disponibile. Inserisci i risultati nei gironi.
+                                  </td>
+                              </tr>
+                          )}
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+        )}
       </div>
     </main>
   );

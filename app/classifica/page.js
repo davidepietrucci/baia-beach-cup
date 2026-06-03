@@ -2,13 +2,14 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { getTornei, getGironi } from "@/app/utils/db";
+import { getTornei, getGironi, getBracket } from "@/app/utils/db";
 
 export default function ClassificaPubblica() {
   const [tornei, setTornei] = useState([]);
   const [selectedTorneo, setSelectedTorneo] = useState("");
   const [activeGirone, setActiveGirone] = useState("A");
   const [config, setConfig] = useState(null);
+  const [bracketConfig, setBracketConfig] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,6 +27,9 @@ export default function ClassificaPubblica() {
     const fetchLive = () => {
       getGironi(slug).then(data => {
         setConfig(data);
+      });
+      getBracket(slug).then(data => {
+        setBracketConfig(data);
       });
     };
 
@@ -158,6 +162,156 @@ export default function ClassificaPubblica() {
   const rankings = calculateRanking();
   const gironiDisponibili = config ? Array.from({ length: config.numGironi || 0 }, (_, i) => String.fromCharCode(65 + i)) : [];
 
+  const selectedTorneoObj = tornei.find(t => t.nome === selectedTorneo);
+  const isConcluso = selectedTorneoObj?.stato === "Concluso";
+
+  const getWinnerOfMatch = (matchId) => {
+    const assignments = bracketConfig?.bracketAssignments || {};
+    const metadata = bracketConfig?.bracketMetadata || {};
+    const meta = metadata[matchId] || {};
+    const scoreL = parseInt(meta.scoreL || 0);
+    const scoreR = parseInt(meta.scoreR || 0);
+    if (scoreL === 0 && scoreR === 0) return null;
+    return scoreL > scoreR ? assignments[`${matchId}-L`] : assignments[`${matchId}-R`];
+  };
+
+  const getLoserOfMatch = (matchId) => {
+    const assignments = bracketConfig?.bracketAssignments || {};
+    const metadata = bracketConfig?.bracketMetadata || {};
+    const meta = metadata[matchId] || {};
+    const scoreL = parseInt(meta.scoreL || 0);
+    const scoreR = parseInt(meta.scoreR || 0);
+    if (scoreL === 0 && scoreR === 0) return null;
+    return scoreL > scoreR ? assignments[`${matchId}-R`] : assignments[`${matchId}-L`];
+  };
+
+  const renderFinalStandings = () => {
+    const isGoldSilver = bracketConfig?.phaseType === "gold_silver";
+    const fontStack = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+
+    if (isGoldSilver) {
+      const goldRank = [
+        getWinnerOfMatch("gold-f1") || "Da determinare",
+        getLoserOfMatch("gold-f1") || "Da determinare",
+        getWinnerOfMatch("gold-f3") || "Da determinare",
+        getLoserOfMatch("gold-f3") || "Da determinare",
+      ];
+      
+      const silverRank = [
+        getWinnerOfMatch("silver-f1") || "Da determinare",
+        getLoserOfMatch("silver-f1") || "Da determinare",
+        getWinnerOfMatch("silver-f3") || "Da determinare",
+        getLoserOfMatch("silver-f3") || "Da determinare",
+      ];
+      
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+          {/* Gold Standings Card */}
+          <div className="bg-white rounded-[2.5rem] shadow-xl p-8 border-t-8 border-yellow-400">
+            <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter mb-6 flex items-center gap-2">
+              🏆 Classifica Finale GOLD
+            </h3>
+            <div className="space-y-4">
+              {goldRank.map((team, idx) => {
+                const colors = [
+                  "bg-yellow-400 text-white shadow-sm", // 1st
+                  "bg-gray-300 text-white shadow-sm", // 2nd
+                  "bg-amber-600 text-white shadow-sm", // 3rd
+                  "bg-gray-100 text-gray-400" // 4th
+                ];
+                const labels = ["1° Classificato", "2° Classificato", "3° Classificato", "4° Classificato"];
+                return (
+                  <div key={idx} className="flex items-center justify-between p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
+                    <div className="flex items-center gap-4">
+                      <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm ${colors[idx]}`}>
+                        {idx + 1}
+                      </span>
+                      <div>
+                        <p className="font-black text-lg text-[#0a1628]">{team}</p>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">{labels[idx]}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Silver Standings Card */}
+          <div className="bg-white rounded-[2.5rem] shadow-xl p-8 border-t-8 border-gray-400">
+            <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter mb-6 flex items-center gap-2">
+              🥈 Classifica Finale SILVER
+            </h3>
+            <div className="space-y-4">
+              {silverRank.map((team, idx) => {
+                const colors = [
+                  "bg-gray-400 text-white shadow-sm", // 1st
+                  "bg-gray-300 text-white shadow-sm", // 2nd
+                  "bg-amber-600 text-white shadow-sm", // 3rd
+                  "bg-gray-100 text-gray-400" // 4th
+                ];
+                const labels = ["1° Silver", "2° Silver", "3° Silver", "4° Silver"];
+                return (
+                  <div key={idx} className="flex items-center justify-between p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
+                    <div className="flex items-center gap-4">
+                      <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm ${colors[idx]}`}>
+                        {idx + 1}
+                      </span>
+                      <div>
+                        <p className="font-black text-lg text-[#0a1628]">{team}</p>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">{labels[idx]}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      // Double Elimination Standings
+      const doubleRank = [
+        getWinnerOfMatch("grand-final") || "Da determinare",
+        getLoserOfMatch("grand-final") || "Da determinare",
+        getLoserOfMatch("lb-f") || "Da determinare",
+        getLoserOfMatch("lb-s2") || "Da determinare",
+      ];
+
+      return (
+        <div className="bg-white rounded-[2.5rem] shadow-xl p-8 border-t-8 border-blue-600 max-w-2xl mx-auto">
+          <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter mb-6 flex items-center gap-2 justify-center">
+            🏆 Classifica Finale
+          </h3>
+          <div className="space-y-4">
+            {doubleRank.map((team, idx) => {
+              const colors = [
+                "bg-yellow-400 text-white shadow-sm", // 1st
+                "bg-gray-300 text-white shadow-sm", // 2nd
+                "bg-amber-600 text-white shadow-sm", // 3rd
+                "bg-gray-100 text-gray-400" // 4th
+              ];
+              const labels = ["1° Classificato", "2° Classificato", "3° Classificato", "4° Classificato"];
+              return (
+                <div key={idx} className="flex items-center justify-between p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
+                  <div className="flex items-center gap-4">
+                    <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm ${colors[idx]}`}>
+                      {idx + 1}
+                    </span>
+                    <div>
+                      <p className="font-black text-lg text-[#0a1628]">{team}</p>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">{labels[idx]}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+  };
+
   return (
     <main className="min-h-screen bg-gray-50 pb-20 text-[#0a1628]">
       <header style={{backgroundColor: "#0a1628"}} className="text-white py-6 px-8 flex justify-between items-center shadow-lg border-b-4 border-[#FFD700]">
@@ -180,17 +334,22 @@ export default function ClassificaPubblica() {
                     {tornei.map(t => <option key={t.id} value={t.nome}>{t.nome}</option>)}
                 </select>
             </div>
-            <div className="flex gap-2 bg-gray-100 p-1.5 rounded-2xl">
-                {gironiDisponibili.map(g => (
-                    <button key={g} onClick={() => setActiveGirone(g)}
-                        className={`px-6 py-2.5 rounded-xl font-black text-sm transition-all ${activeGirone === g ? 'bg-[#0a1628] text-white shadow-md' : 'text-gray-400 hover:text-[#0a1628]'}`}>
-                        GIRONE {g}
-                    </button>
-                ))}
-            </div>
+            {!isConcluso && (
+              <div className="flex gap-2 bg-gray-100 p-1.5 rounded-2xl">
+                  {gironiDisponibili.map(g => (
+                      <button key={g} onClick={() => setActiveGirone(g)}
+                          className={`px-6 py-2.5 rounded-xl font-black text-sm transition-all ${activeGirone === g ? 'bg-[#0a1628] text-white shadow-md' : 'text-gray-400 hover:text-[#0a1628]'}`}>
+                          GIRONE {g}
+                      </button>
+                  ))}
+              </div>
+            )}
         </div>
 
-        <div className="bg-white rounded-[3rem] shadow-xl border border-gray-100 overflow-hidden">
+        {isConcluso ? (
+          renderFinalStandings()
+        ) : (
+          <div className="bg-white rounded-[3rem] shadow-xl border border-gray-100 overflow-hidden">
             <table className="w-full text-left">
                 <thead className="bg-gray-50 border-b border-gray-100">
                     <tr>
@@ -235,7 +394,8 @@ export default function ClassificaPubblica() {
                     })}
                 </tbody>
             </table>
-        </div>
+          </div>
+        )}
       </div>
     </main>
   );
