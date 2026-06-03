@@ -249,19 +249,33 @@ function TabelloneContent() {
     let changed = false;
 
     const resolveWinner = (matchId) => {
+      const left = bracketAssignments[`${matchId}-L`];
+      const right = bracketAssignments[`${matchId}-R`];
+
+      // Se uno dei due lati è un Bye ("—") e l'altro ha una squadra reale/valida, avanza l'altra squadra
+      if (left === "—" && right && right !== "—") return right;
+      if (right === "—" && left && left !== "—") return left;
+
       const meta = bracketMetadata[matchId] || {};
       const scoreL = parseInt(meta.scoreL || 0);
       const scoreR = parseInt(meta.scoreR || 0);
       if (scoreL === 0 && scoreR === 0) return null;
-      return scoreL > scoreR ? bracketAssignments[`${matchId}-L`] : bracketAssignments[`${matchId}-R`];
+      return scoreL > scoreR ? left : right;
     };
 
     const resolveLoser = (matchId) => {
+      const left = bracketAssignments[`${matchId}-L`];
+      const right = bracketAssignments[`${matchId}-R`];
+
+      // Se uno dei due lati è un Bye ("—"), il perdente è "—"
+      if (left === "—" && right && right !== "—") return "—";
+      if (right === "—" && left && left !== "—") return "—";
+
       const meta = bracketMetadata[matchId] || {};
       const scoreL = parseInt(meta.scoreL || 0);
       const scoreR = parseInt(meta.scoreR || 0);
       if (scoreL === 0 && scoreR === 0) return null;
-      return scoreL > scoreR ? bracketAssignments[`${matchId}-R`] : bracketAssignments[`${matchId}-L`];
+      return scoreL > scoreR ? right : left;
     };
 
     const update = (targetKey, value) => {
@@ -399,7 +413,11 @@ function TabelloneContent() {
 
     const rankings = {};
     for(let i=0; i<numGironi; i++) { const gid = String.fromCharCode(65+i); rankings[gid] = getRanking(gid); }
-    const getRanked = (gid, pos) => rankings[gid]?.[pos] || `TBD ${pos+1}° ${gid}`;
+    const getRanked = (gid, pos) => {
+      const count = gConfig.teamCounts[gid] || 0;
+      if (pos >= count) return "—";
+      return rankings[gid]?.[pos] || `TBD ${pos+1}° ${gid}`;
+    };
 
     if (phaseType === "gold_silver" && subPhaseType === "groups") {
       // Clean previous intermediate results to avoid stale data
@@ -613,6 +631,7 @@ function TabelloneContent() {
           {matchPairs.map((pair, idx) => {
             const teamL = teams[pair.l];
             const teamR = teams[pair.r];
+            if (!teamL || teamL === "—" || teamL === "Slot Libero" || !teamR || teamR === "—" || teamR === "Slot Libero") return null;
             return (
               <div key={idx}>
                 {renderGroupMatch(groupKey, idx, pair.label, teamL, teamR)}

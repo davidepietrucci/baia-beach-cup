@@ -212,17 +212,19 @@ export default function GironiPubblici() {
       { l: 2, r: 3, label: "Gara 6" }
     ];
 
-    return matchPairs.map((pair, idx) => {
-      const teamL = teams[pair.l];
-      const teamR = teams[pair.r];
-      const mKey = `${groupKey}-m${idx}`;
-      return {
-        label: pair.label,
-        left: teamL,
-        right: teamR,
-        meta: metadata[mKey] || {}
-      };
-    });
+    return matchPairs
+      .map((pair, idx) => {
+        const teamL = teams[pair.l];
+        const teamR = teams[pair.r];
+        const mKey = `${groupKey}-m${idx}`;
+        return {
+          label: pair.label,
+          left: teamL,
+          right: teamR,
+          meta: metadata[mKey] || {}
+        };
+      })
+      .filter(m => m.left && m.left !== "—" && m.left !== "Slot Libero" && m.right && m.right !== "—" && m.right !== "Slot Libero");
   };
 
   const renderIntermediateGroupForSpectator = (groupKey, title, color) => {
