@@ -29,6 +29,8 @@ export default function Iscrizioni() {
   // Risposte per i campi custom
   const [customAnswers, setCustomAnswers] = useState({});
 
+  const activeTorneo = torneiAperti.find(t => t.nome === formData.torneo);
+
   useEffect(() => {
     Promise.all([getTornei(), getModuli()]).then(([allTornei, allModuli]) => {
       // Mostriamo solo i tornei aperti se possibile
@@ -257,189 +259,221 @@ export default function Iscrizioni() {
               </div>
             </div>
 
-            {/* Rendering Modulo Custom o Modulo Standard */}
-            {activeModulo ? (
-              // MODULO PERSONALIZZATO (Google Forms Style)
-              <div className="space-y-6">
-                {/* Dynamic Style Tag for Custom Theme Color */}
-                <style dangerouslySetInnerHTML={{__html: `
-                  .custom-focus-input:focus {
-                    border-color: ${activeModulo.coloreTema || "#673ab7"} !important;
-                  }
-                  .custom-radio-input:checked {
-                    background-color: ${activeModulo.coloreTema || "#673ab7"} !important;
-                    border-color: ${activeModulo.coloreTema || "#673ab7"} !important;
-                  }
-                  .custom-checkbox-input:checked {
-                    background-color: ${activeModulo.coloreTema || "#673ab7"} !important;
-                    border-color: ${activeModulo.coloreTema || "#673ab7"} !important;
-                  }
-                `}} />
-                {/* Intestazione Modulo Custom */}
-                <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-3" style={{ backgroundColor: activeModulo.coloreTema || "#673ab7" }}></div>
-                  <h3 className="text-3xl font-black text-[#0a1628] mb-2">{activeModulo.titolo}</h3>
-                  <p className="text-sm font-medium text-gray-500">{activeModulo.descrizione}</p>
-                  <p className="text-[10px] text-red-500 font-bold mt-4">* Indica un campo obbligatorio</p>
+            {/* Se è un modulo esterno (Google Form) */}
+            {activeTorneo?.tipoIscrizione === "esterno" ? (
+              <div className="bg-white rounded-2xl shadow-xl p-8 border-t-8 border-indigo-600 space-y-6 text-center">
+                <div className="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center mx-auto">
+                  <span className="text-4xl">📋</span>
                 </div>
-
-                {/* Domande del Modulo Custom */}
-                {activeModulo.campi.map((campo) => (
-                  <div key={campo.id} className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 relative overflow-hidden space-y-3">
-                    <label className="block text-sm font-bold text-gray-800">
-                      {campo.label} {campo.obbligatorio && <span className="text-red-500 font-bold">*</span>}
-                    </label>
-
-                    {/* Rendering Input specifici in base al tipo */}
-                    {campo.tipo === "text" && (
-                      <input 
-                        type="text" 
-                        required={campo.obbligatorio}
-                        value={customAnswers[campo.id] || ""}
-                        onChange={(e) => handleCustomAnswerChange(campo.id, e.target.value)}
-                        placeholder="La tua risposta"
-                        className="w-full border-b border-gray-200 focus:outline-none py-2 text-sm font-semibold text-gray-800 bg-transparent transition-colors custom-focus-input"
-                      />
-                    )}
-
-                    {campo.tipo === "email" && (
-                      <input 
-                        type="email" 
-                        required={campo.obbligatorio}
-                        value={customAnswers[campo.id] || ""}
-                        onChange={(e) => handleCustomAnswerChange(campo.id, e.target.value)}
-                        placeholder="Nome@esempio.com"
-                        className="w-full border-b border-gray-200 focus:outline-none py-2 text-sm font-semibold text-gray-800 bg-transparent transition-colors custom-focus-input"
-                      />
-                    )}
-
-                    {campo.tipo === "tel" && (
-                      <input 
-                        type="tel" 
-                        required={campo.obbligatorio}
-                        value={customAnswers[campo.id] || ""}
-                        onChange={(e) => handleCustomAnswerChange(campo.id, e.target.value)}
-                        placeholder="Numero di telefono"
-                        className="w-full border-b border-gray-200 focus:outline-none py-2 text-sm font-semibold text-gray-800 bg-transparent transition-colors custom-focus-input"
-                      />
-                    )}
-
-                    {campo.tipo === "number" && (
-                      <input 
-                        type="number" 
-                        required={campo.obbligatorio}
-                        value={customAnswers[campo.id] || ""}
-                        onChange={(e) => handleCustomAnswerChange(campo.id, e.target.value)}
-                        placeholder="Risposta numerica"
-                        className="w-full border-b border-gray-200 focus:outline-none py-2 text-sm font-semibold text-gray-800 bg-transparent transition-colors custom-focus-input"
-                      />
-                    )}
-
-                    {campo.tipo === "textarea" && (
-                      <textarea 
-                        required={campo.obbligatorio}
-                        value={customAnswers[campo.id] || ""}
-                        onChange={(e) => handleCustomAnswerChange(campo.id, e.target.value)}
-                        placeholder="Risposta dettagliata"
-                        rows={3}
-                        className="w-full border border-gray-200 rounded-xl p-3 focus:outline-none text-sm font-semibold text-gray-800 bg-transparent transition-colors resize-none custom-focus-input"
-                      />
-                    )}
-
-                    {campo.tipo === "select" && (
-                      <select 
-                        required={campo.obbligatorio}
-                        value={customAnswers[campo.id] || ""}
-                        onChange={(e) => handleCustomAnswerChange(campo.id, e.target.value)}
-                        className="w-full max-w-xs border border-gray-200 rounded-xl px-4 py-2.5 bg-white text-sm font-semibold text-gray-700 focus:outline-none focus:ring-1 focus:ring-indigo-600 cursor-pointer shadow-sm"
-                      >
-                        <option value="">Scegli opzione</option>
-                        {(campo.opzioni || []).map((opt, oIdx) => (
-                          <option key={oIdx} value={opt}>{opt}</option>
-                        ))}
-                      </select>
-                    )}
-
-                    {campo.tipo === "radio" && (
-                      <div className="space-y-2 pt-1">
-                        {(campo.opzioni || []).map((opt, oIdx) => (
-                          <label key={oIdx} className="flex items-center gap-3 cursor-pointer group py-1">
-                            <input 
-                              type="radio" 
-                              name={campo.id} 
-                              required={campo.obbligatorio && !customAnswers[campo.id]}
-                              value={opt}
-                              checked={customAnswers[campo.id] === opt}
-                              onChange={() => handleCustomAnswerChange(campo.id, opt)}
-                              className="w-4 h-4 border-gray-300 cursor-pointer custom-radio-input"
-                            />
-                            <span className="text-sm font-semibold text-gray-600 group-hover:text-[#0a1628] transition-colors">{opt}</span>
-                          </label>
-                        ))}
-                      </div>
-                    )}
-
-                    {campo.tipo === "checkbox" && (
-                      <div className="space-y-2 pt-1">
-                        {(campo.opzioni || []).map((opt, oIdx) => (
-                          <label key={oIdx} className="flex items-center gap-3 cursor-pointer group py-1">
-                            <input 
-                              type="checkbox" 
-                              value={opt}
-                              checked={(customAnswers[campo.id] || []).includes(opt)}
-                              onChange={(e) => handleCustomAnswerChange(campo.id, opt, true, e.target.checked)}
-                              className="w-4 h-4 rounded border-gray-300 cursor-pointer custom-checkbox-input"
-                            />
-                            <span className="text-sm font-semibold text-gray-600 group-hover:text-[#0a1628] transition-colors">{opt}</span>
-                          </label>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-black text-[#0a1628]">Iscrizione tramite Google Moduli</h3>
+                  <p className="text-gray-500 text-sm max-w-md mx-auto font-medium">
+                    Per questo torneo, BVI utilizza un modulo esterno per la raccolta dei dati. Clicca sul pulsante qui sotto per completare la tua iscrizione su Google Moduli.
+                  </p>
+                </div>
+                
+                <div className="pt-4">
+                  <a 
+                    href={activeTorneo.googleFormUrl || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block w-full py-4 rounded-full font-bold text-white text-lg transition-all shadow-md hover:opacity-90 hover:shadow-lg bg-indigo-600 text-center"
+                  >
+                    Apri Modulo Google 🌐
+                  </a>
+                </div>
+                
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                  ⚠️ Una volta completato il modulo su Google, la tua iscrizione verrà registrata automaticamente nel nostro sistema.
+                </p>
               </div>
             ) : (
-              // MODULO STANDARD
-              <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8 border-t-4 space-y-6" style={{ borderColor: "#FFD700" }}>
-                {/* Giocatori */}
-                <div>
-                  <h3 className="text-xl font-bold border-b pb-2 mb-4" style={{ color: "#0a1628" }}>Anagrafica Giocatori</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Giocatore 1 */}
-                    <div className="space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
-                      <h4 className="font-semibold text-gray-800">Giocatore 1 (Referente)</h4>
-                      <input type="text" name="giocatore1" value={formData.giocatore1} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Nome e Cognome" />
-                      <input type="email" name="email1" value={formData.email1} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Email" />
-                      <input type="tel" name="tel1" value={formData.tel1} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Telefono (WhatsApp)" />
+              // MODULO INTERNO (STANDARD O CUSTOM)
+              <>
+                {activeModulo ? (
+                  // MODULO PERSONALIZZATO (Google Forms Style)
+                  <div className="space-y-6">
+                    {/* Dynamic Style Tag for Custom Theme Color */}
+                    <style dangerouslySetInnerHTML={{__html: `
+                      .custom-focus-input:focus {
+                        border-color: ${activeModulo.coloreTema || "#673ab7"} !important;
+                      }
+                      .custom-radio-input:checked {
+                        background-color: ${activeModulo.coloreTema || "#673ab7"} !important;
+                        border-color: ${activeModulo.coloreTema || "#673ab7"} !important;
+                      }
+                      .custom-checkbox-input:checked {
+                        background-color: ${activeModulo.coloreTema || "#673ab7"} !important;
+                        border-color: ${activeModulo.coloreTema || "#673ab7"} !important;
+                      }
+                    `}} />
+                    {/* Intestazione Modulo Custom */}
+                    <div className="bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
+                      <div className="absolute top-0 left-0 right-0 h-3" style={{ backgroundColor: activeModulo.coloreTema || "#673ab7" }}></div>
+                      <h3 className="text-3xl font-black text-[#0a1628] mb-2">{activeModulo.titolo}</h3>
+                      <p className="text-sm font-medium text-gray-500">{activeModulo.descrizione}</p>
+                      <p className="text-[10px] text-red-500 font-bold mt-4">* Indica un campo obbligatorio</p>
                     </div>
-                    {/* Giocatore 2 */}
-                    <div className="space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
-                      <h4 className="font-semibold text-gray-800">Giocatore 2</h4>
-                      <input type="text" name="giocatore2" value={formData.giocatore2} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Nome e Cognome" />
-                      <input type="email" name="email2" value={formData.email2} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Email (Opzionale)" />
-                      <input type="tel" name="tel2" value={formData.tel2} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Telefono (Opzionale)" />
+
+                    {/* Domande del Modulo Custom */}
+                    {activeModulo.campi.map((campo) => (
+                      <div key={campo.id} className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 relative overflow-hidden space-y-3">
+                        <label className="block text-sm font-bold text-gray-800">
+                          {campo.label} {campo.obbligatorio && <span className="text-red-500 font-bold">*</span>}
+                        </label>
+
+                        {/* Rendering Input specifici in base al tipo */}
+                        {campo.tipo === "text" && (
+                          <input 
+                            type="text" 
+                            required={campo.obbligatorio}
+                            value={customAnswers[campo.id] || ""}
+                            onChange={(e) => handleCustomAnswerChange(campo.id, e.target.value)}
+                            placeholder="La tua risposta"
+                            className="w-full border-b border-gray-200 focus:outline-none py-2 text-sm font-semibold text-gray-800 bg-transparent transition-colors custom-focus-input"
+                          />
+                        )}
+
+                        {campo.tipo === "email" && (
+                          <input 
+                            type="email" 
+                            required={campo.obbligatorio}
+                            value={customAnswers[campo.id] || ""}
+                            onChange={(e) => handleCustomAnswerChange(campo.id, e.target.value)}
+                            placeholder="Nome@esempio.com"
+                            className="w-full border-b border-gray-200 focus:outline-none py-2 text-sm font-semibold text-gray-800 bg-transparent transition-colors custom-focus-input"
+                          />
+                        )}
+
+                        {campo.tipo === "tel" && (
+                          <input 
+                            type="tel" 
+                            required={campo.obbligatorio}
+                            value={customAnswers[campo.id] || ""}
+                            onChange={(e) => handleCustomAnswerChange(campo.id, e.target.value)}
+                            placeholder="Numero di telefono"
+                            className="w-full border-b border-gray-200 focus:outline-none py-2 text-sm font-semibold text-gray-800 bg-transparent transition-colors custom-focus-input"
+                          />
+                        )}
+
+                        {campo.tipo === "number" && (
+                          <input 
+                            type="number" 
+                            required={campo.obbligatorio}
+                            value={customAnswers[campo.id] || ""}
+                            onChange={(e) => handleCustomAnswerChange(campo.id, e.target.value)}
+                            placeholder="Risposta numerica"
+                            className="w-full border-b border-gray-200 focus:outline-none py-2 text-sm font-semibold text-gray-800 bg-transparent transition-colors custom-focus-input"
+                          />
+                        )}
+
+                        {campo.tipo === "textarea" && (
+                          <textarea 
+                            required={campo.obbligatorio}
+                            value={customAnswers[campo.id] || ""}
+                            onChange={(e) => handleCustomAnswerChange(campo.id, e.target.value)}
+                            placeholder="Risposta dettagliata"
+                            rows={3}
+                            className="w-full border border-gray-200 rounded-xl p-3 focus:outline-none text-sm font-semibold text-gray-800 bg-transparent transition-colors resize-none custom-focus-input"
+                          />
+                        )}
+
+                        {campo.tipo === "select" && (
+                          <select 
+                            required={campo.obbligatorio}
+                            value={customAnswers[campo.id] || ""}
+                            onChange={(e) => handleCustomAnswerChange(campo.id, e.target.value)}
+                            className="w-full max-w-xs border border-gray-200 rounded-xl px-4 py-2.5 bg-white text-sm font-semibold text-gray-700 focus:outline-none focus:ring-1 focus:ring-indigo-600 cursor-pointer shadow-sm"
+                          >
+                            <option value="">Scegli opzione</option>
+                            {(campo.opzioni || []).map((opt, oIdx) => (
+                              <option key={oIdx} value={opt}>{opt}</option>
+                            ))}
+                          </select>
+                        )}
+
+                        {campo.tipo === "radio" && (
+                          <div className="space-y-2 pt-1">
+                            {(campo.opzioni || []).map((opt, oIdx) => (
+                              <label key={oIdx} className="flex items-center gap-3 cursor-pointer group py-1">
+                                <input 
+                                  type="radio" 
+                                  name={campo.id} 
+                                  required={campo.obbligatorio && !customAnswers[campo.id]}
+                                  value={opt}
+                                  checked={customAnswers[campo.id] === opt}
+                                  onChange={() => handleCustomAnswerChange(campo.id, opt)}
+                                  className="w-4 h-4 border-gray-300 cursor-pointer custom-radio-input"
+                                />
+                                <span className="text-sm font-semibold text-gray-600 group-hover:text-[#0a1628] transition-colors">{opt}</span>
+                              </label>
+                            ))}
+                          </div>
+                        )}
+
+                        {campo.tipo === "checkbox" && (
+                          <div className="space-y-2 pt-1">
+                            {(campo.opzioni || []).map((opt, oIdx) => (
+                              <label key={oIdx} className="flex items-center gap-3 cursor-pointer group py-1">
+                                <input 
+                                  type="checkbox" 
+                                  value={opt}
+                                  checked={(customAnswers[campo.id] || []).includes(opt)}
+                                  onChange={(e) => handleCustomAnswerChange(campo.id, opt, true, e.target.checked)}
+                                  className="w-4 h-4 rounded border-gray-300 cursor-pointer custom-checkbox-input"
+                                />
+                                <span className="text-sm font-semibold text-gray-600 group-hover:text-[#0a1628] transition-colors">{opt}</span>
+                              </label>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  // MODULO STANDARD
+                  <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8 border-t-4 space-y-6" style={{ borderColor: "#FFD700" }}>
+                    {/* Giocatori */}
+                    <div>
+                      <h3 className="text-xl font-bold border-b pb-2 mb-4" style={{ color: "#0a1628" }}>Anagrafica Giocatori</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Giocatore 1 */}
+                        <div className="space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                          <h4 className="font-semibold text-gray-800">Giocatore 1 (Referente)</h4>
+                          <input type="text" name="giocatore1" value={formData.giocatore1} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Nome e Cognome" />
+                          <input type="email" name="email1" value={formData.email1} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Email" />
+                          <input type="tel" name="tel1" value={formData.tel1} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Telefono (WhatsApp)" />
+                        </div>
+                        {/* Giocatore 2 */}
+                        <div className="space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                          <h4 className="font-semibold text-gray-800">Giocatore 2</h4>
+                          <input type="text" name="giocatore2" value={formData.giocatore2} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Nome e Cognome" />
+                          <input type="email" name="email2" value={formData.email2} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Email (Opzionale)" />
+                          <input type="tel" name="tel2" value={formData.tel2} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Telefono (Opzionale)" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Note */}
+                    <div className="pt-4">
+                      <label className="block text-sm font-semibold text-gray-700 mb-1">Note / Richieste per lo Staff</label>
+                      <textarea name="note" value={formData.note} onChange={handleChange} rows="3" className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Es. Arriveremo con 30 minuti di ritardo..."></textarea>
                     </div>
                   </div>
-                </div>
+                )}
 
-                {/* Note */}
-                <div className="pt-4">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Note / Richieste per lo Staff</label>
-                  <textarea name="note" value={formData.note} onChange={handleChange} rows="3" className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Es. Arriveremo con 30 minuti di ritardo..."></textarea>
+                {/* Invia */}
+                <div className="pt-6">
+                  <button 
+                    type="submit" 
+                    className="w-full py-4 rounded-full font-bold text-white text-lg transition-all shadow-md hover:opacity-90 hover:shadow-lg" 
+                    style={{ backgroundColor: activeModulo ? (activeModulo.coloreTema || "#673ab7") : "#0a1628" }}
+                  >
+                    Invia Richiesta di Iscrizione
+                  </button>
                 </div>
-              </div>
+              </>
             )}
-
-            {/* Invia */}
-            <div className="pt-6">
-              <button 
-                type="submit" 
-                className="w-full py-4 rounded-full font-bold text-white text-lg transition-all shadow-md hover:opacity-90 hover:shadow-lg" 
-                style={{ backgroundColor: activeModulo ? (activeModulo.coloreTema || "#673ab7") : "#0a1628" }}
-              >
-                Invia Richiesta di Iscrizione
-              </button>
-            </div>
           </form>
         )}
       </div>

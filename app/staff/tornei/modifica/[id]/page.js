@@ -20,6 +20,8 @@ export default function ModificaTorneo() {
       if (torneoToEdit) {
         setFormData({
           moduloIscrizioneId: "", // fallback
+          tipoIscrizione: "interno", // fallback
+          googleFormUrl: "", // fallback
           ...torneoToEdit
         });
       } else {
@@ -191,19 +193,49 @@ export default function ModificaTorneo() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Modulo Iscrizione Personalizzato</label>
-              <select 
-                name="moduloIscrizioneId" 
-                value={formData.moduloIscrizioneId || ""} 
-                onChange={handleChange}
-                className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] transition-all"
-              >
-                <option value="">Standard (Default BVI)</option>
-                {moduli.map(m => (
-                  <option key={m.id} value={m.id}>{m.titolo}</option>
-                ))}
-              </select>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-gray-50">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Tipo Iscrizione</label>
+                <select 
+                  name="tipoIscrizione" 
+                  value={formData.tipoIscrizione || "interno"} 
+                  onChange={handleChange}
+                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] transition-all cursor-pointer"
+                >
+                  <option value="interno">Modulo del Sito (Standard o Personalizzato)</option>
+                  <option value="esterno">Modulo Google Esterno (Link)</option>
+                </select>
+              </div>
+
+              {formData.tipoIscrizione === "esterno" ? (
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Link Modulo Google (URL)</label>
+                  <input 
+                    type="url" 
+                    name="googleFormUrl" 
+                    required={formData.tipoIscrizione === "esterno"}
+                    value={formData.googleFormUrl || ""} 
+                    onChange={handleChange}
+                    placeholder="https://docs.google.com/forms/d/e/.../viewform" 
+                    className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] transition-all" 
+                  />
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Modulo Iscrizione Personalizzato</label>
+                  <select 
+                    name="moduloIscrizioneId" 
+                    value={formData.moduloIscrizioneId || ""} 
+                    onChange={handleChange}
+                    className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] transition-all cursor-pointer"
+                  >
+                    <option value="">Standard (Default BVI)</option>
+                    {moduli.map(m => (
+                      <option key={m.id} value={m.id}>{m.titolo}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
 
           </div>
