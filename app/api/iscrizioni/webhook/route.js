@@ -16,9 +16,28 @@ export async function POST(request) {
 
     // Carica tornei per associare correttamente l'iscrizione
     const tornei = await getTornei();
-    const matchTorneo = tornei.find(
+    
+    const cleanStr = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, "").trim();
+    
+    // 1. Cerca corrispondenza esatta (case insensitive e trim)
+    let matchTorneo = tornei.find(
       t => t.nome.toLowerCase().trim() === torneo.toLowerCase().trim()
     );
+
+    // 2. Cerca corrispondenza rimuovendo spazi e caratteri speciali (es. "Pink Party - Maschile" e "Pink Party Maschile")
+    if (!matchTorneo) {
+      matchTorneo = tornei.find(
+        t => cleanStr(t.nome) === cleanStr(torneo)
+      );
+    }
+
+    // 3. Cerca corrispondenza parziale (sotto-stringa)
+    if (!matchTorneo) {
+      matchTorneo = tornei.find(
+        t => t.nome.toLowerCase().trim().includes(torneo.toLowerCase().trim()) ||
+             torneo.toLowerCase().trim().includes(t.nome.toLowerCase().trim())
+      );
+    }
 
     if (!matchTorneo) {
       return NextResponse.json(

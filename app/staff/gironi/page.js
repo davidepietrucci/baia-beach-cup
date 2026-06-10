@@ -4,6 +4,15 @@ import { useState, useEffect } from "react";
 import StaffHeader from "@/app/components/StaffHeader";
 import { getTornei, getIscrizioni, getGironi, saveGironi } from "@/app/utils/db";
 
+function shuffle(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 export default function StaffGironi() {
   const [numGironi, setNumGironi] = useState(4);
   const [teamCounts, setTeamCounts] = useState({ A: 4, B: 4, C: 4, D: 4, E: 4, F: 4, G: 4, H: 4 });
@@ -192,11 +201,7 @@ export default function StaffGironi() {
     if (!window.confirm("Sei sicuro di voler mescolare e riassegnare casualmente tutti gli iscritti nei gironi? La configurazione attuale verrà sovrascritta.")) return;
     
     // 1. Get and shuffle teams
-    const shuffledTeams = [...giocatoriFiltrati.map(gf => gf.giocatori)];
-    for (let i = shuffledTeams.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledTeams[i], shuffledTeams[j]] = [shuffledTeams[j], shuffledTeams[i]];
-    }
+    const shuffledTeams = shuffle(giocatoriFiltrati.map(gf => gf.giocatori));
     
     // 2. Build new assignments
     const newAssignments = { ...gironeAssignments };

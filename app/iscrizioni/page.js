@@ -29,27 +29,6 @@ export default function Iscrizioni() {
   // Risposte per i campi custom
   const [customAnswers, setCustomAnswers] = useState({});
 
-  const activeTorneo = torneiAperti.find(t => t.nome === formData.torneo);
-
-  useEffect(() => {
-    Promise.all([getTornei(), getModuli()]).then(([allTornei, allModuli]) => {
-      // Mostriamo solo i tornei aperti se possibile
-      const aperti = allTornei.filter(t => t.stato === "Iscrizioni Aperte" || !t.stato);
-      const daMostrare = aperti.length > 0 ? aperti : allTornei;
-      
-      setTorneiAperti(daMostrare);
-      setModuli(allModuli);
-      
-      if (daMostrare.length > 0) {
-        const firstTorneo = daMostrare[0];
-        setFormData(prev => ({ ...prev, torneo: firstTorneo.nome }));
-        
-        // Verifica modulo custom
-        updateActiveModulo(firstTorneo, allModuli);
-      }
-    });
-  }, []);
-
   const updateActiveModulo = (torneo, allModuli) => {
     if (torneo && torneo.moduloIscrizioneId) {
       const mod = allModuli.find(m => String(m.id) === String(torneo.moduloIscrizioneId));
@@ -68,6 +47,37 @@ export default function Iscrizioni() {
       setCustomAnswers({});
     }
   };
+
+  const activeTorneo = torneiAperti.find(t => t.nome === formData.torneo);
+
+  useEffect(() => {
+    Promise.all([getTornei(), getModuli()]).then(([allTornei, allModuli]) => {
+      // Mostriamo solo i tornei aperti se possibile
+      const aperti = allTornei.filter(t => t.stato === "Iscrizioni Aperte" || !t.stato);
+      const daMostrare = aperti.length > 0 ? aperti : allTornei;
+      
+      setTorneiAperti(daMostrare);
+      setModuli(allModuli);
+      
+      if (daMostrare.length > 0) {
+        const params = new URLSearchParams(window.location.search);
+        const urlTour = params.get('tour');
+        
+        let selected = daMostrare[0];
+        if (urlTour) {
+          const match = daMostrare.find(t => t.nome.toLowerCase().trim() === urlTour.toLowerCase().trim());
+          if (match) {
+            selected = match;
+          }
+        }
+        
+        setFormData(prev => ({ ...prev, torneo: selected.nome }));
+        
+        // Verifica modulo custom
+        updateActiveModulo(selected, allModuli);
+      }
+    });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

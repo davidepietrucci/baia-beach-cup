@@ -118,9 +118,25 @@ export default function Home() {
                     </div>
                   ) : (
                     <div className="mt-auto pt-6 border-t border-gray-100 flex flex-col sm:flex-row gap-3">
-                      <a href="/iscrizioni" className="flex-1 py-3 text-center rounded-xl font-bold text-sm text-[#0a1628] hover:bg-gray-50 transition-colors border-2" style={{borderColor: "#0a1628"}}>
-                        📋 Iscriviti
-                      </a>
+                      {t.tipoIscrizione === "esterno" && t.googleFormUrl ? (
+                        <a 
+                          href={t.googleFormUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="flex-1 py-3 text-center rounded-xl font-bold text-sm text-[#0a1628] hover:bg-gray-50 transition-colors border-2" 
+                          style={{borderColor: "#0a1628"}}
+                        >
+                          📋 Iscriviti
+                        </a>
+                      ) : (
+                        <a 
+                          href={`/iscrizioni?tour=${encodeURIComponent(t.nome)}`} 
+                          className="flex-1 py-3 text-center rounded-xl font-bold text-sm text-[#0a1628] hover:bg-gray-50 transition-colors border-2" 
+                          style={{borderColor: "#0a1628"}}
+                        >
+                          📋 Iscriviti
+                        </a>
+                      )}
                       <a href={`/gironi?tour=${encodeURIComponent(t.nome)}`} className="flex-1 py-3 text-center rounded-xl font-bold text-sm text-white bg-[#0a1628] hover:bg-opacity-90 transition-colors shadow-sm">
                         🏆 Gironi
                       </a>
