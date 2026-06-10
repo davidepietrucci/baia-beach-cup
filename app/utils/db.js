@@ -10,7 +10,7 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
-const isFirebaseConfigured = typeof window !== "undefined" && !!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+const isFirebaseConfigured = !!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
 
 let db = null;
 if (isFirebaseConfigured) {
