@@ -11,7 +11,6 @@ export default function GironiPubblici() {
   const [config, setConfig] = useState(null);
   const [bracketConfig, setBracketConfig] = useState(null);
   const [activeTab, setActiveTab] = useState("iniziali"); // "iniziali", "intermedi", "finali"
-  const [hasUrlTour, setHasUrlTour] = useState(false);
 
   const getSlug = (nomeTorneo) => {
     if (!nomeTorneo) return "";
@@ -28,7 +27,6 @@ export default function GironiPubblici() {
       
       if (urlTour && attivi.some(t => t.nome === urlTour)) {
         setSelectedTorneo(urlTour);
-        setHasUrlTour(true);
       } else if (attivi.length > 0) {
         setSelectedTorneo(attivi[0].nome);
       }
@@ -456,32 +454,12 @@ export default function GironiPubblici() {
 
       <div className="max-w-4xl mx-auto mt-8 px-4">
         {/* Header Sezione */}
-        <div className="mb-10 text-center flex flex-col items-center">
+        <div className="mb-10 text-center">
           <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-4">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
             Torneo Attivo
           </div>
-          
-          {tornei.length > 1 && !hasUrlTour ? (
-            <div className="relative group mb-3 w-full max-w-xl">
-              <div className="absolute inset-0 bg-[#0a1628]/10 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
-              <select 
-                className="w-full relative bg-white border-2 border-gray-200 rounded-[2rem] px-8 py-4 font-black text-[#0a1628] uppercase text-sm md:text-base tracking-widest shadow-lg outline-none focus:ring-4 focus:ring-[#0a1628]/5 transition-all appearance-none pr-14 text-center cursor-pointer" 
-                value={selectedTorneo} 
-                onChange={e => setSelectedTorneo(e.target.value)}
-              >
-                {tornei.map(t => <option key={t.id} value={t.nome}>{t.nome}</option>)}
-              </select>
-              <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-[#0a1628]">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={4} stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                </svg>
-              </div>
-            </div>
-          ) : (
-            <h2 className="text-4xl md:text-5xl font-black text-[#0a1628] uppercase tracking-tighter">{selectedTorneo || "Nessun Torneo"}</h2>
-          )}
-          
+          <h2 className="text-4xl md:text-5xl font-black text-[#0a1628] uppercase tracking-tighter">{selectedTorneo || "Nessun Torneo"}</h2>
           <p className="text-gray-500 font-bold mt-2 uppercase text-xs tracking-[0.3em]">Gironi & Calendario</p>
         </div>
 
