@@ -12,6 +12,16 @@ export default function GironiPubblici() {
   const [bracketConfig, setBracketConfig] = useState(null);
   const [activeTab, setActiveTab] = useState("iniziali"); // "iniziali", "intermedi", "finali"
 
+  const areGironiPubblicati = () => {
+    if (!config || !config.gironeAssignments) return false;
+    return Object.values(config.gironeAssignments).some(assignments => {
+      if (!assignments) return false;
+      return Object.values(assignments).some(nome => {
+        return nome && nome !== "—" && nome !== "Slot Libero" && nome !== "";
+      });
+    });
+  };
+
   const getSlug = (nomeTorneo) => {
     if (!nomeTorneo) return "";
     return nomeTorneo.toLowerCase().trim().replace(/\s+/g, '_');
@@ -463,7 +473,7 @@ export default function GironiPubblici() {
           <p className="text-gray-500 font-bold mt-2 uppercase text-xs tracking-[0.3em]">Gironi & Calendario</p>
         </div>
 
-        {config ? (
+        {areGironiPubblicati() ? (
           <>
             {/* Phase Navigation Tabs */}
             {bracketConfig && (
@@ -668,8 +678,10 @@ export default function GironiPubblici() {
             )}
           </>
         ) : (
-          <div className="text-center py-20 bg-white rounded-3xl shadow-sm">
-            <p className="text-gray-400 font-bold italic">Configurazione non disponibile per questo torneo.</p>
+          <div className="bg-white p-12 md:p-20 rounded-[2rem] shadow-sm text-center border border-gray-100 flex flex-col items-center">
+            <span className="text-6xl mb-4">🏐</span>
+            <h4 className="text-xl font-bold text-[#0a1628] mb-2 uppercase tracking-tight">Gironi non ancora pubblicati</h4>
+            <p className="text-gray-500 font-medium max-w-md">La configurazione dei gironi per questo torneo sarà disponibile a breve.</p>
           </div>
         )}
       </div>
