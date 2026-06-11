@@ -41,8 +41,8 @@ export default function StaffTornei() {
         {/* Lista Tornei - Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {tornei.map((torneo) => (
-            <div key={torneo.id} className="bg-white rounded-[2.5rem] shadow-xl border-b-8 overflow-hidden flex flex-col hover:shadow-2xl transition-all group" style={{borderColor: torneo.stato === "Concluso" ? "#cbd5e1" : "#FFD700"}}>
-              <div className="p-8 flex-1">
+            <div key={torneo.id} className="bg-white rounded-[2rem] shadow-xl border-b-8 overflow-hidden flex flex-col hover:shadow-2xl transition-all group" style={{borderColor: torneo.stato === "Concluso" ? "#cbd5e1" : "#FFD700"}}>
+              <div className="p-6 sm:p-8 flex-1">
                 <div className="flex justify-between items-start mb-6">
                   <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
                     torneo.stato === 'Iscrizioni Aperte' ? 'bg-green-100 text-green-700' :
@@ -90,16 +90,16 @@ export default function StaffTornei() {
                 </div>
               </div>
               
-              <div className="bg-gray-50/50 p-6 flex gap-3">
+              <div className="bg-gray-50/50 p-4 sm:p-6 flex gap-3">
                 <button 
                   onClick={() => router.push(`/staff/tornei/modifica/${torneo.id}`)}
-                  className="flex-1 bg-white border-2 border-gray-100 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-600 hover:bg-[#0a1628] hover:text-white hover:border-[#0a1628] transition-all shadow-sm"
+                  className="flex-1 bg-white border-2 border-gray-100 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest text-gray-600 hover:bg-[#0a1628] hover:text-white hover:border-[#0a1628] transition-all shadow-sm cursor-pointer"
                 >
                   Modifica
                 </button>
                 <button 
                   onClick={() => router.push(`/staff/gironi?tour=${encodeURIComponent(torneo.nome)}`)}
-                  className="flex-1 bg-white border-2 border-blue-100 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-blue-600 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all shadow-sm"
+                  className="flex-1 bg-white border-2 border-blue-100 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest text-blue-600 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all shadow-sm cursor-pointer"
                 >
                   Gironi
                 </button>

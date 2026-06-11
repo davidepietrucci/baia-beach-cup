@@ -73,28 +73,28 @@ export default function MieIscrizioni() {
         {filteredIscrizioni.length > 0 ? (
           <div className="grid grid-cols-1 gap-8">
             {filteredIscrizioni.map((isc) => (
-              <div key={isc.id} className="bg-white rounded-[3rem] shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500 group">
+              <div key={isc.id} className="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500 group">
                 <div className="flex flex-col lg:flex-row">
                   
-                  <div className="p-10 lg:w-1/3 bg-[#0a1628] text-white flex flex-col justify-center relative overflow-hidden">
+                  <div className="p-6 sm:p-8 md:p-10 lg:w-1/3 bg-[#0a1628] text-white flex flex-col justify-center relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16"></div>
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[#FFD700] text-[10px] font-black uppercase tracking-widest mb-6 w-fit relative z-10">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#FFD700] animate-pulse"></span>
                       Attivo
                     </div>
-                    <h3 className="text-3xl font-black leading-none uppercase tracking-tighter mb-6 relative z-10">{isc.torneo}</h3>
+                    <h3 className="text-2xl sm:text-3xl font-black leading-none uppercase tracking-tighter mb-4 sm:mb-6 relative z-10">{isc.torneo}</h3>
                     <div className="flex items-center gap-3 text-gray-400 font-bold text-xs uppercase tracking-widest relative z-10">
                       <span className="text-xl">📅</span>
                       <span>{isc.data}</span>
                     </div>
                   </div>
 
-                  <div className="p-10 flex-grow flex flex-col md:flex-row justify-between items-center gap-8">
-                    <div className="flex flex-col md:flex-row gap-8 items-center text-center md:text-left">
-                      <div className="w-20 h-20 rounded-3xl bg-blue-50 flex items-center justify-center text-4xl shadow-inner border border-blue-100 group-hover:scale-110 transition-transform">🏐</div>
-                      <div>
+                  <div className="p-6 sm:p-8 md:p-10 flex-grow flex flex-col md:flex-row justify-between items-center gap-6 sm:gap-8">
+                    <div className="flex flex-col md:flex-row gap-6 sm:gap-8 items-center text-center md:text-left">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-blue-50 flex items-center justify-center text-3xl sm:text-4xl shadow-inner border border-blue-100 group-hover:scale-110 transition-transform shrink-0">🏐</div>
+                      <div className="min-w-0">
                         <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-2">Team & Partner</p>
-                        <p className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter">{isc.giocatori}</p>
+                        <p className="text-xl sm:text-2xl font-black text-[#0a1628] uppercase tracking-tighter truncate">{isc.giocatori}</p>
                         <div className="flex items-center justify-center md:justify-start gap-4 mt-3">
                             <span className="text-[10px] font-bold text-gray-400 bg-gray-50 px-3 py-1 rounded-full">ID #{isc.id}</span>
                             {isc.tel && <span className="text-[10px] font-bold text-gray-400">📞 {isc.tel}</span>}
@@ -102,8 +102,8 @@ export default function MieIscrizioni() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col items-center md:items-end gap-4 w-full md:w-auto">
-                      <div className={`px-10 py-5 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.2em] shadow-xl border-4 ${
+                    <div className="flex flex-col items-center md:items-end gap-3 sm:gap-4 w-full md:w-auto">
+                      <div className={`px-8 py-4 sm:px-10 sm:py-5 rounded-[1.5rem] sm:rounded-[2rem] text-[10px] font-black uppercase tracking-[0.2em] shadow-xl border-4 ${
                         isc.stato === "Approvata" ? "bg-green-50 text-green-700 border-green-100" : 
                         isc.stato === "In Attesa" ? "bg-yellow-50 text-yellow-700 border-yellow-100" : 
                         "bg-red-50 text-red-700 border-red-100"
@@ -119,11 +119,11 @@ export default function MieIscrizioni() {
                     </div>
                   </div>
 
-                  <div className="p-10 lg:w-64 flex flex-col items-center justify-center border-t lg:border-t-0 lg:border-l border-gray-50 bg-gray-50/50 gap-4">
-                    <button className="w-full py-5 rounded-[1.5rem] bg-[#0a1628] text-[#FFD700] font-black text-[10px] uppercase tracking-widest hover:shadow-2xl hover:scale-105 active:scale-95 transition-all shadow-xl">
+                  <div className="p-6 sm:p-8 md:p-10 lg:w-64 flex flex-row lg:flex-col items-center justify-center border-t lg:border-t-0 lg:border-l border-gray-50 bg-gray-50/50 gap-4 w-full lg:w-auto">
+                    <button className="flex-1 lg:flex-none w-full py-4 rounded-[1.2rem] bg-[#0a1628] text-[#FFD700] font-black text-[10px] uppercase tracking-widest hover:shadow-2xl hover:scale-105 active:scale-95 transition-all shadow-xl cursor-pointer">
                       Dettagli 📁
                     </button>
-                    <button className="w-full py-5 rounded-[1.5rem] bg-white border-2 border-gray-100 text-gray-400 font-black text-[10px] uppercase tracking-widest hover:border-[#0a1628] hover:text-[#0a1628] transition-all active:scale-95">
+                    <button className="flex-1 lg:flex-none w-full py-4 rounded-[1.2rem] bg-white border-2 border-gray-100 text-gray-400 font-black text-[10px] uppercase tracking-widest hover:border-[#0a1628] hover:text-[#0a1628] transition-all active:scale-95 cursor-pointer">
                       Supporto 💬
                     </button>
                   </div>

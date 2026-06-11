@@ -28,6 +28,45 @@ export default function StaffGironi() {
   
   const [isDragging, setIsDragging] = useState(false);
   const [dragOverSlot, setDragOverSlot] = useState(null);
+  
+  const [selectedAthlete, setSelectedAthlete] = useState(null);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+
+  const handleSlotClick = (gironeId, idx, playerInSlot) => {
+    const hasPlayer = playerInSlot !== "—";
+    
+    if (selectedAthlete) {
+      // Assign selected athlete from sidebar to this slot
+      handleAssignmentChange(gironeId, idx, selectedAthlete);
+      setSelectedAthlete(null);
+    } else if (selectedSlot) {
+      if (selectedSlot.gironeId === gironeId && selectedSlot.slotIdx === idx) {
+        // Deselect if clicking the same slot
+        setSelectedSlot(null);
+      } else {
+        // Swap or move
+        const athlete1 = selectedSlot.name;
+        const athlete2 = playerInSlot;
+        handleAssignmentChange(selectedSlot.gironeId, selectedSlot.slotIdx, athlete2);
+        handleAssignmentChange(gironeId, idx, athlete1);
+        setSelectedSlot(null);
+      }
+    } else {
+      // Select slot for moving/swapping
+      if (hasPlayer) {
+        setSelectedSlot({ gironeId, slotIdx: idx, name: playerInSlot });
+        setSelectedAthlete(null);
+      }
+    }
+  };
+
+  const handleSidebarClick = () => {
+    if (selectedSlot) {
+      // If a slot was selected for moving, tapping the sidebar clears it
+      handleAssignmentChange(selectedSlot.gironeId, selectedSlot.slotIdx, "—");
+      setSelectedSlot(null);
+    }
+  };
 
   useEffect(() => {
     getTornei().then(parsedTornei => {
@@ -442,10 +481,12 @@ export default function StaffGironi() {
                                             return (
                                                 <div 
                                                     key={idx} 
-                                                    className={`flex items-center gap-3 p-1.5 rounded-2xl transition-all border-2 ${
-                                                        dragOverSlot === slotKey 
-                                                            ? `border-dashed ${c.border} ${c.light} scale-[1.02] shadow-sm` 
-                                                            : 'border-transparent'
+                                                    className={`flex items-center gap-3 p-1.5 rounded-2xl transition-all border-2 cursor-pointer ${
+                                                        selectedSlot && selectedSlot.gironeId === g.id && selectedSlot.slotIdx === idx
+                                                            ? 'border-[#FFD700] bg-yellow-50/50 scale-[1.02] shadow-md'
+                                                            : dragOverSlot === slotKey 
+                                                                ? `border-dashed ${c.border} ${c.light} scale-[1.02] shadow-sm` 
+                                                                : 'border-transparent hover:border-gray-200 hover:bg-gray-50/30'
                                                     }`}
                                                     draggable={hasPlayer}
                                                     onDragStart={(e) => handleDragStart(e, playerInSlot, g.id, idx)}
@@ -459,12 +500,14 @@ export default function StaffGironi() {
                                                     }}
                                                     onDragLeave={() => setDragOverSlot(null)}
                                                     onDrop={(e) => handleDrop(e, g.id, idx)}
+                                                    onClick={() => handleSlotClick(g.id, idx, playerInSlot)}
                                                 >
                                                     <span className="text-[10px] font-black text-gray-300 w-4 cursor-default select-none">{idx + 1}</span>
                                                     <select 
-                                                        className="flex-1 bg-gray-50 border-none rounded-xl py-2 px-4 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#0a1628]"
+                                                        className="flex-1 bg-gray-50/80 border-none rounded-xl py-2.5 px-3 text-xs sm:text-sm font-bold text-gray-900 focus:ring-2 focus:ring-[#0a1628] cursor-pointer"
                                                         value={playerInSlot}
                                                         onChange={(e) => handleAssignmentChange(g.id, idx, e.target.value)}
+                                                        onClick={(e) => e.stopPropagation()}
                                                     >
                                                         <option value="—">—</option>
                                                         {giocatoriFiltrati.map(gf => (
@@ -473,8 +516,11 @@ export default function StaffGironi() {
                                                     </select>
                                                     {hasPlayer && (
                                                         <button 
-                                                            onClick={() => handleAssignmentChange(g.id, idx, "—")}
-                                                            className="text-gray-400 hover:text-red-500 text-xs font-bold px-1 transition-colors"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleAssignmentChange(g.id, idx, "—");
+                                                            }}
+                                                            className="text-gray-400 hover:text-red-500 text-xs font-bold px-2 py-1 transition-colors"
                                                             title="Rimuovi dal girone"
                                                             type="button"
                                                         >
@@ -540,19 +586,19 @@ export default function StaffGironi() {
                 </div>
             </div>
 
-            {/* Sidebar Giocatori - Hidden on mobile if preferred, or at bottom */}
             <div 
                 className={`w-full lg:w-80 bg-white rounded-[2.5rem] shadow-xl border p-6 h-fit sticky top-10 transition-all duration-300 ${
-                    isDragging 
-                        ? 'border-dashed border-red-300 bg-red-50/20' 
+                    isDragging || selectedSlot
+                        ? 'border-dashed border-red-300 bg-red-50/20 cursor-pointer shadow-lg' 
                         : 'border-gray-100'
                 }`}
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={handleSidebarDrop}
+                onClick={handleSidebarClick}
             >
                 <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-sm font-black uppercase tracking-widest text-gray-400 transition-colors">
-                        {isDragging ? "Rilascia qui per rimuovere 🗑️" : "Iscritti Approvati"}
+                    <h3 className="text-sm font-black uppercase tracking-widest transition-colors text-gray-400">
+                        {isDragging || selectedSlot ? "Rilascia/Clicca qui per rimuovere 🗑️" : "Iscritti Approvati"}
                     </h3>
                     <span className="bg-green-100 text-green-700 text-[10px] font-black px-3 py-1 rounded-full">{giocatoriFiltrati.length}</span>
                 </div>
@@ -567,10 +613,22 @@ export default function StaffGironi() {
                                 draggable
                                 onDragStart={(e) => handleDragStart(e, g.giocatori)}
                                 onDragEnd={() => setIsDragging(false)}
-                                className={`bg-gray-50 p-4 rounded-2xl border transition-all cursor-grab active:cursor-grabbing flex justify-between items-center group ${
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (isAssigned) return;
+                                    if (selectedAthlete === g.giocatori) {
+                                        setSelectedAthlete(null);
+                                    } else {
+                                        setSelectedAthlete(g.giocatori);
+                                        setSelectedSlot(null);
+                                    }
+                                }}
+                                className={`p-4 rounded-2xl border transition-all flex justify-between items-center group ${
                                     isAssigned 
-                                        ? 'opacity-40 border-gray-100 hover:border-gray-100' 
-                                        : 'border-gray-100 hover:border-blue-200 hover:bg-white hover:shadow-md'
+                                        ? 'opacity-40 border-gray-100 hover:border-gray-100 bg-gray-50' 
+                                        : selectedAthlete === g.giocatori
+                                            ? 'border-blue-500 bg-blue-50/80 shadow-md scale-[1.02] cursor-pointer'
+                                            : 'border-gray-100 bg-gray-50 hover:border-blue-200 hover:bg-white hover:shadow-md cursor-pointer'
                                 }`}
                             >
                                 <div className="flex items-center gap-2">

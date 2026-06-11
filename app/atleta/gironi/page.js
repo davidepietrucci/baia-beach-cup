@@ -373,11 +373,11 @@ export default function AtletaGironi() {
               <tr>
                 <th className="px-4 py-3">Pos</th>
                 <th className="px-4 py-3">Squadra</th>
-                <th className="px-4 py-3 text-center">G</th>
+                <th className="px-4 py-3 text-center hidden sm:table-cell">G</th>
                 <th className="px-4 py-3 text-center">V / P</th>
-                <th className="px-4 py-3 text-center">PF</th>
-                <th className="px-4 py-3 text-center">PS</th>
-                <th className="px-4 py-3 text-center">Quoz.</th>
+                <th className="px-4 py-3 text-center hidden sm:table-cell">PF</th>
+                <th className="px-4 py-3 text-center hidden sm:table-cell">PS</th>
+                <th className="px-4 py-3 text-center hidden sm:table-cell">Quoz.</th>
                 <th className="px-4 py-3 text-right">Punti</th>
               </tr>
             </thead>
@@ -398,15 +398,15 @@ export default function AtletaGironi() {
                         {highlight && <span className="w-1.5 h-1.5 rounded-full bg-[#FFD700]"></span>}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-center text-gray-400">{team.giocate}</td>
+                    <td className="px-4 py-3 text-center text-gray-400 hidden sm:table-cell">{team.giocate}</td>
                     <td className="px-4 py-3 text-center whitespace-nowrap">
                       <span className="text-green-600">{team.vinte}</span>
                       <span className="mx-1 text-gray-200">/</span>
                       <span className="text-red-500">{team.perse}</span>
                     </td>
-                    <td className="px-4 py-3 text-center text-gray-600">{team.pf}</td>
-                    <td className="px-4 py-3 text-center text-gray-400">{team.ps}</td>
-                    <td className="px-4 py-3 text-center text-[#0a1628]">{quotient}</td>
+                    <td className="px-4 py-3 text-center text-gray-600 hidden sm:table-cell">{team.pf}</td>
+                    <td className="px-4 py-3 text-center text-gray-400 hidden sm:table-cell">{team.ps}</td>
+                    <td className="px-4 py-3 text-center text-[#0a1628] hidden sm:table-cell">{quotient}</td>
                     <td className="px-4 py-3 text-right text-lg font-black text-[#0a1628]">{team.punti}</td>
                   </tr>
                 );
@@ -529,7 +529,7 @@ export default function AtletaGironi() {
             {activeTab === "iniziali" && (
               <>
                 {/* Tab Gironi */}
-                <div className="flex gap-2 mb-6 overflow-x-auto pb-2 justify-center no-scrollbar">
+                <div className="flex gap-2 mb-6 overflow-x-auto pb-2 justify-start sm:justify-center no-scrollbar px-2">
                   {gironiIds.map(g => (
                     <button
                       key={g}

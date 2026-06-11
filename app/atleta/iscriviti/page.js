@@ -110,8 +110,8 @@ export default function AtletaIscriviti() {
             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Al momento non ci sono tornei attivi. Torna a controllare più tardi!</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 overflow-hidden">
-            <div className="p-8 md:p-12 space-y-8">
+          <form onSubmit={handleSubmit} className="bg-white rounded-[2rem] shadow-2xl border border-gray-100 overflow-hidden">
+            <div className="p-6 sm:p-8 md:p-12 space-y-6 sm:space-y-8">
               
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Seleziona Torneo</label>
@@ -120,7 +120,7 @@ export default function AtletaIscriviti() {
                   required
                   value={formData.torneo} 
                   onChange={handleChange}
-                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 font-black text-[#0a1628] uppercase text-xs tracking-wider focus:ring-2 focus:ring-[#0a1628] transition-all"
+                  className="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 sm:px-6 sm:py-5 font-black text-[#0a1628] uppercase text-xs tracking-wider focus:ring-2 focus:ring-[#0a1628] transition-all cursor-pointer"
                 >
                   {torneiAperti.map(t => (
                     <option key={t.id} value={t.nome}>{t.nome} - {t.data} ({t.categoria})</option>
@@ -128,7 +128,7 @@ export default function AtletaIscriviti() {
                 </select>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Giocatore 1 (Tu)</label>
                   <input 
@@ -137,7 +137,7 @@ export default function AtletaIscriviti() {
                     required
                     value={formData.giocatore1} 
                     onChange={handleChange}
-                    className="w-full bg-gray-100 border-none rounded-2xl px-6 py-5 font-bold text-gray-400 transition-all" 
+                    className="w-full bg-gray-100 border-none rounded-2xl px-5 py-4 sm:px-6 sm:py-5 font-bold text-gray-400 transition-all cursor-not-allowed" 
                     readOnly 
                   />
                 </div>
@@ -150,12 +150,12 @@ export default function AtletaIscriviti() {
                     value={formData.giocatore2} 
                     onChange={handleChange}
                     placeholder="es. Elena M." 
-                    className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] transition-all" 
+                    className="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 sm:px-6 sm:py-5 font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] transition-all" 
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Cellulare</label>
                   <input 
@@ -165,7 +165,7 @@ export default function AtletaIscriviti() {
                     value={formData.telefono} 
                     onChange={handleChange}
                     placeholder="es. 333 1234567" 
-                    className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] transition-all" 
+                    className="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 sm:px-6 sm:py-5 font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] transition-all" 
                   />
                 </div>
                 <div className="space-y-2">
@@ -177,17 +177,17 @@ export default function AtletaIscriviti() {
                     value={formData.email} 
                     onChange={handleChange}
                     placeholder="tua@email.com" 
-                    className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] transition-all" 
+                    className="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 sm:px-6 sm:py-5 font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] transition-all" 
                   />
                 </div>
               </div>
 
             </div>
             
-            <div className="bg-gray-50 p-8 md:p-12 flex justify-end">
+            <div className="bg-gray-50 p-6 sm:p-8 md:p-12 flex justify-end">
               <button 
                 type="submit" 
-                className="w-full md:w-auto px-12 py-6 rounded-3xl bg-[#0a1628] text-[#FFD700] font-black text-xs uppercase tracking-[0.2em] shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-4"
+                className="w-full sm:w-auto px-10 py-5 sm:px-12 sm:py-6 rounded-2xl sm:rounded-3xl bg-[#0a1628] text-[#FFD700] font-black text-xs uppercase tracking-[0.2em] shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-4 cursor-pointer"
               >
                 Invia Richiesta 🚀
               </button>

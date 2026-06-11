@@ -83,8 +83,8 @@ export default function AthleteHeader() {
       {/* Mobile Sidebar Overlay */}
       {isMenuOpen && (
         <div className="fixed inset-0 bg-black/60 z-[110] xl:hidden backdrop-blur-sm" onClick={() => setIsMenuOpen(false)}>
-          <div className="absolute right-0 top-0 h-full w-80 bg-white shadow-2xl p-8 flex flex-col gap-8 animate-in slide-in-from-right duration-300" onClick={e => e.stopPropagation()}>
-            <div className="flex justify-between items-center border-b pb-6">
+          <div className="absolute right-0 top-0 h-full w-[85vw] max-w-[20rem] sm:w-80 bg-white shadow-2xl p-6 sm:p-8 flex flex-col gap-6 sm:gap-8 animate-in slide-in-from-right duration-300" onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-center border-b pb-4 sm:pb-6">
                 <div className="flex items-center gap-3">
                     <Image src="/logo.png" alt="BVI Logo" width={40} height={40} />
                     <span className="font-black text-xl text-[#0a1628] tracking-tighter">MENU ATLETA</span>
@@ -92,12 +92,12 @@ export default function AthleteHeader() {
                 <button onClick={() => setIsMenuOpen(false)} className="text-2xl text-gray-400">✕</button>
             </div>
             
-            <nav className="flex flex-col gap-3">
+            <nav className="flex flex-col gap-2.5 sm:gap-3 overflow-y-auto max-h-[50vh] pr-1">
               {menuItems.map((item) => (
                 <a
                   key={item.path}
                   href={item.path}
-                  className={`p-5 rounded-[1.5rem] text-sm font-black transition-all flex items-center justify-between group ${
+                  className={`p-4 sm:p-5 rounded-[1.5rem] text-sm font-black transition-all flex items-center justify-between group ${
                     pathname === item.path
                       ? "bg-[#0a1628] text-white shadow-xl scale-[1.02]"
                       : "bg-gray-50 text-gray-600 hover:bg-gray-100"
@@ -112,14 +112,14 @@ export default function AthleteHeader() {
               ))}
             </nav>
 
-            <div className="mt-auto space-y-4">
-                <div className="p-6 bg-blue-50 rounded-[2rem] border border-blue-100 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-[#0a1628] flex items-center justify-center text-[#FFD700] font-black text-lg border-2 border-[#FFD700]">
+            <div className="mt-auto space-y-3 sm:space-y-4">
+                <div className="p-4 sm:p-6 bg-blue-50 rounded-[2rem] border border-blue-100 flex items-center gap-3 sm:gap-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#0a1628] flex items-center justify-center text-[#FFD700] font-black text-base sm:text-lg border-2 border-[#FFD700]">
                         {session?.user?.name ? session.user.name.charAt(0) : "A"}
                     </div>
                     <div>
-                        <p className="font-black text-[#0a1628] uppercase text-xs tracking-widest">{session?.user?.name || "Atleta"}</p>
-                        <p className="text-[10px] font-bold text-blue-400">Livro Socio Attivo</p>
+                        <p className="font-black text-[#0a1628] uppercase text-[10px] sm:text-xs tracking-widest">{session?.user?.name || "Atleta"}</p>
+                        <p className="text-[9px] sm:text-[10px] font-bold text-blue-400">Livro Socio Attivo</p>
                     </div>
                 </div>
                 <button 

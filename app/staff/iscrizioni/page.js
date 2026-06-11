@@ -465,18 +465,18 @@ export default function StaffIscrizioni() {
                 {/* Select Stato Iniziale */}
                 <div>
                   <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Stato Iniziale delle Iscrizioni</label>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <button
                       type="button"
                       onClick={() => setInitialStatusImport("Approvata")}
-                      className={`p-4 rounded-2xl font-black text-xs uppercase tracking-wider border-2 transition-all ${initialStatusImport === "Approvata" ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-100 bg-gray-50 text-gray-400'}`}
+                      className={`p-3.5 sm:p-4 rounded-2xl font-black text-xs uppercase tracking-wider border-2 transition-all ${initialStatusImport === "Approvata" ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-100 bg-gray-50 text-gray-400'}`}
                     >
                       Approvata (Subito in Classifica)
                     </button>
                     <button
                       type="button"
                       onClick={() => setInitialStatusImport("In Attesa")}
-                      className={`p-4 rounded-2xl font-black text-xs uppercase tracking-wider border-2 transition-all ${initialStatusImport === "In Attesa" ? 'border-yellow-500 bg-yellow-50 text-yellow-700' : 'border-gray-100 bg-gray-50 text-gray-400'}`}
+                      className={`p-3.5 sm:p-4 rounded-2xl font-black text-xs uppercase tracking-wider border-2 transition-all ${initialStatusImport === "In Attesa" ? 'border-yellow-500 bg-yellow-50 text-yellow-700' : 'border-gray-100 bg-gray-50 text-gray-400'}`}
                     >
                       In Attesa (Da approvare a mano)
                     </button>
@@ -549,7 +549,7 @@ export default function StaffIscrizioni() {
                   )}
                 </div>
 
-                <div className="pt-4 border-t border-gray-50 flex gap-4">
+                <div className="pt-4 border-t border-gray-50 flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={() => { setIsImportModalOpen(false); setImportStep(1); }}
                     className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#0a1628] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
@@ -655,7 +655,7 @@ export default function StaffIscrizioni() {
                 </div>
 
                 {/* Actions */}
-                <div className="pt-4 border-t border-gray-50 flex gap-4">
+                <div className="pt-4 border-t border-gray-50 flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={() => setImportStep(1)}
                     className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#0a1628] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
@@ -664,7 +664,7 @@ export default function StaffIscrizioni() {
                   </button>
                   <button
                     onClick={handleConfirmImport}
-                    className="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg transition-all"
+                    className="flex-grow sm:flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg transition-all"
                   >
                     Importa Ora ✅
                   </button>
@@ -779,7 +779,7 @@ export default function StaffIscrizioni() {
               </div>
             </div>
 
-            <div className="pt-6 border-t border-gray-100 mt-6 flex gap-4">
+            <div className="pt-6 border-t border-gray-100 mt-6 flex flex-col sm:flex-row gap-3">
               <button
                 onClick={() => setEditingIscrizione(null)}
                 className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#0a1628] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
