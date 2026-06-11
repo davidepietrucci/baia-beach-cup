@@ -3,40 +3,40 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 
 export default function StaffLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (localStorage.getItem("bvi_staff_logged_in") === "true") {
+    if (status === "authenticated" && (session?.user?.role === "admin" || session?.user?.role === "staff")) {
       router.push("/staff/dashboard");
     }
-  }, [router]);
+  }, [session, status, router]);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (username === "admin" && password === "admin") {
-      setError("");
-      localStorage.setItem("bvi_staff_logged_in", "true");
-      localStorage.setItem("bvi_staff_role", "admin");
-      localStorage.setItem("bvi_staff_username", username);
-      router.push("/staff/dashboard");
-    } else if (
-      (username === "staff" && password === "staff") ||
-      (username === "vale" && password === "bvi2026") ||
-      (username === "davide" && password === "bvi2026") ||
-      (username === "fra.b" && password === "Bvi2026")
-    ) {
-      setError("");
-      localStorage.setItem("bvi_staff_logged_in", "true");
-      localStorage.setItem("bvi_staff_role", "staff");
-      localStorage.setItem("bvi_staff_username", username);
-      router.push("/staff/dashboard");
-    } else {
-      setError("Credenziali errate. Riprova.");
+    setError("");
+
+    try {
+      const res = await signIn("credentials", {
+        username,
+        password,
+        redirect: false,
+      });
+
+      if (res?.error) {
+        setError("Credenziali errate. Riprova.");
+      } else {
+        router.push("/staff/dashboard");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Si è verificato un errore durante l'accesso.");
     }
   };
 

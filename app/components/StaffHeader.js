@@ -3,12 +3,14 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import { isUsingFirebase } from "@/app/utils/db";
 
 export default function StaffHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const { data: session, status } = useSession();
   const [role, setRole] = useState("admin");
   const [username, setUsername] = useState("");
   const [dbConnected, setDbConnected] = useState(false);
@@ -16,27 +18,25 @@ export default function StaffHeader() {
   useEffect(() => {
     setDbConnected(isUsingFirebase());
     
-    if (localStorage.getItem("bvi_staff_logged_in") !== "true") {
+    if (status === "unauthenticated") {
       router.push("/staff");
       return;
     }
-    const savedRole = localStorage.getItem("bvi_staff_role");
-    if (savedRole) {
-      setRole(savedRole);
-      if (savedRole !== "admin" && pathname === "/staff/atleti") {
+
+    if (session?.user) {
+      const userRole = session.user.role || "staff";
+      setRole(userRole);
+      setUsername(session.user.username || session.user.name || "Staff");
+
+      if (userRole !== "admin" && pathname === "/staff/atleti") {
         router.push("/staff/dashboard");
       }
     }
-    const savedUsername = localStorage.getItem("bvi_staff_username") || savedRole || "Staff";
-    setUsername(savedUsername);
-  }, [router, pathname]);
+  }, [router, pathname, session, status]);
 
-  const handleLogout = (e) => {
+  const handleLogout = async (e) => {
     e.preventDefault();
-    localStorage.removeItem("bvi_staff_logged_in");
-    localStorage.removeItem("bvi_staff_role");
-    localStorage.removeItem("bvi_staff_username");
-    router.push("/staff");
+    await signOut({ callbackUrl: "/staff" });
   };
 
   const menuItems = [

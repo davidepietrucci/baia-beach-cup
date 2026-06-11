@@ -2,29 +2,33 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import StaffHeader from "@/app/components/StaffHeader";
 import { getUsers } from "@/app/utils/db";
 
 export default function StaffAtleti() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [atleti, setAtleti] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    if (localStorage.getItem("bvi_staff_logged_in") !== "true") {
+    if (status === "unauthenticated") {
       router.push("/staff");
       return;
     }
-    const savedRole = localStorage.getItem("bvi_staff_role");
-    if (savedRole !== "admin") {
-      router.push("/staff/dashboard");
-      return;
-    }
 
-    getUsers().then(users => {
-      setAtleti(users);
-    });
-  }, [router]);
+    if (session?.user) {
+      if (session.user.role !== "admin") {
+        router.push("/staff/dashboard");
+        return;
+      }
+
+      getUsers().then(users => {
+        setAtleti(users);
+      });
+    }
+  }, [router, session, status]);
 
   const filteredAtleti = atleti.filter(a => {
     const fullName = `${a.nome || ""} ${a.cognome || ""}`.toLowerCase();
