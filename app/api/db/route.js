@@ -6,7 +6,8 @@ import {
   getUsers, saveUsers, 
   getModuli, saveModuli, 
   getGironi, saveGironi, 
-  getBracket, saveBracket 
+  getBracket, saveBracket,
+  getNotifiche, saveNotifiche
 } from "@/app/utils/db";
 
 // 1. GET: Gestisce le letture del database controllando i permessi di lettura
@@ -31,6 +32,7 @@ export async function GET(req) {
     else if (type === "moduli") data = await getModuli();
     else if (type === "gironi") data = await getGironi(slug);
     else if (type === "bracket") data = await getBracket(slug);
+    else if (type === "notifiche") data = await getNotifiche();
     else {
       return NextResponse.json({ error: "Tipo database non valido" }, { status: 400 });
     }
@@ -67,13 +69,14 @@ export async function POST(req) {
       if (type === "tornei") await saveTornei(data);
       if (type === "moduli") await saveModuli(data);
     } 
-    else if (type === "gironi" || type === "bracket" || type === "iscrizioni") {
+    else if (type === "gironi" || type === "bracket" || type === "iscrizioni" || type === "notifiche") {
       if (role !== "admin" && role !== "staff") {
         return NextResponse.json({ error: "Accesso negato: richiesto ruolo Staff" }, { status: 403 });
       }
       if (type === "gironi") await saveGironi(slug, data);
       if (type === "bracket") await saveBracket(slug, data);
       if (type === "iscrizioni") await saveIscrizioni(data);
+      if (type === "notifiche") await saveNotifiche(data);
     } 
     else if (type === "users") {
       if (isRegistration) {

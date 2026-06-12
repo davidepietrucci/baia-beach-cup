@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import AthleteHeader from "@/app/components/AthleteHeader";
+import AthleteBottomNav from "@/app/components/AthleteBottomNav";
 import { getTornei, getGironi, getBracket } from "@/app/utils/db";
 
 export default function AtletaGironi() {
@@ -469,7 +470,7 @@ export default function AtletaGironi() {
   );
 
   return (
-    <main className="min-h-screen bg-[#f8faff] pb-20">
+    <main className="min-h-screen bg-[#f8faff] pb-28 xl:pb-10">
       <AthleteHeader />
 
       <div className="max-w-6xl mx-auto mt-6 md:mt-10 px-4">
@@ -716,10 +717,12 @@ export default function AtletaGironi() {
       
       <button 
         onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} 
-        className="fixed bottom-8 right-8 w-16 h-16 bg-[#0a1628] text-[#FFD700] rounded-3xl shadow-2xl flex items-center justify-center text-2xl border-4 border-[#FFD700] hover:scale-110 active:scale-90 transition-all z-50 md:hidden"
+        className="fixed bottom-24 right-4 xl:bottom-8 xl:right-8 w-12 h-12 bg-[#0a1628] text-[#FFD700] rounded-2xl shadow-2xl flex items-center justify-center text-lg border-2 border-[#FFD700] hover:scale-110 active:scale-90 transition-all z-50 md:hidden"
       >
         ↑
       </button>
+
+      <AthleteBottomNav />
     </main>
   );
 }

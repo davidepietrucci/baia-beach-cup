@@ -349,3 +349,49 @@ export async function saveModuli(list) {
     localStorage.setItem("bvi_moduli", JSON.stringify(list));
   }
 }
+
+// 7. Notifiche Staff
+export async function getNotifiche() {
+  if (typeof window === "undefined") {
+    if (db) {
+      try {
+        const docRef = doc(db, "config", "notifiche");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          return docSnap.data().list || [];
+        }
+      } catch (e) {
+        console.error("Firestore read notifiche error:", e);
+      }
+    }
+    return [];
+  }
+
+  if (isFirebaseConfigured) {
+    const serverData = await fetchFromServerDb("notifiche");
+    return serverData || [];
+  } else {
+    const saved = localStorage.getItem("bvi_notifiche");
+    return safeJsonParse(saved, []);
+  }
+}
+
+export async function saveNotifiche(list) {
+  if (typeof window === "undefined") {
+    if (db) {
+      try {
+        const docRef = doc(db, "config", "notifiche");
+        await setDoc(docRef, { list });
+      } catch (e) {
+        console.error("Firestore write notifiche error:", e);
+      }
+    }
+    return;
+  }
+
+  if (isFirebaseConfigured) {
+    await saveToServerDb("notifiche", list);
+  } else {
+    localStorage.setItem("bvi_notifiche", JSON.stringify(list));
+  }
+}
