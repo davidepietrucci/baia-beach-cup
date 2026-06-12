@@ -498,7 +498,7 @@ export default function AtletaGironi() {
             </div>
         </div>
 
-        {config ? (
+        {config && config.pubblicato ? (
           <>
             {/* Phase Navigation Tabs */}
             {bracketConfig && (
@@ -709,8 +709,12 @@ export default function AtletaGironi() {
             )}
           </>
         ) : (
-          <div className="text-center py-20 bg-white rounded-3xl shadow-sm">
-            <p className="text-gray-400 font-bold italic">Configurazione non disponibile per questo torneo.</p>
+          <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
+            <span className="text-5xl mb-4 block">⏳</span>
+            <h3 className="text-lg font-black text-[#0a1628] uppercase tracking-tight mb-2">Gironi in Elaborazione</h3>
+            <p className="text-gray-400 font-medium text-xs max-w-sm mx-auto">
+              {config ? "Lo staff sta completando la composizione dei gironi e dei calendari. Saranno visibili a breve!" : "I gironi per questo torneo non sono ancora stati configurati dallo staff."}
+            </p>
           </div>
         )}
       </div>

@@ -18,7 +18,7 @@ export default function AthleteHeader() {
     { name: "Iscriviti", path: "/atleta/iscriviti", emoji: "➕" },
     { name: "Notifiche", path: "/atleta/notifiche", emoji: "🔔" },
     { name: "Profilo & Documenti", path: "/atleta/profilo", emoji: "👤" },
-    { name: "Classifica", path: "/classifica", emoji: "🏆" },
+    { name: "Classifica", path: "/atleta/classifica", emoji: "🏆" },
   ];
 
   const handleLogout = () => {

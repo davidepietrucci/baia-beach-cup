@@ -25,6 +25,7 @@ export default function StaffGironi() {
   const [gironeSets, setGironeSets] = useState({ A: "1 set", B: "1 set", C: "1 set", D: "1 set", E: "1 set", F: "1 set", G: "1 set", H: "1 set" });
   const [matchMetadata, setMatchMetadata] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
+  const [pubblicato, setPubblicato] = useState(false);
   
   const [isDragging, setIsDragging] = useState(false);
   const [dragOverSlot, setDragOverSlot] = useState(null);
@@ -106,6 +107,7 @@ export default function StaffGironi() {
         setGironeSets(config.gironeSets || { A: "1 set", B: "1 set", C: "1 set", D: "1 set", E: "1 set", F: "1 set", G: "1 set", H: "1 set" });
         setGironeAssignments(config.gironeAssignments || {});
         setMatchMetadata(config.matchMetadata || {});
+        setPubblicato(config.pubblicato || false);
       } else {
         setNumGironi(4);
         setTeamCounts({ A: 4, B: 4, C: 4, D: 4, E: 4, F: 4, G: 4, H: 4 });
@@ -113,6 +115,7 @@ export default function StaffGironi() {
         setGironeSets({ A: "1 set", B: "1 set", C: "1 set", D: "1 set", E: "1 set", F: "1 set", G: "1 set", H: "1 set" });
         setGironeAssignments({});
         setMatchMetadata({});
+        setPubblicato(false);
       }
       setIsLoaded(true);
     });
@@ -127,7 +130,8 @@ export default function StaffGironi() {
       gironeTypes,
       gironeSets,
       gironeAssignments,
-      matchMetadata
+      matchMetadata,
+      pubblicato
     };
     
     // Immediate save to localStorage
@@ -140,7 +144,7 @@ export default function StaffGironi() {
     }, 1000);
 
     return () => clearTimeout(handler);
-  }, [numGironi, teamCounts, gironeTypes, gironeSets, gironeAssignments, matchMetadata, selectedTorneo, isLoaded]);
+  }, [numGironi, teamCounts, gironeTypes, gironeSets, gironeAssignments, matchMetadata, pubblicato, selectedTorneo, isLoaded]);
 
   const giocatoriFiltrati = tutteLeIscrizioni.filter(isc => {
     const tName = (isc.torneo || "").toLowerCase();
@@ -223,7 +227,8 @@ export default function StaffGironi() {
       gironeTypes,
       gironeSets,
       gironeAssignments,
-      matchMetadata
+      matchMetadata,
+      pubblicato
     };
     
     localStorage.setItem(configKey, JSON.stringify(config));
@@ -277,6 +282,7 @@ export default function StaffGironi() {
     setGironeSets({ A: "1 set", B: "1 set", C: "1 set", D: "1 set", E: "1 set", F: "1 set", G: "1 set", H: "1 set" });
     setGironeAssignments({});
     setMatchMetadata({});
+    setPubblicato(false);
     
     localStorage.removeItem(getConfigKey(selectedTorneo));
     await saveGironi(slug, null);
@@ -435,16 +441,31 @@ export default function StaffGironi() {
             {/* Configurazione Gironi */}
             <div className="flex-1 space-y-8">
                 <div className="bg-white p-6 rounded-[2.5rem] shadow-xl border border-gray-100">
-                    <div className="flex justify-between items-center mb-6">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                         <h3 className="text-sm font-black uppercase tracking-widest text-gray-400">Parametri Globali</h3>
-                        <div className="flex items-center gap-3">
-                            <span className="text-xs font-bold text-gray-500">Numero Gironi:</span>
-                            <input 
-                                type="number" 
-                                value={numGironi} 
-                                onChange={(e) => setNumGironi(Math.max(1, Math.min(8, parseInt(e.target.value) || 1)))}
-                                className="w-16 bg-gray-50 border-none rounded-xl px-3 py-2 text-center font-black text-[#0a1628] shadow-inner" 
-                            />
+                        <div className="flex flex-wrap items-center gap-6">
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs font-bold text-gray-500">Stato Gironi:</span>
+                                <button
+                                    onClick={() => setPubblicato(!pubblicato)}
+                                    className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                                        pubblicato 
+                                            ? 'bg-green-100 text-green-700 border border-green-200' 
+                                            : 'bg-amber-100 text-amber-700 border border-amber-200'
+                                    }`}
+                                >
+                                    {pubblicato ? "🟢 Pubblicati (Visibili)" : "🟡 Bozza (Nascosti)"}
+                                </button>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="text-xs font-bold text-gray-500">Numero Gironi:</span>
+                                <input 
+                                    type="number" 
+                                    value={numGironi} 
+                                    onChange={(e) => setNumGironi(Math.max(1, Math.min(8, parseInt(e.target.value) || 1)))}
+                                    className="w-16 bg-gray-50 border-none rounded-xl px-3 py-2 text-center font-black text-[#0a1628] shadow-inner" 
+                                />
+                            </div>
                         </div>
                     </div>
 

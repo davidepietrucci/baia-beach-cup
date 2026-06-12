@@ -230,7 +230,7 @@ export default function AtletaDashboard() {
               <span className="text-[10px] font-black text-[#0a1628] uppercase tracking-widest text-center">Notifiche</span>
             </button>
             <button
-              onClick={() => router.push("/classifica")}
+              onClick={() => router.push("/atleta/classifica")}
               className="bg-white rounded-[1.8rem] p-5 shadow-sm border border-gray-100 flex flex-col items-center gap-3 hover:shadow-md transition-all active:scale-[0.98] group"
             >
               <span className="text-3xl group-hover:scale-110 transition-transform">🏅</span>
