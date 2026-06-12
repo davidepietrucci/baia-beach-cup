@@ -7,10 +7,9 @@ import { getTornei, getGironi, getBracket } from "@/app/utils/db";
 export default function PortaleLiveMobile() {
   const [tornei, setTornei] = useState([]);
   const [selectedTorneo, setSelectedTorneo] = useState("");
-  const [activeGirone, setActiveGirone] = useState("A");
   const [config, setConfig] = useState(null);
   const [bracketConfig, setBracketConfig] = useState(null);
-  const [activeTab, setActiveTab] = useState("partite"); // "partite", "classifica", "finali"
+  const [activeTab, setActiveTab] = useState("gironi"); // "gironi", "partite", "classifica", "finali"
   const [loading, setLoading] = useState(true);
 
   // 1. Carica l'elenco dei tornei e determina quello da visualizzare
@@ -46,16 +45,6 @@ export default function PortaleLiveMobile() {
     const fetchLive = () => {
       getGironi(slug).then((data) => {
         setConfig(data);
-        if (data) {
-          // Prepara la lista iniziale dei gironi disponibili e imposta il primo se non valido
-          const groups = getGroupsList(data);
-          setActiveGirone((prev) => {
-            if (groups.length > 0 && !groups.some((g) => g.id === prev)) {
-              return groups[0].id;
-            }
-            return prev;
-          });
-        }
       });
       getBracket(slug).then((data) => {
         setBracketConfig(data);
@@ -97,8 +86,6 @@ export default function PortaleLiveMobile() {
     }
     return list;
   };
-
-  const activeGroupObj = getGroupsList().find((g) => g.id === activeGirone) || { type: "iniziale" };
 
   // Logica per il calendario incontri dei gironi
   const getSchedule = (numTeams, gironeId, assignments = {}) => {
@@ -186,13 +173,38 @@ export default function PortaleLiveMobile() {
     return [];
   };
 
-  const calculateRanking = () => {
-    if (!config || !config.gironeAssignments || !config.gironeAssignments[activeGirone]) return [];
+  const getGroupTeams = (groupId, type) => {
+    if (type === "intermedio") {
+      if (!bracketConfig || !bracketConfig.bracketAssignments) return [];
+      const assignments = bracketConfig.bracketAssignments;
+      return [
+        assignments[`${groupId}-0`],
+        assignments[`${groupId}-1`],
+        assignments[`${groupId}-2`],
+        assignments[`${groupId}-3`],
+      ].filter((t) => t && t !== "—" && t !== "Slot Libero");
+    } else {
+      if (!config || !config.gironeAssignments || !config.gironeAssignments[groupId]) return [];
+      const assignments = config.gironeAssignments[groupId];
+      const teamCount = config.teamCounts[groupId] || 0;
+      const list = [];
+      for (let i = 0; i < teamCount; i++) {
+        const name = assignments[i];
+        if (name && name !== "—" && name !== "Slot Libero") {
+          list.push(name);
+        }
+      }
+      return list;
+    }
+  };
 
-    const assignments = config.gironeAssignments[activeGirone];
-    const teamCount = config.teamCounts[activeGirone] || 0;
+  const calculateRanking = (groupId) => {
+    if (!config || !config.gironeAssignments || !config.gironeAssignments[groupId]) return [];
+
+    const assignments = config.gironeAssignments[groupId];
+    const teamCount = config.teamCounts[groupId] || 0;
     const metadata = config.matchMetadata || {};
-    const isThreeSets = config.gironeSets?.[activeGirone] === "3 set";
+    const isThreeSets = config.gironeSets?.[groupId] === "3 set";
 
     const stats = {};
     for (let i = 0; i < teamCount; i++) {
@@ -210,9 +222,9 @@ export default function PortaleLiveMobile() {
       }
     }
 
-    const schedule = getSchedule(teamCount, activeGirone, assignments);
+    const schedule = getSchedule(teamCount, groupId, assignments);
     schedule.forEach((match, i) => {
-      const meta = metadata[`${activeGirone}-${i}`];
+      const meta = metadata[`${groupId}-${i}`];
       if (!meta) return;
 
       const teamL = match.left;
@@ -385,30 +397,42 @@ export default function PortaleLiveMobile() {
       );
   };
 
-  // 4. Auto-Scroll alla prima partita senza punteggio
+  // 4. Auto-Scroll alla prima partita senza punteggio a livello globale
   useEffect(() => {
     if (activeTab === "partite" && isPublished && selectedTorneo) {
-      const isIntermediate = activeGroupObj.type === "intermedio";
-      const matchesList = isIntermediate
-        ? getIntermediateGroupMatches(activeGirone)
-        : getSchedule(
-            config.teamCounts[activeGirone],
-            activeGirone,
-            config.gironeAssignments[activeGirone] || {}
-          );
+      const groups = getGroupsList();
+      let firstUnplayedMatch = null;
 
-      const firstUnplayedIdx = matchesList.findIndex((m, idx) => {
-        const meta = isIntermediate
-          ? m.meta
-          : config?.matchMetadata?.[`${activeGirone}-${idx}`] || {};
-        const scoreL = parseInt(meta.s1L || meta.scoreL || 0);
-        const scoreR = parseInt(meta.s1R || meta.scoreR || 0);
-        return scoreL === 0 && scoreR === 0;
-      });
+      for (const group of groups) {
+        const isIntermediate = group.type === "intermedio";
+        const matchesList = isIntermediate
+          ? getIntermediateGroupMatches(group.id)
+          : getSchedule(
+              config.teamCounts[group.id],
+              group.id,
+              config.gironeAssignments[group.id] || {}
+            );
 
-      if (firstUnplayedIdx !== -1) {
+        const firstUnplayedIdx = matchesList.findIndex((m, idx) => {
+          const meta = isIntermediate
+            ? m.meta
+            : config?.matchMetadata?.[`${group.id}-${idx}`] || {};
+          const scoreL = parseInt(meta.s1L || meta.scoreL || 0);
+          const scoreR = parseInt(meta.s1R || meta.scoreR || 0);
+          return scoreL === 0 && scoreR === 0;
+        });
+
+        if (firstUnplayedIdx !== -1) {
+          firstUnplayedMatch = { groupId: group.id, index: firstUnplayedIdx };
+          break; // Trovato il primo non giocato a livello globale!
+        }
+      }
+
+      if (firstUnplayedMatch) {
         const timer = setTimeout(() => {
-          const el = document.getElementById(`match-${activeGirone}-${firstUnplayedIdx}`);
+          const el = document.getElementById(
+            `match-${firstUnplayedMatch.groupId}-${firstUnplayedMatch.index}`
+          );
           if (el) {
             el.scrollIntoView({ behavior: "smooth", block: "center" });
           }
@@ -416,7 +440,7 @@ export default function PortaleLiveMobile() {
         return () => clearTimeout(timer);
       }
     }
-  }, [activeGirone, activeTab, config, selectedTorneo, isPublished]);
+  }, [activeTab, config, selectedTorneo, isPublished]);
 
   // Restituisce la lista di partite playoff lineare
   const getPlayoffMatchesList = () => {
@@ -435,10 +459,22 @@ export default function PortaleLiveMobile() {
     if (bracketConfig.phaseType === "gold_silver") {
       const isGroups = bracketConfig.subPhaseType === "groups";
       if (isGroups) {
-        list.push({ title: "Semifinali Gold 🏆", matches: [getMatchData("gold-s1", "Semifinale 1"), getMatchData("gold-s2", "Semifinale 2")] });
-        list.push({ title: "Finali Gold 🏆", matches: [getMatchData("gold-f3", "Finale 3°/4° Posto"), getMatchData("gold-f1", "Finale 1°/2° Posto")] });
-        list.push({ title: "Semifinali Silver 🥈", matches: [getMatchData("silver-s1", "Semifinale 1"), getMatchData("silver-s2", "Semifinale 2")] });
-        list.push({ title: "Finali Silver 🥈", matches: [getMatchData("silver-f3", "Finale 3°/4° Posto"), getMatchData("silver-f1", "Finale 1°/2° Posto")] });
+        list.push({
+          title: "Semifinali Gold 🏆",
+          matches: [getMatchData("gold-s1", "Semifinale 1"), getMatchData("gold-s2", "Semifinale 2")],
+        });
+        list.push({
+          title: "Finali Gold 🏆",
+          matches: [getMatchData("gold-f3", "Finale 3°/4° Posto"), getMatchData("gold-f1", "Finale 1°/2° Posto")],
+        });
+        list.push({
+          title: "Semifinali Silver 🥈",
+          matches: [getMatchData("silver-s1", "Semifinale 1"), getMatchData("silver-s2", "Semifinale 2")],
+        });
+        list.push({
+          title: "Finali Silver 🥈",
+          matches: [getMatchData("silver-f3", "Finale 3°/4° Posto"), getMatchData("silver-f1", "Finale 1°/2° Posto")],
+        });
       } else {
         if (bracketConfig.bracketSize === 8) {
           list.push({
@@ -451,8 +487,14 @@ export default function PortaleLiveMobile() {
             ],
           });
         }
-        list.push({ title: "Semifinali Gold 🏆", matches: [getMatchData("gold-s1", "Semifinale 1"), getMatchData("gold-s2", "Semifinale 2")] });
-        list.push({ title: "Finali Gold 🏆", matches: [getMatchData("gold-f3", "Finale 3°/4° Posto"), getMatchData("gold-f1", "Finale 1°/2° Posto")] });
+        list.push({
+          title: "Semifinali Gold 🏆",
+          matches: [getMatchData("gold-s1", "Semifinale 1"), getMatchData("gold-s2", "Semifinale 2")],
+        });
+        list.push({
+          title: "Finali Gold 🏆",
+          matches: [getMatchData("gold-f3", "Finale 3°/4° Posto"), getMatchData("gold-f1", "Finale 1°/2° Posto")],
+        });
 
         if (bracketConfig.bracketSize === 8) {
           list.push({
@@ -465,8 +507,14 @@ export default function PortaleLiveMobile() {
             ],
           });
         }
-        list.push({ title: "Semifinali Silver 🥈", matches: [getMatchData("silver-s1", "Semifinale 1"), getMatchData("silver-s2", "Semifinale 2")] });
-        list.push({ title: "Finali Silver 🥈", matches: [getMatchData("silver-f3", "Finale 3°/4° Posto"), getMatchData("silver-f1", "Finale 1°/2° Posto")] });
+        list.push({
+          title: "Semifinali Silver 🥈",
+          matches: [getMatchData("silver-s1", "Semifinale 1"), getMatchData("silver-s2", "Semifinale 2")],
+        });
+        list.push({
+          title: "Finali Silver 🥈",
+          matches: [getMatchData("silver-f3", "Finale 3°/4° Posto"), getMatchData("silver-f1", "Finale 1°/2° Posto")],
+        });
       }
     } else {
       // Doppia Eliminazione
@@ -485,12 +533,18 @@ export default function PortaleLiveMobile() {
         title: "Semifinali Vincenti (Winners SF) 🏆",
         matches: [getMatchData("wb-s1", "Winners Semifinale 1"), getMatchData("wb-s2", "Winners Semifinale 2")],
       });
-      list.push({ title: "Finale Vincenti (Winners Final) 🏆", matches: [getMatchData("wb-f", "Finale Vincenti")] });
+      list.push({
+        title: "Finale Vincenti (Winners Final) 🏆",
+        matches: [getMatchData("wb-f", "Finale Vincenti")],
+      });
       list.push({
         title: "Semifinali Perdenti (Losers SF) 🔄",
         matches: [getMatchData("lb-s1", "Losers Semifinale 1"), getMatchData("lb-s2", "Losers Semifinale 2")],
       });
-      list.push({ title: "Finale Perdenti (Losers Final) 🔄", matches: [getMatchData("lb-f", "Finale Perdenti")] });
+      list.push({
+        title: "Finale Perdenti (Losers Final) 🔄",
+        matches: [getMatchData("lb-f", "Finale Perdenti")],
+      });
       list.push({ title: "Grand Final 👑", matches: [getMatchData("grand-final", "Finalissima")] });
     }
 
@@ -498,26 +552,32 @@ export default function PortaleLiveMobile() {
   };
 
   // Rendering del singolo blocco partita SofaScore
-  const renderMatchRow = (teamL, teamR, meta, idx, matchKeyPrefix) => {
+  const renderMatchRow = (teamL, teamR, meta, idx, matchKeyPrefix, gironeId = null) => {
     const scoreL = parseInt(meta?.s1L || meta?.scoreL || 0);
     const scoreR = parseInt(meta?.s1R || meta?.scoreR || 0);
-    const hasScore = (meta?.s1L !== undefined && meta?.s1L !== "") || (meta?.scoreL !== undefined && meta?.scoreL !== "");
-    
+    const hasScore =
+      (meta?.s1L !== undefined && meta?.s1L !== "") ||
+      (meta?.scoreL !== undefined && meta?.scoreL !== "");
+
     // Altri set per partite a 3 set
     const s2L = parseInt(meta?.s2L || 0);
     const s2R = parseInt(meta?.s2R || 0);
     const s3L = parseInt(meta?.s3L || 0);
     const s3R = parseInt(meta?.s3R || 0);
-    const isThreeSets = activeGroupObj.type === "iniziale" && config?.gironeSets?.[activeGirone] === "3 set";
+    const isThreeSets = gironeId ? config?.gironeSets?.[gironeId] === "3 set" : false;
 
     let isWinnerL = false;
     let isWinnerR = false;
     if (hasScore && (scoreL > 0 || scoreR > 0)) {
       if (isThreeSets) {
-        let winL = 0, winR = 0;
-        if (scoreL > scoreR) winL++; else if (scoreR > scoreL) winR++;
-        if (s2L > s2R) winL++; else if (s2R > s2L) winR++;
-        if (s3L > s3R) winL++; else if (s3R > s3L) winR++;
+        let winL = 0,
+          winR = 0;
+        if (scoreL > scoreR) winL++;
+        else if (scoreR > scoreL) winR++;
+        if (s2L > s2R) winL++;
+        else if (s2R > s2L) winR++;
+        if (s3L > s3R) winL++;
+        else if (s3R > s3L) winR++;
         isWinnerL = winL > winR;
         isWinnerR = winR > winL;
       } else {
@@ -536,9 +596,7 @@ export default function PortaleLiveMobile() {
           <span>Gara {idx + 1}</span>
           <div className="flex gap-1.5">
             {meta?.time && (
-              <span className="bg-gray-50 text-gray-500 px-2.5 py-0.5 rounded-lg">
-                {meta.time}
-              </span>
+              <span className="bg-gray-50 text-gray-500 px-2.5 py-0.5 rounded-lg">{meta.time}</span>
             )}
             {meta?.court && (
               <span className="bg-blue-50 text-blue-600 px-2.5 py-0.5 rounded-lg font-black">
@@ -594,24 +652,6 @@ export default function PortaleLiveMobile() {
       </div>
     );
   };
-
-  const groupStats =
-    activeGroupObj.type === "intermedio"
-      ? getIntermediateGroupStats(activeGirone)
-      : calculateRanking();
-
-  const groupMatches =
-    activeGroupObj.type === "intermedio"
-      ? getIntermediateGroupMatches(activeGirone)
-      : getSchedule(
-          config?.teamCounts?.[activeGirone] || 0,
-          activeGirone,
-          config?.gironeAssignments?.[activeGirone] || {}
-        ).map((m, idx) => ({
-          left: m.left,
-          right: m.right,
-          meta: config?.matchMetadata?.[`${activeGirone}-${idx}`] || {},
-        }));
 
   return (
     <main className="min-h-screen bg-[#f0f4ff] pb-24">
@@ -679,11 +719,7 @@ export default function PortaleLiveMobile() {
                   stroke="currentColor"
                   className="w-3.5 h-3.5"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                 </svg>
               </div>
             </div>
@@ -693,138 +729,180 @@ export default function PortaleLiveMobile() {
         {/* Controllo Pubblicazione */}
         {isPublished ? (
           <>
-            {/* 1. SEZIONE GIRONI (SOLO PARTITE) */}
-            {activeTab === "partite" && (
+            {/* 1. SEZIONE GIRONI (COMPOSIZIONE SQUADRE) */}
+            {activeTab === "gironi" && (
               <div className="space-y-5">
-                {/* Horizontal Gironi selector */}
-                {getGroupsList().length > 0 && (
-                  <div className="flex gap-2 overflow-x-auto pb-1.5 no-scrollbar justify-start">
-                    {getGroupsList().map((g) => (
-                      <button
-                        key={g.id}
-                        onClick={() => setActiveGirone(g.id)}
-                        className={`px-5 py-2.5 rounded-xl font-black transition-all text-xs shrink-0 ${
-                          activeGirone === g.id
-                            ? "bg-[#0a1628] text-white shadow-md"
-                            : "bg-white text-gray-400 hover:bg-gray-50 border border-gray-100"
-                        }`}
+                <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">
+                  Composizione Gironi
+                </h3>
+                <div className="space-y-4">
+                  {getGroupsList().map((group) => {
+                    const teams = getGroupTeams(group.id, group.type);
+                    return (
+                      <div
+                        key={group.id}
+                        className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm"
                       >
-                        {g.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Partite Girone */}
-                <div className="space-y-2.5">
-                  <h3 className="text-[9px] font-black text-gray-400 uppercase tracking-widest pl-1">
-                    Calendario Incontri
-                  </h3>
-                  <div className="space-y-3">
-                    {groupMatches.map((m, idx) =>
-                      renderMatchRow(m.left, m.right, m.meta, idx, `match-${activeGirone}`)
-                    )}
-                    {groupMatches.length === 0 && (
-                      <div className="bg-white rounded-3xl p-6 text-center border border-gray-100">
-                        <p className="text-gray-400 italic text-xs">Nessun match programmato.</p>
+                        <h4 className="text-sm font-black text-[#0a1628] uppercase tracking-tight border-b border-gray-50 pb-3 mb-3 flex items-center justify-between">
+                          <span>{group.label}</span>
+                          <span className="text-[9px] font-black bg-blue-50 text-blue-600 px-2 py-0.5 rounded-lg uppercase tracking-wider">
+                            {teams.length} Squadre
+                          </span>
+                        </h4>
+                        <ul className="space-y-2">
+                          {teams.map((team, idx) => (
+                            <li key={team} className="flex items-center gap-3 py-1">
+                              <span className="w-5 h-5 rounded-full bg-gray-50 text-gray-400 flex items-center justify-center text-[10px] font-black">
+                                {idx + 1}
+                              </span>
+                              <span className="text-xs font-bold text-gray-700 uppercase tracking-tight">
+                                {team}
+                              </span>
+                            </li>
+                          ))}
+                          {teams.length === 0 && (
+                            <li className="text-center py-4 text-gray-400 italic text-xs">
+                              Nessuna squadra in questo girone.
+                            </li>
+                          )}
+                        </ul>
                       </div>
-                    )}
-                  </div>
+                    );
+                  })}
+                  {getGroupsList().length === 0 && (
+                    <div className="bg-white rounded-3xl p-6 text-center border border-gray-100">
+                      <p className="text-gray-400 italic text-xs">Nessun girone configurato.</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
-            {/* 2. SEZIONE CLASSIFICHE (SOLO TABELLA) */}
-            {activeTab === "classifica" && (
-              <div className="space-y-5">
-                {/* Horizontal Gironi selector */}
-                {getGroupsList().length > 0 && (
-                  <div className="flex gap-2 overflow-x-auto pb-1.5 no-scrollbar justify-start">
-                    {getGroupsList().map((g) => (
-                      <button
-                        key={g.id}
-                        onClick={() => setActiveGirone(g.id)}
-                        className={`px-5 py-2.5 rounded-xl font-black transition-all text-xs shrink-0 ${
-                          activeGirone === g.id
-                            ? "bg-[#0a1628] text-white shadow-md"
-                            : "bg-white text-gray-400 hover:bg-gray-50 border border-gray-100"
-                        }`}
-                      >
-                        {g.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
+            {/* 2. SEZIONE PARTITE (CALENDARIO VERTICALE) */}
+            {activeTab === "partite" && (
+              <div className="space-y-6">
+                {getGroupsList().map((group) => {
+                  const isIntermediate = group.type === "intermedio";
+                  const groupMatches = isIntermediate
+                    ? getIntermediateGroupMatches(group.id)
+                    : getSchedule(
+                        config?.teamCounts?.[group.id] || 0,
+                        group.id,
+                        config?.gironeAssignments?.[group.id] || {}
+                      ).map((m, idx) => ({
+                        left: m.left,
+                        right: m.right,
+                        meta: config?.matchMetadata?.[`${group.id}-${idx}`] || {},
+                      }));
 
-                {/* Classifica Unificata */}
-                <div className="space-y-2.5">
-                  <h3 className="text-[9px] font-black text-gray-400 uppercase tracking-widest pl-1">
-                    Classifica Live
-                  </h3>
-                  <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-                    <table className="w-full text-left">
-                      <thead className="bg-gray-50/50 border-b border-gray-100 text-[8px] font-black text-gray-400 uppercase tracking-widest">
-                        <tr>
-                          <th className="pl-4 py-3 w-10 text-center">Pos</th>
-                          <th className="px-2 py-3">Squadra</th>
-                          <th className="px-2 py-3 text-center w-8">G</th>
-                          <th className="px-2 py-3 text-center w-12">V/P</th>
-                          <th className="pr-4 py-3 text-right w-12">Pt</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-50 text-xs font-bold">
-                        {groupStats.map((team, idx) => {
-                          const isQualified = idx < 2;
-                          return (
-                            <tr
-                              key={team.nome}
-                              className={`hover:bg-blue-50/10 transition-colors ${
-                                isQualified ? "bg-yellow-50/10" : ""
-                              }`}
-                            >
-                              <td className="pl-4 py-3.5 text-center">
-                                <span
-                                  className={`w-5.5 h-5.5 rounded-full flex items-center justify-center text-[10px] font-black mx-auto ${
-                                    isQualified
-                                      ? "bg-yellow-400 text-white shadow-sm"
-                                      : "bg-gray-100 text-gray-400"
+                  return (
+                    <div key={group.id} className="space-y-3">
+                      <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-[#FFD700] pl-2">
+                        Partite {group.label}
+                      </h3>
+                      <div className="space-y-3">
+                        {groupMatches.map((m, idx) =>
+                          renderMatchRow(
+                            m.left,
+                            m.right,
+                            m.meta,
+                            idx,
+                            `match-${group.id}`,
+                            group.id
+                          )
+                        )}
+                        {groupMatches.length === 0 && (
+                          <div className="bg-white rounded-3xl p-6 text-center border border-gray-100">
+                            <p className="text-gray-400 italic text-xs">Nessun match programmato.</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* 3. SEZIONE CLASSIFICHE (TABELLE VERTICALI) */}
+            {activeTab === "classifica" && (
+              <div className="space-y-6">
+                {getGroupsList().map((group) => {
+                  const groupStats =
+                    group.type === "intermedio"
+                      ? getIntermediateGroupStats(group.id)
+                      : calculateRanking(group.id);
+
+                  return (
+                    <div key={group.id} className="space-y-3">
+                      <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-yellow-400 pl-2">
+                        Classifica {group.label}
+                      </h3>
+                      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+                        <table className="w-full text-left">
+                          <thead className="bg-gray-50/50 border-b border-gray-100 text-[8px] font-black text-gray-400 uppercase tracking-widest">
+                            <tr>
+                              <th className="pl-4 py-3 w-10 text-center">Pos</th>
+                              <th className="px-2 py-3">Squadra</th>
+                              <th className="px-2 py-3 text-center w-8">G</th>
+                              <th className="px-2 py-3 text-center w-12">V/P</th>
+                              <th className="pr-4 py-3 text-right w-12">Pt</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-50 text-xs font-bold">
+                            {groupStats.map((team, idx) => {
+                              const isQualified = idx < 2;
+                              return (
+                                <tr
+                                  key={team.nome}
+                                  className={`hover:bg-blue-50/10 transition-colors ${
+                                    isQualified ? "bg-yellow-50/10" : ""
                                   }`}
                                 >
-                                  {idx + 1}
-                                </span>
-                              </td>
-                              <td className="px-2 py-3.5 text-[#0a1628] font-black uppercase tracking-tight truncate max-w-[140px]">
-                                {team.nome}
-                              </td>
-                              <td className="px-2 py-3.5 text-center text-gray-400 font-semibold">
-                                {team.giocate}
-                              </td>
-                              <td className="px-2 py-3.5 text-center whitespace-nowrap text-[10px]">
-                                <span className="text-green-600 font-bold">{team.vinte}</span>
-                                <span className="text-gray-200 mx-0.5">/</span>
-                                <span className="text-red-500 font-bold">{team.perse}</span>
-                              </td>
-                              <td className="pr-4 py-3.5 text-right font-black text-sm text-[#0a1628]">
-                                {team.score}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                        {groupStats.length === 0 && (
-                          <tr>
-                            <td colSpan="5" className="py-8 text-center text-gray-400 italic">
-                              In attesa dei risultati di questo girone.
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                                  <td className="pl-4 py-3.5 text-center">
+                                    <span
+                                      className={`w-5.5 h-5.5 rounded-full flex items-center justify-center text-[10px] font-black mx-auto ${
+                                        isQualified
+                                          ? "bg-yellow-400 text-white shadow-sm"
+                                          : "bg-gray-100 text-gray-400"
+                                      }`}
+                                    >
+                                      {idx + 1}
+                                    </span>
+                                  </td>
+                                  <td className="px-2 py-3.5 text-[#0a1628] font-black uppercase tracking-tight truncate max-w-[140px]">
+                                    {team.nome}
+                                  </td>
+                                  <td className="px-2 py-3.5 text-center text-gray-400 font-semibold">
+                                    {team.giocate}
+                                  </td>
+                                  <td className="px-2 py-3.5 text-center whitespace-nowrap text-[10px]">
+                                    <span className="text-green-600 font-bold">{team.vinte}</span>
+                                    <span className="text-gray-200 mx-0.5">/</span>
+                                    <span className="text-red-500 font-bold">{team.perse}</span>
+                                  </td>
+                                  <td className="pr-4 py-3.5 text-right font-black text-sm text-[#0a1628]">
+                                    {team.score}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                            {groupStats.length === 0 && (
+                              <tr>
+                                <td colSpan="5" className="py-8 text-center text-gray-400 italic">
+                                  In attesa dei risultati di questo girone.
+                                </td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
 
-            {/* 3. SEZIONE FASI FINALI */}
+            {/* 4. SEZIONE FASI FINALI */}
             {activeTab === "finali" && (
               <div className="space-y-5">
                 {getPlayoffMatchesList().length > 0 ? (
@@ -847,7 +925,8 @@ export default function PortaleLiveMobile() {
                       Fasi Finali in Preparazione
                     </h3>
                     <p className="text-gray-400 font-medium text-xs max-w-xs mx-auto">
-                      Il tabellone ad eliminazione diretta non è ancora stato generato dallo staff per questo torneo.
+                      Il tabellone ad eliminazione diretta non è ancora stato generato dallo staff per
+                      questo torneo.
                     </p>
                   </div>
                 )}
@@ -862,21 +941,53 @@ export default function PortaleLiveMobile() {
               Calendario in Elaborazione
             </h3>
             <p className="text-gray-400 font-medium text-xs max-w-xs mx-auto">
-              Lo staff sta configurando i gironi e le partite per il torneo. I dati saranno visibili in tempo reale su questa pagina non appena verranno pubblicati!
+              Lo staff sta configurando i gironi e le partite per il torneo. I dati saranno visibili in
+              tempo reale su questa pagina non appena verranno pubblicati!
             </p>
           </div>
         )}
       </div>
 
-      {/* BOTTOM NAV BAR FISSA - 3 Pulsanti */}
+      {/* BOTTOM NAV BAR FISSA - 4 Pulsanti */}
       {isPublished && (
         <nav className="fixed bottom-0 left-0 right-0 z-50">
           <div className="absolute inset-0 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-[0_-4px_30px_rgba(0,0,0,0.08)]" />
-          <div className="relative flex justify-around px-2 pb-safe">
+          <div className="relative flex justify-around px-1 pb-safe">
+            {/* Pulsante Gironi (Composizione) */}
+            <button
+              onClick={() => setActiveTab("gironi")}
+              className="relative flex flex-col items-center gap-1.5 py-3.5 px-3 flex-1 active:scale-95 transition-transform"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill={activeTab === "gironi" ? "currentColor" : "none"}
+                stroke="currentColor"
+                strokeWidth={activeTab === "gironi" ? 0 : 2}
+                className="w-5 h-5 text-[#0a1628]"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
+                />
+              </svg>
+              <span
+                className={`text-[9px] font-black uppercase tracking-widest ${
+                  activeTab === "gironi" ? "text-[#0a1628]" : "text-gray-300"
+                }`}
+              >
+                Gironi
+              </span>
+              {activeTab === "gironi" && (
+                <span className="absolute top-2.5 w-1 h-1 rounded-full bg-[#FFD700]" />
+              )}
+            </button>
+
             {/* Pulsante Partite */}
             <button
               onClick={() => setActiveTab("partite")}
-              className="relative flex flex-col items-center gap-1.5 py-3.5 px-4 flex-1 active:scale-95 transition-transform"
+              className="relative flex flex-col items-center gap-1.5 py-3.5 px-3 flex-1 active:scale-95 transition-transform"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -907,7 +1018,7 @@ export default function PortaleLiveMobile() {
             {/* Pulsante Classifiche */}
             <button
               onClick={() => setActiveTab("classifica")}
-              className="relative flex flex-col items-center gap-1.5 py-3.5 px-4 flex-1 active:scale-95 transition-transform"
+              className="relative flex flex-col items-center gap-1.5 py-3.5 px-3 flex-1 active:scale-95 transition-transform"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -938,7 +1049,7 @@ export default function PortaleLiveMobile() {
             {/* Pulsante Fasi Finali */}
             <button
               onClick={() => setActiveTab("finali")}
-              className="relative flex flex-col items-center gap-1.5 py-3.5 px-4 flex-1 active:scale-95 transition-transform"
+              className="relative flex flex-col items-center gap-1.5 py-3.5 px-3 flex-1 active:scale-95 transition-transform"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
