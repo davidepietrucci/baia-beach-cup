@@ -81,6 +81,7 @@ function TabelloneContent() {
   const [teamsPerGoldGirone, setTeamsPerGoldGirone] = useState(4);
   const [numSilverGironiOpt, setNumSilverGironiOpt] = useState(0); // 0 = Auto
   const [teamsPerSilverGirone, setTeamsPerSilverGirone] = useState(4);
+  const [groupCompositionMethod, setGroupCompositionMethod] = useState("girone"); // "girone" or "classifica"
 
   let goldSlots = 0;
   let silverSlots = 0;
@@ -132,9 +133,11 @@ function TabelloneContent() {
         setTeamsPerGoldGirone(config.teamsPerGoldGirone || 4);
         setNumSilverGironiOpt(config.numSilverGironi || 0);
         setTeamsPerSilverGirone(config.teamsPerSilverGirone || 4);
+        setGroupCompositionMethod(config.groupCompositionMethod || "girone");
       } else {
         setPhaseType("gold_silver"); setSubPhaseType("direct"); setBracketSize(8); setBracketAssignments({}); setBracketMetadata({});
         setNumGoldGironiOpt(0); setTeamsPerGoldGirone(4); setNumSilverGironiOpt(0); setTeamsPerSilverGirone(4);
+        setGroupCompositionMethod("girone");
       }
       setIsLoaded(true);
     });
@@ -153,7 +156,8 @@ function TabelloneContent() {
       numGoldGironi: numGoldGironiOpt,
       teamsPerGoldGirone,
       numSilverGironi: numSilverGironiOpt,
-      teamsPerSilverGirone
+      teamsPerSilverGirone,
+      groupCompositionMethod
     };
     
     // Save to localStorage immediately
@@ -165,7 +169,7 @@ function TabelloneContent() {
     }, 1000);
 
     return () => clearTimeout(handler);
-  }, [phaseType, subPhaseType, bracketSize, bracketAssignments, bracketMetadata, selectedTorneo, isLoaded, numGoldGironiOpt, teamsPerGoldGirone, numSilverGironiOpt, teamsPerSilverGirone]);
+  }, [phaseType, subPhaseType, bracketSize, bracketAssignments, bracketMetadata, selectedTorneo, isLoaded, numGoldGironiOpt, teamsPerGoldGirone, numSilverGironiOpt, teamsPerSilverGirone, groupCompositionMethod]);
 
 
   const getTeamsCountForGroup = (groupKey) => {
@@ -529,60 +533,94 @@ function TabelloneContent() {
       const currentTeamsPerGoldGirone = teamsPerGoldGirone || 4;
       const currentTeamsPerSilverGirone = teamsPerSilverGirone || 4;
 
-      // 1. Gold Assignments
-      const goldFilled = Array(currentNumGoldGironi).fill(0);
-      for (let rank = 0; rank < 2; rank++) {
-        for (let gIdx = 0; gIdx < numGironi; gIdx++) {
-          const gid = String.fromCharCode(65 + gIdx);
-          const count = gConfig.teamCounts[gid] || 0;
-          if (rank < count) {
-            const team = getRanked(gid, rank);
-            const targetGroupIdx = (gIdx + rank) % currentNumGoldGironi;
-            const targetLetter = String.fromCharCode(65 + targetGroupIdx);
-            const slotIdx = goldFilled[targetGroupIdx];
-            if (slotIdx < currentTeamsPerGoldGirone) {
-              newAssignments[`gold-${targetLetter}-${slotIdx}`] = team;
-              goldFilled[targetGroupIdx]++;
+      if (groupCompositionMethod === "classifica") {
+        const unifiedRanking = getRanking ? getRanking("A") : []; // Wait, getRanking needs gid, but let's see how calculateUnifiedRanking is imported. Yes, calculateUnifiedRanking(gConfig) is available!
+        const rankingsUnified = calculateUnifiedRanking(gConfig).map(s => s.nome);
+
+        // 1. Gold Assignments
+        const goldFilled = Array(currentNumGoldGironi).fill(0);
+        const totalGoldTeamsNeeded = currentNumGoldGironi * currentTeamsPerGoldGirone;
+        for (let idx = 0; idx < totalGoldTeamsNeeded; idx++) {
+          const team = rankingsUnified[idx] || "—";
+          const targetGroupIdx = idx % currentNumGoldGironi;
+          const targetLetter = String.fromCharCode(65 + targetGroupIdx);
+          const slotIdx = goldFilled[targetGroupIdx];
+          if (slotIdx < currentTeamsPerGoldGirone) {
+            newAssignments[`gold-${targetLetter}-${slotIdx}`] = team;
+            goldFilled[targetGroupIdx]++;
+          }
+        }
+
+        // 2. Silver Assignments
+        const silverFilled = Array(currentNumSilverGironi).fill(0);
+        const totalSilverTeamsNeeded = currentNumSilverGironi * currentTeamsPerSilverGirone;
+        for (let idx = 0; idx < totalSilverTeamsNeeded; idx++) {
+          const rankingIdx = totalGoldTeamsNeeded + idx;
+          const team = rankingsUnified[rankingIdx] || "—";
+          const targetGroupIdx = idx % currentNumSilverGironi;
+          const targetLetter = String.fromCharCode(65 + targetGroupIdx);
+          const slotIdx = silverFilled[targetGroupIdx];
+          if (slotIdx < currentTeamsPerSilverGirone) {
+            newAssignments[`silver-${targetLetter}-${slotIdx}`] = team;
+            silverFilled[targetGroupIdx]++;
+          }
+        }
+      } else {
+        // 1. Gold Assignments
+        const goldFilled = Array(currentNumGoldGironi).fill(0);
+        for (let rank = 0; rank < 2; rank++) {
+          for (let gIdx = 0; gIdx < numGironi; gIdx++) {
+            const gid = String.fromCharCode(65 + gIdx);
+            const count = gConfig.teamCounts[gid] || 0;
+            if (rank < count) {
+              const team = getRanked(gid, rank);
+              const targetGroupIdx = (gIdx + rank) % currentNumGoldGironi;
+              const targetLetter = String.fromCharCode(65 + targetGroupIdx);
+              const slotIdx = goldFilled[targetGroupIdx];
+              if (slotIdx < currentTeamsPerGoldGirone) {
+                newAssignments[`gold-${targetLetter}-${slotIdx}`] = team;
+                goldFilled[targetGroupIdx]++;
+              }
             }
           }
         }
-      }
 
-      // 2. Silver Assignments
-      const silverFilled = Array(currentNumSilverGironi).fill(0);
-      let maxTeams = 0;
-      for (let i = 0; i < numGironi; i++) {
-        const gid = String.fromCharCode(65 + i);
-        maxTeams = Math.max(maxTeams, gConfig.teamCounts[gid] || 0);
-      }
-      for (let rank = 2; rank < Math.min(4, maxTeams); rank++) {
-        for (let gIdx = 0; gIdx < numGironi; gIdx++) {
-          const gid = String.fromCharCode(65 + gIdx);
-          const count = gConfig.teamCounts[gid] || 0;
-          if (rank < count) {
-            const team = getRanked(gid, rank);
-            const targetGroupIdx = (gIdx + rank) % currentNumSilverGironi;
-            const targetLetter = String.fromCharCode(65 + targetGroupIdx);
-            const slotIdx = silverFilled[targetGroupIdx];
-            if (slotIdx < currentTeamsPerSilverGirone) {
-              newAssignments[`silver-${targetLetter}-${slotIdx}`] = team;
-              silverFilled[targetGroupIdx]++;
+        // 2. Silver Assignments
+        const silverFilled = Array(currentNumSilverGironi).fill(0);
+        let maxTeams = 0;
+        for (let i = 0; i < numGironi; i++) {
+          const gid = String.fromCharCode(65 + i);
+          maxTeams = Math.max(maxTeams, gConfig.teamCounts[gid] || 0);
+        }
+        for (let rank = 2; rank < Math.min(4, maxTeams); rank++) {
+          for (let gIdx = 0; gIdx < numGironi; gIdx++) {
+            const gid = String.fromCharCode(65 + gIdx);
+            const count = gConfig.teamCounts[gid] || 0;
+            if (rank < count) {
+              const team = getRanked(gid, rank);
+              const targetGroupIdx = (gIdx + rank) % currentNumSilverGironi;
+              const targetLetter = String.fromCharCode(65 + targetGroupIdx);
+              const slotIdx = silverFilled[targetGroupIdx];
+              if (slotIdx < currentTeamsPerSilverGirone) {
+                newAssignments[`silver-${targetLetter}-${slotIdx}`] = team;
+                silverFilled[targetGroupIdx]++;
+              }
             }
           }
         }
-      }
 
-      // Pad remainder with "—" up to limit
-      for (let targetGroupIdx = 0; targetGroupIdx < currentNumGoldGironi; targetGroupIdx++) {
-        const targetLetter = String.fromCharCode(65 + targetGroupIdx);
-        for (let slotIdx = goldFilled[targetGroupIdx]; slotIdx < currentTeamsPerGoldGirone; slotIdx++) {
-          newAssignments[`gold-${targetLetter}-${slotIdx}`] = "—";
+        // Pad remainder with "—" up to limit
+        for (let targetGroupIdx = 0; targetGroupIdx < currentNumGoldGironi; targetGroupIdx++) {
+          const targetLetter = String.fromCharCode(65 + targetGroupIdx);
+          for (let slotIdx = goldFilled[targetGroupIdx]; slotIdx < currentTeamsPerGoldGirone; slotIdx++) {
+            newAssignments[`gold-${targetLetter}-${slotIdx}`] = "—";
+          }
         }
-      }
-      for (let targetGroupIdx = 0; targetGroupIdx < currentNumSilverGironi; targetGroupIdx++) {
-        const targetLetter = String.fromCharCode(65 + targetGroupIdx);
-        for (let slotIdx = silverFilled[targetGroupIdx]; slotIdx < currentTeamsPerSilverGirone; slotIdx++) {
-          newAssignments[`silver-${targetLetter}-${slotIdx}`] = "—";
+        for (let targetGroupIdx = 0; targetGroupIdx < currentNumSilverGironi; targetGroupIdx++) {
+          const targetLetter = String.fromCharCode(65 + targetGroupIdx);
+          for (let slotIdx = silverFilled[targetGroupIdx]; slotIdx < currentTeamsPerSilverGirone; slotIdx++) {
+            newAssignments[`silver-${targetLetter}-${slotIdx}`] = "—";
+          }
         }
       }
     } else {
@@ -1011,7 +1049,7 @@ function TabelloneContent() {
 
         {isLoaded && torneiAttivi.length > 0 && phaseType === "gold_silver" && subPhaseType === "groups" && (
           <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-xl mb-8 flex flex-col md:flex-row gap-6 items-stretch md:items-center justify-between">
-            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-6">
               {/* Gold Config */}
               <div className="space-y-2">
                 <span className="text-[10px] font-black text-yellow-600 uppercase tracking-widest block">Configurazione Gironi Gold</span>
@@ -1077,6 +1115,22 @@ function TabelloneContent() {
                       <option value={6}>6 Squadre</option>
                     </select>
                   </div>
+                </div>
+              </div>
+
+              {/* Composition Method Config */}
+              <div className="space-y-2 col-span-1 sm:col-span-3 lg:col-span-1">
+                <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest block">Metodo Composizione</span>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-bold text-gray-400 uppercase">Composizione Gironi</label>
+                  <select 
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] cursor-pointer"
+                    value={groupCompositionMethod}
+                    onChange={(e) => setGroupCompositionMethod(e.target.value)}
+                  >
+                    <option value="girone">Serpente per Gironi (Standard)</option>
+                    <option value="classifica">Classifica Avulsa (Complessiva)</option>
+                  </select>
                 </div>
               </div>
             </div>
