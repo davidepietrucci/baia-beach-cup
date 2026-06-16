@@ -1118,8 +1118,15 @@ function TabelloneContent() {
             <div className="space-y-16">
                 <section>
                   <h2 className="text-2xl md:text-4xl font-black text-yellow-600 uppercase tracking-tighter mb-8">🏆 Gironi Intermedi GOLD</h2>
-                  {renderIntermediateGroup("gold-A", "Girone Gold A", "gold")}
-                  {numGoldGironi === 2 && renderIntermediateGroup("gold-B", "Girone Gold B", "gold")}
+                  {Array.from({ length: numGoldGironi }, (_, i) => {
+                    const letter = String.fromCharCode(65 + i);
+                    const groupKey = `gold-${letter}`;
+                    return (
+                      <div key={groupKey}>
+                        {renderIntermediateGroup(groupKey, `Girone Gold ${letter}`, "gold")}
+                      </div>
+                    );
+                  })}
                   {renderFinalsForGroups("gold", "Fasi Finali GOLD 🏆", "gold")}
                 </section>
 
@@ -1127,8 +1134,15 @@ function TabelloneContent() {
 
                 <section>
                   <h2 className="text-2xl md:text-4xl font-black text-gray-500 uppercase tracking-tighter mb-8">🥈 Gironi Intermedi SILVER</h2>
-                  {renderIntermediateGroup("silver-A", "Girone Silver A", "silver")}
-                  {numSilverGironi === 2 && renderIntermediateGroup("silver-B", "Girone Silver B", "silver")}
+                  {Array.from({ length: numSilverGironi }, (_, i) => {
+                    const letter = String.fromCharCode(65 + i);
+                    const groupKey = `silver-${letter}`;
+                    return (
+                      <div key={groupKey}>
+                        {renderIntermediateGroup(groupKey, `Girone Silver ${letter}`, "silver")}
+                      </div>
+                    );
+                  })}
                   {renderFinalsForGroups("silver", "Fasi Finali SILVER 🥈", "silver")}
                 </section>
             </div>
