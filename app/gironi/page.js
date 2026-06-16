@@ -45,7 +45,17 @@ const formatPlayerName = (fullName) => {
   ) {
     return cleanName;
   }
+
+  // Se contiene già un punto o l'ultima parte è una singola lettera, è già formattato
   const parts = cleanName.split(/\s+/);
+  const lastPart = parts[parts.length - 1];
+  if (cleanName.includes(".") || lastPart.length === 1 || (lastPart.length === 2 && lastPart.endsWith("."))) {
+    if (lastPart.length === 1) {
+      return cleanName + ".";
+    }
+    return cleanName;
+  }
+
   if (parts.length < 2) return capitalizeName(cleanName);
   const firstName = parts[0];
   const surname = parts.slice(1).join(" ");
@@ -1268,7 +1278,7 @@ export default function GironiPubblici() {
                           m.left,
                           m.right,
                           m.meta,
-                          m.idx,
+                          sortedIdx,
                           `match-${m.gironeId}`,
                           m.gironeId
                         )
