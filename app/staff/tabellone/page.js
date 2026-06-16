@@ -534,7 +534,6 @@ function TabelloneContent() {
       const currentTeamsPerSilverGirone = teamsPerSilverGirone || 4;
 
       if (groupCompositionMethod === "classifica") {
-        const unifiedRanking = getRanking ? getRanking("A") : []; // Wait, getRanking needs gid, but let's see how calculateUnifiedRanking is imported. Yes, calculateUnifiedRanking(gConfig) is available!
         const rankingsUnified = calculateUnifiedRanking(gConfig).map(s => s.nome);
 
         // 1. Gold Assignments
@@ -542,7 +541,9 @@ function TabelloneContent() {
         const totalGoldTeamsNeeded = currentNumGoldGironi * currentTeamsPerGoldGirone;
         for (let idx = 0; idx < totalGoldTeamsNeeded; idx++) {
           const team = rankingsUnified[idx] || "—";
-          const targetGroupIdx = idx % currentNumGoldGironi;
+          const row = Math.floor(idx / currentNumGoldGironi);
+          const col = idx % currentNumGoldGironi;
+          const targetGroupIdx = (row % 2 === 0) ? col : (currentNumGoldGironi - 1 - col);
           const targetLetter = String.fromCharCode(65 + targetGroupIdx);
           const slotIdx = goldFilled[targetGroupIdx];
           if (slotIdx < currentTeamsPerGoldGirone) {
@@ -557,7 +558,9 @@ function TabelloneContent() {
         for (let idx = 0; idx < totalSilverTeamsNeeded; idx++) {
           const rankingIdx = totalGoldTeamsNeeded + idx;
           const team = rankingsUnified[rankingIdx] || "—";
-          const targetGroupIdx = idx % currentNumSilverGironi;
+          const row = Math.floor(idx / currentNumSilverGironi);
+          const col = idx % currentNumSilverGironi;
+          const targetGroupIdx = (row % 2 === 0) ? col : (currentNumSilverGironi - 1 - col);
           const targetLetter = String.fromCharCode(65 + targetGroupIdx);
           const slotIdx = silverFilled[targetGroupIdx];
           if (slotIdx < currentTeamsPerSilverGirone) {
