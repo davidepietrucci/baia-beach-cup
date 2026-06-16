@@ -1213,7 +1213,7 @@ function TabelloneContent() {
           <div className="mb-10">
             {hasOttavi && <h4 className="text-[11px] font-black text-gray-400 mb-4 uppercase tracking-widest">Quarti di finale</h4>}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 overflow-x-auto no-scrollbar">
-              {renderMatch(`${p}-q1`,'M1',color)} {renderMatch(`${p}-q2`,'M2',color)} {renderMatch(`${p}-q3`,'M3',color)} {renderMatch(`${p}-q4`,'M4',color)}
+              {renderMatch(`${p}-q1`,'Quarti 1',color)} {renderMatch(`${p}-q2`,'Quarti 2',color)} {renderMatch(`${p}-q3`,'Quarti 3',color)} {renderMatch(`${p}-q4`,'Quarti 4',color)}
             </div>
           </div>
         )}
