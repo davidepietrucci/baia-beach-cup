@@ -125,6 +125,7 @@ export async function getTornei() {
       } catch (e) {
         console.error("Firestore read tornei error:", e);
       }
+      return [];
     }
     return await getLocalFileDb("tornei", null, []);
   }
@@ -144,6 +145,7 @@ export async function saveTornei(list) {
       } catch (e) {
         console.error("Firestore write tornei error:", e);
       }
+      return;
     }
     await saveLocalFileDb("tornei", list);
     return;
@@ -168,6 +170,7 @@ export async function getIscrizioni() {
       } catch (e) {
         console.error("Firestore read iscrizioni error:", e);
       }
+      return [];
     }
     return await getLocalFileDb("iscrizioni", null, []);
   }
@@ -187,6 +190,7 @@ export async function saveIscrizioni(list) {
       } catch (e) {
         console.error("Firestore write iscrizioni error:", e);
       }
+      return;
     }
     await saveLocalFileDb("iscrizioni", list);
     return;
@@ -212,6 +216,7 @@ export async function getGironi(slug) {
       } catch (e) {
         console.error("Firestore read gironi error:", e);
       }
+      return null;
     }
     return await getLocalFileDb("gironi", slug, null);
   }
@@ -232,6 +237,7 @@ export async function saveGironi(slug, data) {
       } catch (e) {
         console.error("Firestore write gironi error:", e);
       }
+      return;
     }
     await saveLocalFileDb("gironi", data, slug);
     return;
@@ -257,6 +263,7 @@ export async function getBracket(slug) {
       } catch (e) {
         console.error("Firestore read bracket error:", e);
       }
+      return null;
     }
     return await getLocalFileDb("bracket", slug, null);
   }
@@ -277,6 +284,7 @@ export async function saveBracket(slug, data) {
       } catch (e) {
         console.error("Firestore write bracket error:", e);
       }
+      return;
     }
     await saveLocalFileDb("bracket", data, slug);
     return;
@@ -301,6 +309,7 @@ export async function getUsers() {
       } catch (e) {
         console.error("Firestore read users error:", e);
       }
+      return [];
     }
     return await getLocalFileDb("users", null, []);
   }
@@ -320,6 +329,7 @@ export async function saveUsers(list) {
       } catch (e) {
         console.error("Firestore write users error:", e);
       }
+      return;
     }
     await saveLocalFileDb("users", list);
     return;
@@ -344,6 +354,7 @@ export async function getModuli() {
       } catch (e) {
         console.error("Firestore read moduli error:", e);
       }
+      return [];
     }
     return await getLocalFileDb("moduli", null, []);
   }
@@ -363,6 +374,7 @@ export async function saveModuli(list) {
       } catch (e) {
         console.error("Firestore write moduli error:", e);
       }
+      return;
     }
     await saveLocalFileDb("moduli", list);
     return;
@@ -387,6 +399,7 @@ export async function getNotifiche() {
       } catch (e) {
         console.error("Firestore read notifiche error:", e);
       }
+      return [];
     }
     return await getLocalFileDb("notifiche", null, []);
   }
@@ -406,6 +419,7 @@ export async function saveNotifiche(list) {
       } catch (e) {
         console.error("Firestore write notifiche error:", e);
       }
+      return;
     }
     await saveLocalFileDb("notifiche", list);
     return;
@@ -430,6 +444,7 @@ export async function getStaff() {
       } catch (e) {
         console.error("Firestore read staff error:", e);
       }
+      return [];
     }
     return await getLocalFileDb("staff", null, []);
   }
@@ -449,6 +464,7 @@ export async function saveStaff(list) {
       } catch (e) {
         console.error("Firestore write staff error:", e);
       }
+      return;
     }
     await saveLocalFileDb("staff", list);
     return;
