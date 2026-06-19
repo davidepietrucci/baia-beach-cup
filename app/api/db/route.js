@@ -10,6 +10,7 @@ import {
   getNotifiche, saveNotifiche,
   getStaff, saveStaff
 } from "@/app/utils/db";
+import { sendApprovalEmail } from "@/app/utils/email";
 
 // 1. GET: Gestisce le letture del database controllando i permessi di lettura
 export async function GET(req) {
@@ -81,7 +82,37 @@ export async function POST(req) {
       if (type === "tornei") await saveTornei(data);
       if (type === "gironi") await saveGironi(slug, data);
       if (type === "bracket") await saveBracket(slug, data);
-      if (type === "iscrizioni") await saveIscrizioni(data);
+      if (type === "iscrizioni") {
+        const oldIscrizioni = await getIscrizioni();
+        await saveIscrizioni(data);
+
+        // Rileva transizioni verso lo stato "Approvata" per inviare l'email di notifica
+        for (const nuova of data) {
+          if (nuova.stato === "Approvata") {
+            const vecchia = oldIscrizioni.find(o => o.id === nuova.id);
+            const eraInAttesa = vecchia && vecchia.stato === "In Attesa";
+            const haEmail = nuova.email && nuova.email.trim() !== "" && nuova.email.toLowerCase() !== "non inserita" && nuova.email.toLowerCase() !== "non inserito";
+            
+            if (eraInAttesa && haEmail) {
+              try {
+                const torneiList = await getTornei();
+                const matchTorneo = torneiList.find(t => t.nome.toLowerCase().trim() === nuova.torneo.toLowerCase().trim());
+                
+                // Esegue l'invio asincrono senza bloccare la risposta HTTP del client
+                sendApprovalEmail({
+                  email: nuova.email.trim(),
+                  torneo: nuova.torneo,
+                  giocatori: nuova.giocatori,
+                  data: matchTorneo?.data,
+                  quota: matchTorneo?.quota
+                }).catch(err => console.error("Errore asincrono invio email approvazione:", err));
+              } catch (err) {
+                console.error("Errore durante la preparazione dell'invio dell'email di approvazione:", err);
+              }
+            }
+          }
+        }
+      }
       if (type === "notifiche") await saveNotifiche(data);
     } 
     else if (type === "users") {
