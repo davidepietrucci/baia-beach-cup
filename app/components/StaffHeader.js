@@ -29,10 +29,6 @@ export default function StaffHeader() {
       const userRole = isDavide ? "admin" : (user.publicMetadata?.role || "staff");
       setRole(userRole);
       setUsername(user.firstName || user.username || user.emailAddresses[0]?.emailAddress || "Staff");
-
-      if (userRole !== "admin" && pathname === "/staff/atleti") {
-        router.push("/staff/dashboard");
-      }
     }
   }, [router, pathname, user, isLoaded]);
 
@@ -43,21 +39,16 @@ export default function StaffHeader() {
 
   const menuItems = [
     { name: "Dashboard", path: "/staff/dashboard" },
+    { name: "Teams", path: "/staff/teams" },
     { name: "Iscrizioni", path: "/staff/iscrizioni" },
-    { name: "Moduli Iscrizione", path: "/staff/moduli" },
-    { name: "Anagrafica Atleti", path: "/staff/atleti" },
-    { name: "Gestione Staff", path: "/staff/gestione-staff" },
     { name: "Tornei", path: "/staff/tornei" },
     { name: "Gironi", path: "/staff/gironi" },
     { name: "Tabellone", path: "/staff/tabellone" },
-    { name: "Classifica", path: "/staff/classifica" },
     { name: "Pagamenti", path: "/staff/pagamenti" },
   ];
 
   const filteredMenuItems = menuItems.filter(item => {
-    if (role === "staff" && (item.name === "Anagrafica Atleti" || item.name === "Gestione Staff")) {
-      return false;
-    }
+    if (item.name === "Iscrizioni" && role !== "admin") return false;
     return true;
   });
 

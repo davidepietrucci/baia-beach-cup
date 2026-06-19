@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import StaffHeader from "@/app/components/StaffHeader";
-import { getTornei, saveTornei, getModuli } from "@/app/utils/db";
+import { getTornei, saveTornei } from "@/app/utils/db";
 
 export default function NuovoTorneo() {
   const router = useRouter();
-  const [moduli, setModuli] = useState([]);
   const [formData, setFormData] = useState({
     nome: "",
     data: "",
@@ -16,14 +15,9 @@ export default function NuovoTorneo() {
     stato: "In Programmazione",
     maxSquadre: 16,
     quota: 40,
-    moduloIscrizioneId: "",
     tipoIscrizione: "interno",
     googleFormUrl: ""
   });
-
-  useEffect(() => {
-    getModuli().then(data => setModuli(data));
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -178,7 +172,7 @@ export default function NuovoTorneo() {
                   onChange={handleChange}
                   className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all cursor-pointer"
                 >
-                  <option value="interno">Modulo del Sito (Standard o Personalizzato)</option>
+                  <option value="interno">Modulo del Sito (Standard)</option>
                   <option value="esterno">Modulo Google Esterno (Link)</option>
                 </select>
               </div>
@@ -198,18 +192,10 @@ export default function NuovoTorneo() {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Modulo Iscrizione Personalizzato</label>
-                  <select 
-                    name="moduloIscrizioneId" 
-                    value={formData.moduloIscrizioneId} 
-                    onChange={handleChange}
-                    className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all cursor-pointer"
-                  >
-                    <option value="">Standard (Default Baia Beach Cup)</option>
-                    {moduli.map(m => (
-                      <option key={m.id} value={m.id}>{m.titolo}</option>
-                    ))}
-                  </select>
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Modulo Iscrizione</label>
+                  <div className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31]">
+                    Standard (Default Baia Beach Cup)
+                  </div>
                 </div>
               )}
             </div>

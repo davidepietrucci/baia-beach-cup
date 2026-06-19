@@ -1,15 +1,30 @@
 import { NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { currentUser } from "@clerk/nextjs/server";
 import { 
   getTornei, saveTornei, 
   getIscrizioni, saveIscrizioni, 
-  getUsers, saveUsers, 
-  getModuli, saveModuli, 
   getGironi, saveGironi, 
   getBracket, saveBracket,
   getNotifiche, saveNotifiche,
-  getStaff, saveStaff
+  getCountdown, saveCountdown,
+  getSponsors, saveSponsors
 } from "@/app/utils/db";
+
+// Helper per ottenere l'autenticazione ed il ruolo lato server (Clerk)
+async function getAuthAndRole(req) {
+  try {
+    const clerkUser = await currentUser();
+    if (clerkUser) {
+      const isDavide = clerkUser.username === "davide" || clerkUser.firstName?.toLowerCase() === "davide" || clerkUser.emailAddresses[0]?.emailAddress?.toLowerCase().includes("davide");
+      const userRole = isDavide ? "admin" : (clerkUser.publicMetadata?.role || "staff");
+      return { isAuth: true, role: userRole };
+    }
+  } catch (e) {
+    console.error("Errore lettura utente Clerk:", e);
+  }
+
+  return { isAuth: false, role: null };
+}
 
 // 1. GET: Gestisce le letture del database controllando i permessi di lettura
 export async function GET(req) {
@@ -19,25 +34,22 @@ export async function GET(req) {
     const slug = searchParams.get("slug");
 
     // Controlliamo l'autenticazione per le letture sensibili
-    if (type === "users" || type === "iscrizioni" || type === "staff") {
-      const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-      if (!token) {
+    if (type === "iscrizioni") {
+      const { isAuth } = await getAuthAndRole(req);
+      
+      if (!isAuth) {
         return NextResponse.json({ error: "Non autenticato" }, { status: 401 });
-      }
-      if ((type === "users" || type === "staff") && token.role !== "admin") {
-        return NextResponse.json({ error: "Accesso negato: richiesto ruolo Admin" }, { status: 403 });
       }
     }
 
     let data = null;
     if (type === "tornei") data = await getTornei();
     else if (type === "iscrizioni") data = await getIscrizioni();
-    else if (type === "users") data = await getUsers();
-    else if (type === "staff") data = await getStaff();
-    else if (type === "moduli") data = await getModuli();
     else if (type === "gironi") data = await getGironi(slug);
     else if (type === "bracket") data = await getBracket(slug);
     else if (type === "notifiche") data = await getNotifiche();
+    else if (type === "countdown") data = await getCountdown();
+    else if (type === "sponsors") data = await getSponsors();
     else {
       return NextResponse.json({ error: "Tipo database non valido" }, { status: 400 });
     }
@@ -52,29 +64,16 @@ export async function GET(req) {
 // 2. POST: Gestisce le scritture sicure sul database verificando l'autenticazione ed il ruolo lato server
 export async function POST(req) {
   try {
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    const { isAuth, role } = await getAuthAndRole(req);
     const body = await req.json();
     const { type, data, slug } = body;
 
-    // Se non c'è una sessione, blocca la scrittura.
-    // Eccezione: registrazione atleta (type === 'users' e non è presente una sessione)
-    const isRegistration = (type === "users" && !token);
-
-    if (!token && !isRegistration) {
+    if (!isAuth) {
       return NextResponse.json({ error: "Non autenticato" }, { status: 401 });
     }
 
-    const role = token?.role;
-
     // Controllo dei permessi di scrittura lato server
-    if (type === "moduli" || type === "staff") {
-      if (role !== "admin") {
-        return NextResponse.json({ error: "Accesso negato: richiesto ruolo Admin" }, { status: 403 });
-      }
-      if (type === "moduli") await saveModuli(data);
-      if (type === "staff") await saveStaff(data);
-    } 
-    else if (type === "tornei" || type === "gironi" || type === "bracket" || type === "iscrizioni" || type === "notifiche") {
+    if (type === "tornei" || type === "gironi" || type === "bracket" || type === "iscrizioni" || type === "notifiche" || type === "countdown" || type === "sponsors") {
       if (role !== "admin" && role !== "staff") {
         return NextResponse.json({ error: "Accesso negato: richiesto ruolo Staff" }, { status: 403 });
       }
@@ -83,18 +82,11 @@ export async function POST(req) {
       if (type === "bracket") await saveBracket(slug, data);
       if (type === "iscrizioni") await saveIscrizioni(data);
       if (type === "notifiche") await saveNotifiche(data);
-    } 
-    else if (type === "users") {
-      if (isRegistration) {
-        await saveUsers(data);
-      } else if (role === "admin") {
-        await saveUsers(data);
-      } else {
-        return NextResponse.json({ error: "Accesso negato" }, { status: 403 });
-      }
+      if (type === "countdown") await saveCountdown(data);
+      if (type === "sponsors") await saveSponsors(data);
     } 
     else {
-      return NextResponse.json({ error: "Tipo database non valido" }, { status: 400 });
+      return NextResponse.json({ error: "Tipo database non valido o non supportato" }, { status: 400 });
     }
 
     return NextResponse.json({ success: true });

@@ -1,27 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 import StaffHeader from "@/app/components/StaffHeader";
 import { getTornei, getIscrizioni, saveIscrizioni, saveTornei } from "@/app/utils/db";
 
 export default function StaffIscrizioni() {
+  const { user, isLoaded } = useUser();
+  const [role, setRole] = useState("admin");
   const [iscrizioni, setIscrizioni] = useState([]);
   const [tornei, setTornei] = useState([]);
   
   // Import Modal States
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
-  const [importStep, setImportStep] = useState(1); // 1 = Input, 2 = Mapping & Preview
   const [selectedTorneoImport, setSelectedTorneoImport] = useState("");
   const [initialStatusImport, setInitialStatusImport] = useState("Approvata");
   const [inputMethod, setInputMethod] = useState("paste"); // 'paste' or 'file'
   const [pastedText, setPastedText] = useState("");
-  const [parsedHeaders, setParsedHeaders] = useState([]);
-  const [parsedRows, setParsedRows] = useState([]);
-  
-  // Column Mappings (index of column)
-  const [mapGiocatori, setMapGiocatori] = useState(0);
-  const [mapContatto, setMapContatto] = useState(1);
-  const [mapDate, setMapDate] = useState(-1); // -1 means none (use current date)
+  const [importedTeams, setImportedTeams] = useState([]);
   
   // Filter by Tournament state
   const [selectedTorneoFilter, setSelectedTorneoFilter] = useState("Tutti");
@@ -67,6 +63,18 @@ export default function StaffIscrizioni() {
   };
 
   useEffect(() => {
+    if (isLoaded && !user) {
+      window.location.href = "/staff";
+      return;
+    }
+    if (user) {
+      const isDavide = user.username === "davide" || user.firstName?.toLowerCase() === "davide" || user.emailAddresses[0]?.emailAddress?.toLowerCase().includes("davide");
+      const userRole = isDavide ? "admin" : (user.publicMetadata?.role || "staff");
+      setRole(userRole);
+    }
+  }, [user, isLoaded]);
+
+  useEffect(() => {
     getIscrizioni().then(data => {
       setIscrizioni(data);
     });
@@ -107,75 +115,43 @@ export default function StaffIscrizioni() {
     }
   };
 
-  const handleParseData = (text) => {
-    if (!text.trim()) {
-      alert("Inserisci del testo o carica un file prima di procedere.");
-      return;
-    }
+  const parsePlayersList = (text) => {
+    if (!text || !text.trim()) return [];
     
     // Split into lines
     const lines = text.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
-    if (lines.length < 2) {
-      alert("Il testo inserito deve contenere almeno una riga di intestazione e una riga di dati.");
-      return;
-    }
+    if (lines.length === 0) return [];
     
-    // Detect separator
-    let separator = "\t";
-    if (lines[0].includes("\t")) {
-      separator = "\t";
-    } else if (lines[0].includes(";")) {
-      separator = ";";
-    } else if (lines[0].includes(",")) {
-      separator = ",";
-    }
-    
-    const parseCSVLine = (line, sep) => {
-      const result = [];
-      let current = '';
-      let inQuotes = false;
-      for (let i = 0; i < line.length; i++) {
-        const char = line[i];
-        if (char === '"') {
-          inQuotes = !inQuotes;
-        } else if (char === sep && !inQuotes) {
-          result.push(current.trim());
-          current = '';
-        } else {
-          current += char;
-        }
+    const teams = [];
+    lines.forEach((line, idx) => {
+      let cleanLine = line.replace(/^"|"$/g, '').trim();
+      
+      let separator = null;
+      if (cleanLine.includes("\t")) separator = "\t";
+      else if (cleanLine.includes(";")) separator = ";";
+      else if (cleanLine.includes(",")) separator = ",";
+      
+      if (separator) {
+        const parts = cleanLine.split(separator).map(p => p.replace(/^"|"$/g, '').trim());
+        cleanLine = parts[0] || "";
       }
-      result.push(current.trim());
-      return result;
-    };
-
-    const headers = parseCSVLine(lines[0], separator);
-    const rows = lines.slice(1).map(line => parseCSVLine(line, separator));
-    
-    setParsedHeaders(headers);
-    setParsedRows(rows);
-    
-    // Try to auto-map columns
-    let playersIdx = 0;
-    let contactIdx = 1;
-    let dateIdx = -1;
-    
-    headers.forEach((h, idx) => {
-      const lower = h.toLowerCase();
-      if (lower.includes("giocator") || lower.includes("squadra") || lower.includes("atlet") || lower.includes("team") || lower.includes("nomi")) {
-        playersIdx = idx;
-      } else if (lower.includes("tel") || lower.includes("contatt") || lower.includes("mail") || lower.includes("cell") || lower.includes("telefono")) {
-        contactIdx = idx;
-      } else if (lower.includes("timestamp") || lower.includes("data") || lower.includes("ora")) {
-        dateIdx = idx;
+      
+      if (idx === 0 && (cleanLine.toLowerCase().includes("nome") || cleanLine.toLowerCase().includes("giocator") || cleanLine.toLowerCase().includes("squadra"))) {
+        return;
+      }
+      
+      if (cleanLine) {
+        teams.push(cleanLine);
       }
     });
     
-    setMapGiocatori(playersIdx);
-    setMapContatto(contactIdx);
-    setMapDate(dateIdx);
-    
-    setImportStep(2);
+    return teams;
+  };
+
+  const handleTextChange = (text) => {
+    setPastedText(text);
+    const teams = parsePlayersList(text);
+    setImportedTeams(teams);
   };
 
   const handleFileUpload = (e) => {
@@ -185,7 +161,9 @@ export default function StaffIscrizioni() {
     const reader = new FileReader();
     reader.onload = (evt) => {
       const text = evt.target.result;
-      handleParseData(text);
+      setPastedText(text);
+      const teams = parsePlayersList(text);
+      setImportedTeams(teams);
     };
     reader.readAsText(file);
   };
@@ -196,61 +174,57 @@ export default function StaffIscrizioni() {
       return;
     }
     
-    if (parsedRows.length === 0) {
-      alert("Nessun dato da importare.");
+    if (importedTeams.length === 0) {
+      alert("Nessun dato valido da importare.");
       return;
     }
     
-    const today = new Date().toISOString().split("T")[0];
-    
-    const newRegistrations = parsedRows.map((row, idx) => {
-      const playersVal = row[mapGiocatori] || "Sconosciuto";
-      const contactVal = row[mapContatto] || "Non specificato";
-      let dateVal = today;
-      if (mapDate !== -1 && row[mapDate]) {
-        const rawDate = row[mapDate];
-        if (rawDate.includes("/")) {
-          const parts = rawDate.split(" ")[0].split("/");
-          if (parts.length === 3) {
-            const dayStr = parts[0].padStart(2, '0');
-            const monthStr = parts[1].padStart(2, '0');
-            const yearStr = parts[2];
-            dateVal = `${yearStr}-${monthStr}-${dayStr}`;
-          } else {
-            dateVal = rawDate.split(" ")[0];
-          }
-        } else {
-          dateVal = rawDate.split(" ")[0] || today;
-        }
-      }
-      
+    // Genera gli ID progressivi corretti
+    const numericIds = iscrizioni.map(i => parseInt(i.id)).filter(id => !isNaN(id));
+    let nextId = numericIds.length > 0 ? Math.max(...numericIds) + 1 : 100;
+
+    const today = new Date();
+    const dataFormatted = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+
+    const newRegistrations = importedTeams.map((playersVal, idx) => {
+      const currentId = (nextId + idx).toString();
       return {
-        id: Date.now() + idx + Math.floor(Math.random() * 1000),
-        data: dateVal,
+        id: currentId,
+        data: dataFormatted,
         torneo: selectedTorneoImport,
         giocatori: playersVal,
-        tel: contactVal,
-        stato: initialStatusImport
+        tel: "Non inserito",
+        email: "Non inserita",
+        stato: initialStatusImport,
+        quotaPagata: 0,
+        note: "Importato tramite file/testo"
       };
     });
     
     const updated = [...newRegistrations, ...iscrizioni];
     setIscrizioni(updated);
     await saveIscrizioni(updated);
+
+    const allTornei = await getTornei();
+    const updatedTornei = allTornei.map(t => {
+      if (t.nome.toLowerCase().trim() === selectedTorneoImport.toLowerCase().trim()) {
+        return { ...t, iscritti: (t.iscritti || 0) + newRegistrations.length };
+      }
+      return t;
+    });
+    setTornei(updatedTornei);
+    await saveTornei(updatedTornei);
     
-    // Reset and close
     setIsImportModalOpen(false);
-    setImportStep(1);
     setPastedText("");
-    setParsedHeaders([]);
-    setParsedRows([]);
+    setImportedTeams([]);
     
     alert(`Importazione completata con successo! Inserite ${newRegistrations.length} iscrizioni.`);
   };
 
   const downloadTemplate = () => {
-    const csvHeaders = ["Nomi Giocatori", "Cellulare o Email", "Data"];
-    const csvRow = ["Mario Rossi - Luigi Bianchi", "3331112233", "2026-06-10"];
+    const csvHeaders = ["Nomi Giocatori"];
+    const csvRow = ["Mario Rossi & Luigi Bianchi"];
     const csvContent = "data:text/csv;charset=utf-8," + [csvHeaders.join(","), csvRow.join(",")].join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -337,6 +311,22 @@ export default function StaffIscrizioni() {
     URL.revokeObjectURL(url);
   };
 
+  if (isLoaded && role !== "admin") {
+    return (
+      <main className="min-h-screen bg-[#f8faff] flex flex-col">
+        <StaffHeader />
+        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+          <span className="text-6xl mb-4">🚫</span>
+          <h2 className="text-3xl font-black text-[#0D3D31] uppercase tracking-tight">Accesso Negato</h2>
+          <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mt-2">Non hai i permessi amministratore per accedere a questa sezione</p>
+          <a href="/staff/dashboard" className="mt-8 text-xs bg-[#0D3D31] text-white px-8 py-3.5 rounded-2xl font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all">
+            Torna alla Dashboard
+          </a>
+        </div>
+      </main>
+    );
+  }
+
   const filteredIscrizioni = selectedTorneoFilter === "Tutti" 
     ? iscrizioni 
     : iscrizioni.filter(isc => (isc.torneo || "").toLowerCase().trim() === selectedTorneoFilter.toLowerCase().trim());
@@ -357,12 +347,6 @@ export default function StaffIscrizioni() {
                   className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-transform"
                 >
                   🟢 Importa
-                </button>
-                <button 
-                  onClick={exportToExcel}
-                  className="text-xs bg-[#0D3D31] text-white px-6 py-3 rounded-2xl font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-transform"
-                >
-                  ⬇️ Scarica CSV
                 </button>
             </div>
         </div>
@@ -492,12 +476,12 @@ export default function StaffIscrizioni() {
         </div>
       </div>
 
-      {/* Google Form Import Modal */}
+      {/* Import Modal */}
       {isImportModalOpen && (
         <div className="fixed inset-0 bg-[#0D3D31]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-10 relative">
             <button 
-              onClick={() => { setIsImportModalOpen(false); setImportStep(1); }}
+              onClick={() => { setIsImportModalOpen(false); }}
               className="absolute top-6 right-6 text-gray-400 hover:text-[#0D3D31] font-black text-xl w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 rounded-full transition-all"
             >
               ✕
@@ -508,230 +492,158 @@ export default function StaffIscrizioni() {
               Carica un file Excel/CSV o incolla i dati per il torneo selezionato
             </p>
 
-            {importStep === 1 ? (
-              <div className="space-y-6 text-left">
-                {/* Select Torneo */}
-                <div>
-                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Seleziona Torneo di Destinazione</label>
-                  <select
-                    value={selectedTorneoImport}
-                    onChange={(e) => setSelectedTorneoImport(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#0D3D31] outline-none focus:ring-4 focus:ring-blue-500/5 transition-all appearance-none"
+            <div className="space-y-6 text-left">
+              {/* Select Torneo */}
+              <div>
+                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Seleziona Torneo di Destinazione</label>
+                <select
+                  value={selectedTorneoImport}
+                  onChange={(e) => setSelectedTorneoImport(e.target.value)}
+                  className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#0D3D31] outline-none focus:ring-4 focus:ring-blue-500/5 transition-all appearance-none"
+                >
+                  {tornei.map(t => <option key={t.id} value={t.nome}>{t.nome}</option>)}
+                  {tornei.length === 0 && <option value="">Nessun torneo attivo</option>}
+                </select>
+              </div>
+
+              {/* Select Stato Iniziale */}
+              <div>
+                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Stato Iniziale delle Iscrizioni</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setInitialStatusImport("Approvata")}
+                    className={`p-3.5 sm:p-4 rounded-2xl font-black text-xs uppercase tracking-wider border-2 transition-all ${initialStatusImport === "Approvata" ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-100 bg-gray-50 text-gray-400'}`}
                   >
-                    {tornei.map(t => <option key={t.id} value={t.nome}>{t.nome}</option>)}
-                    {tornei.length === 0 && <option value="">Nessun torneo attivo</option>}
-                  </select>
+                    Approvata (Subito in Classifica)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setInitialStatusImport("In Attesa")}
+                    className={`p-3.5 sm:p-4 rounded-2xl font-black text-xs uppercase tracking-wider border-2 transition-all ${initialStatusImport === "In Attesa" ? 'border-yellow-500 bg-yellow-50 text-yellow-700' : 'border-gray-100 bg-gray-50 text-gray-400'}`}
+                  >
+                    In Attesa (Da approvare a mano)
+                  </button>
+                </div>
+              </div>
+
+              {/* Input Method Selector */}
+              <div>
+                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Metodo di Inserimento</label>
+                <div className="flex bg-gray-100 p-1 rounded-xl mb-4">
+                  <button
+                    type="button"
+                    onClick={() => setInputMethod("paste")}
+                    className={`flex-1 py-2 text-center rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${inputMethod === "paste" ? 'bg-white text-[#0D3D31] shadow-sm' : 'text-gray-400 hover:text-[#0D3D31]'}`}
+                  >
+                    Copia-Incolla da Fogli
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setInputMethod("file")}
+                    className={`flex-1 py-2 text-center rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${inputMethod === "file" ? 'bg-white text-[#0D3D31] shadow-sm' : 'text-gray-400 hover:text-[#0D3D31]'}`}
+                  >
+                    Carica CSV (.csv)
+                  </button>
                 </div>
 
-                {/* Select Stato Iniziale */}
-                <div>
-                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Stato Iniziale delle Iscrizioni</label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setInitialStatusImport("Approvata")}
-                      className={`p-3.5 sm:p-4 rounded-2xl font-black text-xs uppercase tracking-wider border-2 transition-all ${initialStatusImport === "Approvata" ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-100 bg-gray-50 text-gray-400'}`}
-                    >
-                      Approvata (Subito in Classifica)
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setInitialStatusImport("In Attesa")}
-                      className={`p-3.5 sm:p-4 rounded-2xl font-black text-xs uppercase tracking-wider border-2 transition-all ${initialStatusImport === "In Attesa" ? 'border-yellow-500 bg-yellow-50 text-yellow-700' : 'border-gray-100 bg-gray-50 text-gray-400'}`}
-                    >
-                      In Attesa (Da approvare a mano)
-                    </button>
-                  </div>
-                </div>
-
-                {/* Input Method Selector */}
-                <div>
-                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Metodo di Inserimento</label>
-                  <div className="flex bg-gray-100 p-1 rounded-xl mb-4">
-                    <button
-                      type="button"
-                      onClick={() => setInputMethod("paste")}
-                      className={`flex-1 py-2 text-center rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${inputMethod === "paste" ? 'bg-white text-[#0D3D31] shadow-sm' : 'text-gray-400 hover:text-[#0D3D31]'}`}
-                    >
-                      Copia-Incolla da Fogli
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setInputMethod("file")}
-                      className={`flex-1 py-2 text-center rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${inputMethod === "file" ? 'bg-white text-[#0D3D31] shadow-sm' : 'text-gray-400 hover:text-[#0D3D31]'}`}
-                    >
-                      Carica CSV (.csv)
-                    </button>
-                  </div>
-
-                  {inputMethod === "paste" ? (
-                    <div>
-                      <textarea
-                        placeholder="Nomi Giocatori	Cellulare o Email	Data&#13;Marco Neri - Fabio Rossi	3331112233	2026-06-10&#13;Alice Gialli - Giulia Verdi	3334445566	2026-06-10"
-                        value={pastedText}
-                        onChange={(e) => setPastedText(e.target.value)}
-                        rows={6}
-                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-5 font-mono text-xs text-[#0D3D31] outline-none focus:ring-4 focus:ring-blue-500/5 transition-all resize-none"
-                      ></textarea>
-                      <div className="mt-2 flex flex-col gap-2">
-                        <p className="text-[10px] text-gray-400 font-semibold">
-                          💡 Seleziona le colonne dal tuo file Excel/Sheets (es: nomi, contatto, data), copiale (Ctrl+C) e incollale qui sopra.
-                        </p>
-                        <button 
-                          type="button" 
-                          onClick={downloadTemplate}
-                          className="text-left text-[10px] text-blue-600 hover:text-blue-800 font-bold self-start"
-                        >
-                          ⬇️ Scarica Template Excel/CSV (da usare come riferimento)
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
+                {inputMethod === "paste" ? (
+                  <div>
+                    <textarea
+                      placeholder="Nomi Giocatori&#13;Marco Neri & Fabio Rossi&#13;Alice Gialli & Giulia Verdi"
+                      value={pastedText}
+                      onChange={(e) => handleTextChange(e.target.value)}
+                      rows={6}
+                      className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-5 font-mono text-xs text-[#0D3D31] outline-none focus:ring-4 focus:ring-blue-500/5 transition-all resize-none"
+                    ></textarea>
+                    <div className="mt-2 flex flex-col gap-2">
+                      <p className="text-[10px] text-gray-400 font-semibold">
+                        💡 Copia la colonna con i nomi dei giocatori (Ctrl+C) dal tuo file Excel/Sheets e incollala qui sopra.
+                      </p>
                       <button 
                         type="button" 
                         onClick={downloadTemplate}
-                        className="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-bold"
+                        className="text-left text-[10px] text-blue-600 hover:text-blue-800 font-bold self-start"
                       >
                         ⬇️ Scarica Template Excel/CSV (da usare come riferimento)
                       </button>
-                      <div className="border-4 border-dashed border-gray-100 rounded-3xl p-10 text-center bg-gray-50 hover:bg-gray-100/50 transition-all relative">
-                        <input
-                          type="file"
-                          accept=".csv"
-                          onChange={handleFileUpload}
-                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        />
-                        <span className="text-4xl block mb-2">📁</span>
-                        <p className="text-xs font-bold text-[#0D3D31] uppercase tracking-wider mb-1">Trascina o clicca per caricare</p>
-                        <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-widest">File CSV (.csv)</p>
-                      </div>
                     </div>
-                  )}
-                </div>
-
-                <div className="pt-4 border-t border-gray-50 flex flex-col sm:flex-row gap-3">
-                  <button
-                    onClick={() => { setIsImportModalOpen(false); setImportStep(1); }}
-                    className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#0D3D31] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
-                  >
-                    Annulla
-                  </button>
-                  {inputMethod === "paste" && (
-                    <button
-                      onClick={() => handleParseData(pastedText)}
-                      className="flex-1 py-4 bg-[#0D3D31] hover:bg-blue-900 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg transition-all"
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <button 
+                      type="button" 
+                      onClick={downloadTemplate}
+                      className="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-bold"
                     >
-                      Avanti ➡️
+                      ⬇️ Scarica Template Excel/CSV (da usare come riferimento)
                     </button>
-                  )}
-                </div>
+                    <div className="border-4 border-dashed border-gray-100 rounded-3xl p-10 text-center bg-gray-50 hover:bg-gray-100/50 transition-all relative">
+                      <input
+                        type="file"
+                        accept=".csv"
+                        onChange={handleFileUpload}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                      <span className="text-4xl block mb-2">📁</span>
+                      <p className="text-xs font-bold text-[#0D3D31] uppercase tracking-wider mb-1">Trascina o clicca per caricare</p>
+                      <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-widest">File CSV (.csv)</p>
+                    </div>
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="space-y-6 text-left">
-                <div className="bg-yellow-50 text-yellow-800 p-4 rounded-2xl text-[10px] font-bold leading-normal">
-                  ⚠️ Mappa le colonne del tuo file Excel/CSV o testo incollato alle proprietà corrette per completare l'importazione.
-                </div>
 
-                {/* Mapping Selectors */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {/* Giocatori */}
-                  <div>
-                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Nomi Giocatori / Squadra</label>
-                    <select
-                      value={mapGiocatori}
-                      onChange={(e) => setMapGiocatori(parseInt(e.target.value))}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 font-bold text-xs text-[#0D3D31] outline-none"
-                    >
-                      {parsedHeaders.map((h, idx) => (
-                        <option key={idx} value={idx}>{h || `Colonna ${idx + 1}`}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Contatto */}
-                  <div>
-                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Recapito (Telefono / Mail)</label>
-                    <select
-                      value={mapContatto}
-                      onChange={(e) => setMapContatto(parseInt(e.target.value))}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 font-bold text-xs text-[#0D3D31] outline-none"
-                    >
-                      {parsedHeaders.map((h, idx) => (
-                        <option key={idx} value={idx}>{h || `Colonna ${idx + 1}`}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Data/Timestamp */}
-                  <div>
-                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Data / Timestamp</label>
-                    <select
-                      value={mapDate}
-                      onChange={(e) => setMapDate(parseInt(e.target.value))}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 font-bold text-xs text-[#0D3D31] outline-none"
-                    >
-                      <option value="-1">Usa data odierna</option>
-                      {parsedHeaders.map((h, idx) => (
-                        <option key={idx} value={idx}>{h || `Colonna ${idx + 1}`}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                {/* Preview Table */}
+              {/* Preview of Imported Teams */}
+              {importedTeams.length > 0 && (
                 <div>
-                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Anteprima Squadre da Importare ({parsedRows.length})</label>
+                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Anteprima Squadre da Importare ({importedTeams.length})</label>
                   <div className="border border-gray-100 rounded-2xl overflow-hidden max-h-[250px] overflow-y-auto bg-gray-50">
                     <table className="w-full text-left text-xs border-collapse">
                       <thead className="bg-gray-100 text-[9px] font-black text-gray-400 uppercase tracking-widest border-b sticky top-0">
                         <tr>
-                          <th className="px-4 py-2.5">Data</th>
+                          <th className="px-4 py-2.5">N.</th>
                           <th className="px-4 py-2.5">Squadra / Giocatori</th>
-                          <th className="px-4 py-2.5">Contatto</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-100 bg-white font-semibold text-gray-700">
-                        {parsedRows.slice(0, 10).map((row, idx) => (
+                        {importedTeams.slice(0, 20).map((team, idx) => (
                           <tr key={idx}>
-                            <td className="px-4 py-2.5 text-gray-400">
-                              {mapDate === -1 ? "Oggi" : (row[mapDate] || "-")}
-                            </td>
-                            <td className="px-4 py-2.5 text-[#0D3D31] font-bold">
-                              {row[mapGiocatori] || "—"}
-                            </td>
-                            <td className="px-4 py-2.5 text-gray-500">
-                              {row[mapContatto] || "—"}
-                            </td>
+                            <td className="px-4 py-2.5 text-gray-400 w-12">{idx + 1}</td>
+                            <td className="px-4 py-2.5 text-[#0D3D31] font-bold">{team}</td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
-                    {parsedRows.length > 10 && (
+                    {importedTeams.length > 20 && (
                       <div className="p-3 text-center text-[10px] text-gray-400 font-bold border-t bg-gray-50">
-                        ...e altri {parsedRows.length - 10} record
+                        ...e altri {importedTeams.length - 20} record
                       </div>
                     )}
                   </div>
                 </div>
+              )}
 
-                {/* Actions */}
-                <div className="pt-4 border-t border-gray-50 flex flex-col sm:flex-row gap-3">
-                  <button
-                    onClick={() => setImportStep(1)}
-                    className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#0D3D31] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
-                  >
-                    ⬅️ Indietro
-                  </button>
-                  <button
-                    onClick={handleConfirmImport}
-                    className="flex-grow sm:flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg transition-all"
-                  >
-                    Importa Ora ✅
-                  </button>
-                </div>
+              {/* Actions */}
+              <div className="pt-4 border-t border-gray-50 flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => { setIsImportModalOpen(false); }}
+                  className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#0D3D31] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
+                >
+                  Annulla
+                </button>
+                <button
+                  onClick={handleConfirmImport}
+                  disabled={importedTeams.length === 0}
+                  className={`flex-grow sm:flex-1 py-4 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg transition-all ${
+                    importedTeams.length > 0
+                      ? "bg-emerald-600 hover:bg-emerald-700 cursor-pointer"
+                      : "bg-gray-300 cursor-not-allowed"
+                  }`}
+                >
+                  Importa Ora ✅
+                </button>
               </div>
-            )}
+            </div>
           </div>
         </div>
       )}

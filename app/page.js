@@ -4,9 +4,30 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { getTornei } from "@/app/utils/db";
 
+const defaultTestSponsors = [
+  { id: "s1", nome: "Mikasa", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Mikasa_Sports_logo.svg", linkUrl: "https://mikasasports.co.jp/en/" },
+  { id: "s2", nome: "Decathlon", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/12/Decathlon_Logo.svg", linkUrl: "https://www.decathlon.it" },
+  { id: "s3", nome: "Red Bull", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Red_Bull_Logo.svg", linkUrl: "https://www.redbull.com" },
+  { id: "s4", nome: "Wilson", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/07/Wilson_Sporting_Goods_logo.svg", linkUrl: "https://www.wilson.com" }
+];
+
 export default function Home() {
   const [torneiLive, setTorneiLive] = useState([]);
   const [torneiConclusi, setTorneiConclusi] = useState([]);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  const [countdownData, setCountdownData] = useState({ enabled: false, date: "", label: "" });
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, expired: true });
+  const [sponsors, setSponsors] = useState([]);
+
+  const displaySponsors = sponsors && sponsors.length > 0 ? sponsors : defaultTestSponsors;
+  
+  // Assicuriamoci che ci siano abbastanza elementi prima di duplicare per il marquee loop
+  let baseSponsors = [...displaySponsors];
+  while (baseSponsors.length < 10) {
+    baseSponsors = [...baseSponsors, ...displaySponsors];
+  }
+  const doubleSponsors = [...baseSponsors, ...baseSponsors];
 
   useEffect(() => {
     // Leggi i tornei dal database per mostrarli in home
@@ -19,39 +40,178 @@ export default function Home() {
       const conclusi = allTornei.filter(t => t.stato === "Concluso");
       setTorneiConclusi(conclusi);
     });
+
+    // Leggi le impostazioni del countdown
+    fetch("/api/db?type=countdown")
+      .then(res => res.json())
+      .then(json => {
+        if (json.data) {
+          setCountdownData(json.data);
+        }
+      })
+      .catch(err => console.error("Error fetching countdown:", err));
+
+    // Leggi gli sponsor dal database
+    fetch("/api/db?type=sponsors")
+      .then(res => res.json())
+      .then(json => {
+        if (json.data) {
+          setSponsors(json.data);
+        }
+      })
+      .catch(err => console.error("Error fetching sponsors:", err));
   }, []);
 
+  useEffect(() => {
+    if (!countdownData.enabled || !countdownData.date) {
+      setTimeLeft(prev => ({ ...prev, expired: true }));
+      return;
+    }
+
+    const calculateTimeLeft = () => {
+      const difference = +new Date(countdownData.date) - +new Date();
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60),
+          expired: false
+        });
+      } else {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, expired: true });
+      }
+    };
+
+    calculateTimeLeft();
+    const interval = setInterval(calculateTimeLeft, 1000);
+    return () => clearInterval(interval);
+  }, [countdownData]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const docHeight = document.documentElement.scrollHeight;
+      const winHeight = window.innerHeight;
+      const totalScroll = docHeight - winHeight;
+      if (totalScroll > 0) {
+        setScrollProgress(window.scrollY / totalScroll);
+      } else {
+        setScrollProgress(0);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+
+    // Esegui dopo un piccolo ritardo per attendere il rendering del DOM e il calcolo delle altezze
+    const timer = setTimeout(handleScroll, 100);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      clearTimeout(timer);
+    };
+  }, [torneiLive, torneiConclusi]);
+
   return (
-    <main className="min-h-screen" style={{ backgroundColor: "#f4f7f6" }}>
+    <main className="min-h-[140vh] flex flex-col relative">
+      {/* Sfondo fisso con effetto parallasse mappato sullo scorrimento della pagina */}
+      <div 
+        className="fixed inset-0 -z-10" 
+        style={{ 
+          backgroundImage: "linear-gradient(rgba(244, 247, 246, 0.90), rgba(244, 247, 246, 0.90)), url('/bg_main.jpg')",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: `center ${scrollProgress * 100}%`
+        }}
+      />
 
       {/* Header */}
-      <header style={{ backgroundColor: "#0D3D31" }} className="text-white py-4 px-8 flex flex-col sm:flex-row justify-between items-center shadow-md gap-4">
-        <div className="flex items-center gap-3">
-          <Image src="/logo.png" alt="Baia Beach Cup Logo" width={50} height={50} className="rounded-full" />
-          <h1 className="text-2xl font-bold" style={{ color: "#C3562B" }}>Baia Beach Cup</h1>
+      <header 
+        style={{ backgroundImage: "linear-gradient(to right, #0D3D31, #581c87)" }} 
+        className="relative text-white py-5 px-8 flex flex-col sm:flex-row justify-center items-center shadow-lg gap-4"
+      >
+        <div className="flex items-center gap-3.5">
+          <Image 
+            src="/logo.png" 
+            alt="Baia Beach Cup Logo" 
+            width={55} 
+            height={55} 
+            className="rounded-full bg-white/10 p-1.5 shadow-inner" 
+          />
+          <h1 className="text-2xl sm:text-3xl font-black tracking-wider text-white uppercase">
+            Baia Beach Cup
+          </h1>
         </div>
-        <nav className="flex gap-6 items-center">
-          <div className="flex gap-4">
-            {/* <a href="/atleta" className="hover:text-yellow-400 text-sm font-medium text-gray-300 transition-colors">Area Atleta</a> */}
-            <a href="/staff" className="hover:text-yellow-400 text-sm font-medium text-gray-300 transition-colors">Area Staff</a>
-          </div>
+        <nav className="sm:absolute sm:right-8 flex items-center">
+          <a 
+            href="/staff" 
+            className="text-xs font-black uppercase tracking-widest text-gray-200 hover:text-white transition-all bg-white/10 hover:bg-white/20 px-4 py-2.5 rounded-full border border-white/10 hover:border-white/30 hover:scale-[1.03] active:scale-[0.97]"
+          >
+            Area Staff
+          </a>
         </nav>
       </header>
+
+      {/* Countdown Box (Centrato Sotto all'Header) */}
+      {countdownData.enabled && !timeLeft.expired && (
+        <div className="w-full max-w-xl mx-auto mt-8 px-4 relative z-20">
+          <div 
+            style={{ backgroundImage: "linear-gradient(135deg, #1e1b4b 0%, #3b0764 100%)" }} 
+            className="rounded-[2.5rem] p-6 sm:p-8 text-center flex flex-col items-center justify-center gap-5 border border-white/10 shadow-2xl ring-8 ring-white/5"
+          >
+            <span className="uppercase tracking-widest text-sm sm:text-base text-[#fbbf24] font-black flex items-center gap-2">
+              ⚡ {countdownData.label || "Inizio Prossimo Torneo"}
+            </span>
+            <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+              {/* Days */}
+              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/10 min-w-[70px] sm:min-w-[80px] shadow-lg">
+                <span className="text-2xl sm:text-3xl font-black text-white font-mono leading-none">{timeLeft.days}</span>
+                <span className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Giorni</span>
+              </div>
+              <span className="text-lg sm:text-2xl font-black text-white/30 self-center -mt-4">:</span>
+              {/* Hours */}
+              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/10 min-w-[70px] sm:min-w-[80px] shadow-lg">
+                <span className="text-2xl sm:text-3xl font-black text-white font-mono leading-none">{timeLeft.hours}</span>
+                <span className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Ore</span>
+              </div>
+              <span className="text-lg sm:text-2xl font-black text-white/30 self-center -mt-4">:</span>
+              {/* Minutes */}
+              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/10 min-w-[70px] sm:min-w-[80px] shadow-lg">
+                <span className="text-2xl sm:text-3xl font-black text-white font-mono leading-none">{timeLeft.minutes}</span>
+                <span className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Minuti</span>
+              </div>
+              <span className="text-lg sm:text-2xl font-black text-white/30 self-center -mt-4">:</span>
+              {/* Seconds */}
+              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/10 min-w-[70px] sm:min-w-[80px] shadow-lg">
+                <span className="text-2xl sm:text-3xl font-black text-red-400 font-mono leading-none animate-pulse">{timeLeft.seconds}</span>
+                <span className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Secondi</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bottone Instagram (Subito sotto il countdown o l'header) */}
+      <div className="w-full flex justify-center mt-6 relative z-20">
+        <a
+          href="https://www.instagram.com/baia_beach_cup/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative inline-flex items-center gap-3 px-8 py-3.5 rounded-2xl font-black text-sm text-white bg-gradient-to-r from-[#f9ce3f] via-[#e1306c] to-[#833ab4] shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.05] active:scale-[0.97]"
+        >
+          <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+          <span className="tracking-wider uppercase">Seguici su Instagram</span>
+        </a>
+      </div>
 
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-8 flex justify-center text-center">
         <div className="max-w-3xl flex flex-col items-center">
-          <div className="mb-8 relative">
-            <div className="absolute inset-0 bg-yellow-400 blur-2xl opacity-20 rounded-full"></div>
-            <Image
-              src="/logo.png"
-              alt="Baia Beach Cup Logo"
-              width={160}
-              height={160}
-              className="object-contain relative drop-shadow-xl"
-              priority
-            />
-          </div>
 
 
           {torneiLive.length > 0 && (
@@ -125,13 +285,8 @@ export default function Home() {
                       </span>
                     )}
                   </div>
-                  <div className="mt-auto pt-6 border-t border-gray-100">
-                    <a
-                      href={`/classifica?tour=${encodeURIComponent(t.nome)}`}
-                      className="block w-full py-3 text-center rounded-xl font-bold text-sm text-[#0D3D31] bg-yellow-400 hover:bg-yellow-500 transition-colors shadow-md"
-                    >
-                      🏆 Vedi Classifica Finale
-                    </a>
+                  <div className="mt-auto pt-6 border-t border-gray-100 text-center text-xs font-black uppercase tracking-widest text-gray-400 bg-gray-50/50 rounded-xl py-3">
+                    🏆 Torneo Concluso
                   </div>
                 </div>
               </div>
@@ -139,32 +294,48 @@ export default function Home() {
           </div>
         </section>
       )}
-      {/* Footer */}
-      <footer className="text-white py-8 px-8 mt-auto border-t-2" style={{ borderColor: "#C3562B", backgroundColor: "#0D3D31" }}>
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-3">
-            <Image src="/logo.png" alt="Baia Beach Cup Logo" width={40} height={40} className="rounded-full bg-white p-0.5" />
-            <h4 className="text-lg font-bold" style={{ color: "#C3562B" }}>Baia Beach Cup</h4>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-300 font-medium">Seguici su Instagram</span>
-            <a
-              href="https://www.instagram.com/baia_beach_cup/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:scale-110 active:scale-95 transition-all cursor-pointer flex items-center justify-center bg-gradient-to-tr from-[#f9ce3f] via-[#e1306c] to-[#833ab4] p-2.5 rounded-xl shadow-lg border border-white/10"
-              aria-label="Instagram"
+      {/* Sezione Sponsor */}
+      {displaySponsors.length > 0 && (
+        <section className="w-full bg-white/70 backdrop-blur-md border-t border-gray-200/40 py-4 mt-auto relative overflow-hidden">
+          <div className="w-full text-center">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Ringraziamo i nostri partner 🤝</h3>
+            
+            <div 
+              className="relative overflow-hidden w-full select-none animate-marquee-paused"
+              style={{ 
+                maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", 
+                WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" 
+              }}
             >
-              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-              </svg>
-            </a>
+              <div className="animate-marquee flex items-center gap-16">
+                {doubleSponsors.map((sp, idx) => (
+                  <div 
+                    key={idx} 
+                    className="inline-flex items-center justify-center transition-all hover:scale-105 active:scale-95 duration-300 mx-4 shrink-0"
+                  >
+                    {sp.linkUrl ? (
+                      <a href={sp.linkUrl} target="_blank" rel="noopener noreferrer" title={sp.nome} className="block cursor-pointer">
+                        <img 
+                          src={sp.logoUrl} 
+                          alt={sp.nome} 
+                          className="h-8 sm:h-10 w-auto object-contain opacity-95 hover:opacity-100 transition-all duration-300" 
+                        />
+                      </a>
+                    ) : (
+                      <img 
+                        src={sp.logoUrl} 
+                        alt={sp.nome} 
+                        title={sp.nome}
+                        className="h-8 sm:h-10 w-auto object-contain opacity-95 hover:opacity-100 transition-all duration-300" 
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-      </footer>
+        </section>
+      )}
 
     </main>
   );

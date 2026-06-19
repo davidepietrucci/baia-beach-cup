@@ -475,3 +475,93 @@ export async function saveStaff(list) {
     localStorage.setItem("bvi_staff", JSON.stringify(list));
   }
 }
+
+// 9. Impostazioni Countdown
+export async function getCountdown() {
+  if (typeof window === "undefined") {
+    if (db) {
+      try {
+        const docRef = doc(db, "config", "countdown");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          return docSnap.data().settings || { enabled: false, date: "", label: "" };
+        }
+      } catch (e) {
+        console.error("Firestore read countdown error:", e);
+      }
+      return { enabled: false, date: "", label: "" };
+    }
+    return await getLocalFileDb("countdown", null, { enabled: false, date: "", label: "" });
+  }
+
+  const serverData = await fetchFromServerDb("countdown");
+  if (serverData !== null) return serverData;
+  const saved = localStorage.getItem("bvi_countdown");
+  return safeJsonParse(saved, { enabled: false, date: "", label: "" });
+}
+
+export async function saveCountdown(settings) {
+  if (typeof window === "undefined") {
+    if (db) {
+      try {
+        const docRef = doc(db, "config", "countdown");
+        await setDoc(docRef, { settings });
+      } catch (e) {
+        console.error("Firestore write countdown error:", e);
+      }
+      return;
+    }
+    await saveLocalFileDb("countdown", settings);
+    return;
+  }
+
+  const success = await saveToServerDb("countdown", settings);
+  if (!success) {
+    localStorage.setItem("bvi_countdown", JSON.stringify(settings));
+  }
+}
+
+// 10. Impostazioni Sponsor
+export async function getSponsors() {
+  if (typeof window === "undefined") {
+    if (db) {
+      try {
+        const docRef = doc(db, "config", "sponsors");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          return docSnap.data().list || [];
+        }
+      } catch (e) {
+        console.error("Firestore read sponsors error:", e);
+      }
+      return [];
+    }
+    return await getLocalFileDb("sponsors", null, []);
+  }
+
+  const serverData = await fetchFromServerDb("sponsors");
+  if (serverData !== null) return serverData;
+  const saved = localStorage.getItem("bvi_sponsors");
+  return safeJsonParse(saved, []);
+}
+
+export async function saveSponsors(list) {
+  if (typeof window === "undefined") {
+    if (db) {
+      try {
+        const docRef = doc(db, "config", "sponsors");
+        await setDoc(docRef, { list });
+      } catch (e) {
+        console.error("Firestore write sponsors error:", e);
+      }
+      return;
+    }
+    await saveLocalFileDb("sponsors", list);
+    return;
+  }
+
+  const success = await saveToServerDb("sponsors", list);
+  if (!success) {
+    localStorage.setItem("bvi_sponsors", JSON.stringify(list));
+  }
+}

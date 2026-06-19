@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import StaffHeader from "@/app/components/StaffHeader";
-import { getTornei, getIscrizioni, saveTornei, saveIscrizioni, saveUsers, saveGironi } from "@/app/utils/db";
+import { getTornei, getIscrizioni, saveTornei, saveIscrizioni, saveGironi } from "@/app/utils/db";
 
 export default function StaffDashboard() {
   const router = useRouter();
@@ -15,6 +15,9 @@ export default function StaffDashboard() {
     squadreConfermate: 0
   });
   const [role, setRole] = useState("admin");
+  const [countdownForm, setCountdownForm] = useState({ enabled: false, date: "", label: "" });
+  const [sponsorsList, setSponsorsList] = useState([]);
+  const [sponsorForm, setSponsorForm] = useState({ nome: "", logoUrl: "", linkUrl: "" });
 
   useEffect(() => {
     Promise.all([getTornei(), getIscrizioni()]).then(([tornei, iscrizioni]) => {
@@ -28,6 +31,26 @@ export default function StaffDashboard() {
         squadreConfermate: countConfermate
       });
     });
+
+    // Carica impostazioni countdown
+    fetch("/api/db?type=countdown")
+      .then(res => res.json())
+      .then(json => {
+        if (json.data) {
+          setCountdownForm(json.data);
+        }
+      })
+      .catch(err => console.error("Error loading countdown settings in dashboard:", err));
+
+    // Carica lista sponsor
+    fetch("/api/db?type=sponsors")
+      .then(res => res.json())
+      .then(json => {
+        if (json.data) {
+          setSponsorsList(json.data);
+        }
+      })
+      .catch(err => console.error("Error loading sponsors list in dashboard:", err));
   }, []);
 
   useEffect(() => {
@@ -39,17 +62,15 @@ export default function StaffDashboard() {
   }, [user]);
 
   const handleResetData = async () => {
-    if (typeof window !== "undefined" && window.confirm("Sei sicuro di voler cancellare TUTTI i dati (tornei, iscritti, atleti, gironi) dal database? Questa azione non è reversibile.")) {
+    if (typeof window !== "undefined" && window.confirm("Sei sicuro di voler cancellare TUTTI i dati (tornei, iscritti, gironi) dal database? Questa azione non è reversibile.")) {
       await saveTornei([]);
       await saveIscrizioni([]);
-      await saveUsers([]);
       // Clear localStorage items
       localStorage.removeItem("bvi_tornei");
       localStorage.removeItem("bvi_iscrizioni");
-      localStorage.removeItem("bvi_users");
       for (let i = localStorage.length - 1; i >= 0; i--) {
         const key = localStorage.key(i);
-        if (key && (key.startsWith("bvi_gironi_") || key.startsWith("bvi_bracket_") || key.startsWith("bvi_iscrizioni") || key.startsWith("bvi_tornei") || key.startsWith("bvi_users"))) {
+        if (key && (key.startsWith("bvi_gironi_") || key.startsWith("bvi_bracket_") || key.startsWith("bvi_iscrizioni") || key.startsWith("bvi_tornei"))) {
           localStorage.removeItem(key);
         }
       }
@@ -84,10 +105,6 @@ export default function StaffDashboard() {
         { id: "116", data: "16 Maggio, 13:00", torneo: "Torneo di Ferragosto", giocatori: "Edoardo M. & Lucrezia B.", tel: "333 3434343", stato: "Approvata", quotaPagata: 40 },
         { id: "201", data: "Oggi, 09:12", torneo: "Baia Beach Cup Summer Cup", giocatori: "Marco R. & Luca B.", tel: "333 7654321", stato: "Approvata", quotaPagata: 0 },
         { id: "202", data: "Ieri, 18:30", torneo: "Baia Beach Cup Summer Cup", giocatori: "Giulia M. & Sara L.", tel: "328 1122334", stato: "In Attesa", quotaPagata: 0 }
-      ];
-      const mockUsers = [
-        { id: "1", nome: "Davide", cognome: "Pietrucci", email: "davide@example.com", dataRegistrazione: "01/01/2024" },
-        { id: "2", nome: "Marco", cognome: "Rossi", email: "marco@example.com", dataRegistrazione: "15/02/2024" }
       ];
 
       const mockGironiConfig = {
@@ -141,19 +158,47 @@ export default function StaffDashboard() {
         }
       };
 
+      const mockSponsors = [
+        { id: "s1", nome: "Mikasa", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Mikasa_Sports_logo.svg", linkUrl: "https://mikasasports.co.jp/en/" },
+        { id: "s2", nome: "Decathlon", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/12/Decathlon_Logo.svg", linkUrl: "https://www.decathlon.it" },
+        { id: "s3", nome: "Red Bull", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Red_Bull_Logo.svg", linkUrl: "https://www.redbull.com" },
+        { id: "s4", nome: "Wilson", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/07/Wilson_Sporting_Goods_logo.svg", linkUrl: "https://www.wilson.com" }
+      ];
+
+      const mockCountdown = {
+        enabled: true,
+        label: "Inizio Torneo di Ferragosto",
+        date: "2026-08-15T09:00"
+      };
+
       // Salva nel database (Cloud o LocalStorage Fallback)
       await saveTornei(mockTornei);
       await saveIscrizioni(mockIscrizioni);
-      await saveUsers(mockUsers);
       await saveGironi("torneo_di_ferragosto", mockGironiConfig);
+
+      try {
+        await fetch("/api/db", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ type: "sponsors", data: mockSponsors })
+        });
+        await fetch("/api/db", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ type: "countdown", data: mockCountdown })
+        });
+      } catch (e) {
+        console.error("Errore salvataggio demo sponsors/countdown:", e);
+      }
 
       // Sincronizza anche localmente per sicurezza/backward compatibility
       localStorage.setItem("bvi_tornei", JSON.stringify(mockTornei));
       localStorage.setItem("bvi_iscrizioni", JSON.stringify(mockIscrizioni));
-      localStorage.setItem("bvi_users", JSON.stringify(mockUsers));
       localStorage.setItem("bvi_gironi_v2_torneo_di_ferragosto", JSON.stringify(mockGironiConfig));
+      localStorage.setItem("bvi_sponsors", JSON.stringify(mockSponsors));
+      localStorage.setItem("bvi_countdown", JSON.stringify(mockCountdown));
       
-      alert("Dati di esempio e risultati dei gironi caricati con successo!");
+      alert("Dati di esempio (tornei, gironi, sponsor e countdown) caricati con successo!");
       window.location.reload();
     }
   };
@@ -234,6 +279,91 @@ export default function StaffDashboard() {
     }
   };
 
+  const handleSaveCountdown = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "countdown", data: countdownForm })
+      });
+      if (res.ok) {
+        alert("Impostazioni countdown salvate con successo!");
+      } else {
+        alert("Errore nel salvataggio del countdown.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Errore di connessione.");
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Limita la dimensione del file a 1MB per non sovraccaricare il database
+      if (file.size > 1024 * 1024) {
+        alert("L'immagine è troppo grande. Seleziona un file inferiore a 1MB.");
+        e.target.value = ""; // Reset input file
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSponsorForm(prev => ({ ...prev, logoUrl: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleAddSponsor = async (e) => {
+    e.preventDefault();
+    const newSponsor = {
+      id: Date.now().toString(),
+      nome: sponsorForm.nome.trim(),
+      logoUrl: sponsorForm.logoUrl.trim(),
+      linkUrl: sponsorForm.linkUrl.trim()
+    };
+    const updatedSponsors = [...sponsorsList, newSponsor];
+    setSponsorsList(updatedSponsors);
+    setSponsorForm({ nome: "", logoUrl: "", linkUrl: "" });
+
+    try {
+      const res = await fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "sponsors", data: updatedSponsors })
+      });
+      if (!res.ok) {
+        alert("Errore nel salvataggio degli sponsor sul server.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Errore di connessione.");
+    }
+  };
+
+  const handleRemoveSponsor = async (id) => {
+    if (typeof window !== "undefined" && !window.confirm("Sei sicuro di voler eliminare questo sponsor?")) {
+      return;
+    }
+    const updatedSponsors = sponsorsList.filter(sp => sp.id !== id);
+    setSponsorsList(updatedSponsors);
+
+    try {
+      const res = await fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "sponsors", data: updatedSponsors })
+      });
+      if (!res.ok) {
+        alert("Errore nel salvataggio degli sponsor sul server.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Errore di connessione.");
+    }
+  };
+
   return (
     <main className="min-h-screen pb-12 bg-[#f8faff]">
       <StaffHeader />
@@ -279,9 +409,15 @@ export default function StaffDashboard() {
             <button onClick={() => router.push('/staff/tornei/nuovo')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
               Crea Torneo <span className="text-xl group-hover:translate-x-2 transition-transform">➕</span>
             </button>
-            <button onClick={() => router.push('/staff/iscrizioni')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
-              Valuta Iscrizioni <span className="text-xl group-hover:translate-x-2 transition-transform">📝</span>
-            </button>
+            {role === "admin" ? (
+              <button onClick={() => router.push('/staff/iscrizioni')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+                Valuta Iscrizioni <span className="text-xl group-hover:translate-x-2 transition-transform">📝</span>
+              </button>
+            ) : (
+              <button onClick={() => router.push('/staff/teams')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+                Visualizza Teams <span className="text-xl group-hover:translate-x-2 transition-transform">👥</span>
+              </button>
+            )}
             <button onClick={() => router.push('/staff/pagamenti')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
               Pagamenti <span className="text-xl group-hover:translate-x-2 transition-transform">💰</span>
             </button>
@@ -290,30 +426,168 @@ export default function StaffDashboard() {
 
         {/* Gestione Dati */}
         {role === "admin" && (
-          <div className="mt-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full -mr-16 -mt-16"></div>
-            <h3 className="text-xl md:text-2xl font-black mb-6 uppercase tracking-tight text-[#0D3D31] relative z-10">Gestione Database ⚙️</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
-              <button 
-                onClick={handleResetData}
-                className="flex items-center justify-between p-5 bg-red-50 hover:bg-red-600 hover:text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm border border-red-100 text-red-700"
-              >
-                Resetta Database (Vuoto) <span className="text-xl group-hover:scale-110 transition-transform">🗑️</span>
-              </button>
-              <button 
-                onClick={handleLoadDemoData}
-                className="flex items-center justify-between p-5 bg-blue-50 hover:bg-blue-600 hover:text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm border border-blue-100 text-blue-700"
-              >
-                Carica Dati Demo <span className="text-xl group-hover:scale-110 transition-transform">💾</span>
-              </button>
-              <button 
-                onClick={handleLoad24TeamsDemo}
-                className="flex items-center justify-between p-5 bg-green-50 hover:bg-green-600 hover:text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm border border-green-100 text-green-700"
-              >
-                Carica Torneo 24 Squadre <span className="text-xl group-hover:scale-110 transition-transform">🏆</span>
-              </button>
+          <>
+            <div className="mt-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full -mr-16 -mt-16"></div>
+              <h3 className="text-xl md:text-2xl font-black mb-6 uppercase tracking-tight text-[#0D3D31] relative z-10">Gestione Database ⚙️</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
+                <button 
+                  onClick={handleResetData}
+                  className="flex items-center justify-between p-5 bg-red-50 hover:bg-red-600 hover:text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm border border-red-100 text-red-700"
+                >
+                  Resetta Database (Vuoto) <span className="text-xl group-hover:scale-110 transition-transform">🗑️</span>
+                </button>
+                <button 
+                  onClick={handleLoadDemoData}
+                  className="flex items-center justify-between p-5 bg-blue-50 hover:bg-blue-600 hover:text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm border border-blue-100 text-blue-700"
+                >
+                  Carica Dati Demo <span className="text-xl group-hover:scale-110 transition-transform">💾</span>
+                </button>
+                <button 
+                  onClick={handleLoad24TeamsDemo}
+                  className="flex items-center justify-between p-5 bg-green-50 hover:bg-green-600 hover:text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm border border-green-100 text-green-700"
+                >
+                  Carica Torneo 24 Squadre <span className="text-xl group-hover:scale-110 transition-transform">🏆</span>
+                </button>
+              </div>
             </div>
-          </div>
+
+            <div className="mt-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
+              <h3 className="text-xl md:text-2xl font-black mb-2 uppercase tracking-tight text-[#0D3D31]">Configurazione Countdown ⏱️</h3>
+              <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mb-6">Imposta il timer mostrato nella parte superiore della homepage</p>
+              
+              <form onSubmit={handleSaveCountdown} className="space-y-6 max-w-xl">
+                <div className="flex items-center gap-3">
+                  <input 
+                    type="checkbox" 
+                    id="countdown-enabled"
+                    checked={countdownForm.enabled} 
+                    onChange={(e) => setCountdownForm(prev => ({ ...prev, enabled: e.target.checked }))}
+                    className="w-5 h-5 rounded text-[#0D3D31] focus:ring-[#0D3D31] cursor-pointer"
+                  />
+                  <label htmlFor="countdown-enabled" className="text-sm font-bold text-[#0D3D31] select-none cursor-pointer">Abilita Countdown in Homepage</label>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Testo/Etichetta</label>
+                    <input 
+                      type="text" 
+                      value={countdownForm.label}
+                      onChange={(e) => setCountdownForm(prev => ({ ...prev, label: e.target.value }))}
+                      placeholder="es. INIZIO TORNEO DI FERRAGOSTO"
+                      disabled={!countdownForm.enabled}
+                      className="w-full bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all" 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Data e Ora di Fine</label>
+                    <input 
+                      type="datetime-local" 
+                      value={countdownForm.date}
+                      onChange={(e) => setCountdownForm(prev => ({ ...prev, date: e.target.value }))}
+                      disabled={!countdownForm.enabled}
+                      className="w-full bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all" 
+                    />
+                  </div>
+                </div>
+
+                <button 
+                  type="submit" 
+                  className="px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest text-white bg-[#0D3D31] hover:scale-105 active:scale-95 transition-all shadow-md"
+                >
+                  Salva Countdown 💾
+                </button>
+              </form>
+            </div>
+
+            {/* Gestione Sponsor */}
+            <div className="mt-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
+              <h3 className="text-xl md:text-2xl font-black mb-2 uppercase tracking-tight text-[#0D3D31]">Gestione Sponsor 🤝</h3>
+              <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mb-6">Aggiungi o rimuovi gli sponsor che appaiono in fondo alla homepage</p>
+              
+              {/* Form aggiunta */}
+              <form onSubmit={handleAddSponsor} className="space-y-4 max-w-xl mb-8 p-6 bg-gray-50 rounded-3xl border border-gray-100">
+                <h4 className="text-xs font-black uppercase tracking-wider text-[#0D3D31]">Aggiungi Nuovo Sponsor</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider ml-1">Nome</label>
+                    <input 
+                      type="text" 
+                      placeholder="es. Decathlon" 
+                      value={sponsorForm.nome}
+                      onChange={(e) => setSponsorForm(prev => ({ ...prev, nome: e.target.value }))}
+                      required
+                      className="w-full bg-white border-none rounded-xl px-4 py-3 text-xs font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31]"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider ml-1">Carica Logo (PNG/JPG)</label>
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      required
+                      className="w-full bg-white border-none rounded-xl px-4 py-2.5 text-xs font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[9px] file:font-black file:uppercase file:bg-[#0D3D31]/10 file:text-[#0D3D31] hover:file:bg-[#0D3D31]/20 cursor-pointer"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider ml-1">Link Sito (Opzionale)</label>
+                    <input 
+                      type="url" 
+                      placeholder="es. https://..." 
+                      value={sponsorForm.linkUrl}
+                      onChange={(e) => setSponsorForm(prev => ({ ...prev, linkUrl: e.target.value }))}
+                      className="w-full bg-white border-none rounded-xl px-4 py-3 text-xs font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31]"
+                    />
+                  </div>
+                </div>
+                {sponsorForm.logoUrl && (
+                  <div className="mt-4 flex items-center gap-3 bg-white p-3 rounded-2xl border border-gray-100 max-w-max shadow-sm">
+                    <img src={sponsorForm.logoUrl} alt="Anteprima Logo" className="w-12 h-12 object-contain rounded-lg bg-gray-50 p-1 border border-gray-100" />
+                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Anteprima Logo caricato</span>
+                  </div>
+                )}
+                <button 
+                  type="submit" 
+                  className="px-6 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest text-white bg-[#0D3D31] hover:scale-105 active:scale-95 transition-all shadow-md mt-2"
+                >
+                  Inserisci Sponsor ➕
+                </button>
+              </form>
+
+              {/* Lista sponsor esistenti */}
+              {sponsorsList.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {sponsorsList.map((sp) => (
+                    <div key={sp.id} className="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-2xl shadow-sm">
+                      <div className="flex items-center gap-3 overflow-hidden">
+                        {sp.logoUrl && (
+                          <img src={sp.logoUrl} alt={sp.nome} className="w-10 h-10 object-contain rounded-lg bg-white p-1 border border-gray-200" />
+                        )}
+                        <div className="flex flex-col overflow-hidden">
+                          <span className="text-xs font-black text-[#0D3D31] truncate">{sp.nome}</span>
+                          {sp.linkUrl && (
+                            <a href={sp.linkUrl} target="_blank" rel="noopener noreferrer" className="text-[9px] font-black text-gray-400 hover:underline truncate">
+                              Visita sito 🔗
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => handleRemoveSponsor(sp.id)}
+                        className="text-red-500 hover:text-red-700 font-bold text-xs p-2 transition-all cursor-pointer"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest text-center py-6 bg-gray-50 rounded-2xl border border-dashed border-gray-200">Nessuno sponsor inserito</p>
+              )}
+            </div>
+          </>
         )}
       </div>
     </main>
