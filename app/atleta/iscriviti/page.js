@@ -83,8 +83,8 @@ export default function AtletaIscriviti() {
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-[#f0f4ff] flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#0a1628] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#f4f7f6] flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-[#0D3D31] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -92,27 +92,27 @@ export default function AtletaIscriviti() {
   const selectedTorneo = torneiAperti.find((t) => t.nome === formData.torneo);
 
   return (
-    <main className="min-h-screen bg-[#f0f4ff] pb-28 xl:pb-10">
+    <main className="min-h-screen bg-[#f4f7f6] pb-28 xl:pb-10">
       <AthleteHeader />
 
       <div className="max-w-2xl mx-auto px-4 pt-6">
 
         {/* Titolo */}
         <div className="mb-6">
-          <h1 className="text-3xl font-black text-[#0a1628] uppercase tracking-tighter">Iscriviti</h1>
+          <h1 className="text-3xl font-black text-[#0D3D31] uppercase tracking-tighter">Iscriviti</h1>
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Prenota il tuo posto sulla sabbia 🏐</p>
         </div>
 
         {torneiAperti.length === 0 ? (
           <div className="bg-white rounded-[2rem] p-10 shadow-sm border border-gray-100 flex flex-col items-center gap-4 text-center">
             <span className="text-5xl">🏜️</span>
-            <p className="font-black text-[#0a1628] text-lg uppercase tracking-tighter">Nessun torneo aperto</p>
+            <p className="font-black text-[#0D3D31] text-lg uppercase tracking-tighter">Nessun torneo aperto</p>
             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
               Al momento non ci sono tornei con iscrizioni aperte. Torna presto!
             </p>
             <button
               onClick={() => router.push("/atleta/dashboard")}
-              className="mt-2 px-8 py-3.5 bg-[#0a1628] text-[#FFD700] rounded-2xl font-black text-[10px] uppercase tracking-widest active:scale-95 transition-transform"
+              className="mt-2 px-8 py-3.5 bg-[#0D3D31] text-[#C3562B] rounded-2xl font-black text-[10px] uppercase tracking-widest active:scale-95 transition-transform"
             >
               ← Torna alla Dashboard
             </button>
@@ -125,7 +125,7 @@ export default function AtletaIscriviti() {
                 <div key={s} className="flex items-center flex-1">
                   <div className={`flex items-center justify-center w-8 h-8 rounded-full font-black text-xs transition-all ${
                     step === s
-                      ? "bg-[#0a1628] text-white shadow-lg scale-110"
+                      ? "bg-[#0D3D31] text-white shadow-lg scale-110"
                       : step > s
                       ? "bg-green-500 text-white"
                       : "bg-gray-200 text-gray-400"
@@ -139,9 +139,9 @@ export default function AtletaIscriviti() {
               ))}
             </div>
             <div className="flex justify-between text-[9px] font-black text-gray-400 uppercase tracking-widest -mt-5 mb-6 px-0.5">
-              <span className={step >= 1 ? "text-[#0a1628]" : ""}>Torneo</span>
-              <span className={step >= 2 ? "text-[#0a1628]" : ""}>Dati</span>
-              <span className={step >= 3 ? "text-[#0a1628]" : ""}>Conferma</span>
+              <span className={step >= 1 ? "text-[#0D3D31]" : ""}>Torneo</span>
+              <span className={step >= 2 ? "text-[#0D3D31]" : ""}>Dati</span>
+              <span className={step >= 3 ? "text-[#0D3D31]" : ""}>Conferma</span>
             </div>
 
             {/* Step 1: Selezione Torneo */}
@@ -156,18 +156,18 @@ export default function AtletaIscriviti() {
                     }}
                     className={`w-full text-left p-5 rounded-[1.8rem] border-2 transition-all active:scale-[0.99] ${
                       formData.torneo === t.nome
-                        ? "bg-[#0a1628] border-[#0a1628] shadow-xl"
+                        ? "bg-[#0D3D31] border-[#0D3D31] shadow-xl"
                         : "bg-white border-gray-100 shadow-sm hover:border-gray-300"
                     }`}
                   >
                     <div className="flex items-center gap-4">
                       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0 ${
-                        formData.torneo === t.nome ? "bg-[#FFD700]" : "bg-gray-50"
+                        formData.torneo === t.nome ? "bg-[#C3562B]" : "bg-gray-50"
                       }`}>
                         🏆
                       </div>
                       <div>
-                        <p className={`font-black text-sm uppercase tracking-tight ${formData.torneo === t.nome ? "text-white" : "text-[#0a1628]"}`}>
+                        <p className={`font-black text-sm uppercase tracking-tight ${formData.torneo === t.nome ? "text-white" : "text-[#0D3D31]"}`}>
                           {t.nome}
                         </p>
                         <p className={`text-[10px] font-semibold mt-0.5 ${formData.torneo === t.nome ? "text-white/60" : "text-gray-400"}`}>
@@ -175,7 +175,7 @@ export default function AtletaIscriviti() {
                         </p>
                       </div>
                       {formData.torneo === t.nome && (
-                        <div className="ml-auto w-6 h-6 rounded-full bg-[#FFD700] flex items-center justify-center text-[#0a1628] font-black text-xs">
+                        <div className="ml-auto w-6 h-6 rounded-full bg-[#C3562B] flex items-center justify-center text-[#0D3D31] font-black text-xs">
                           ✓
                         </div>
                       )}
@@ -186,7 +186,7 @@ export default function AtletaIscriviti() {
                 <button
                   disabled={!formData.torneo}
                   onClick={() => setStep(2)}
-                  className="w-full py-4 bg-[#0a1628] text-[#FFD700] rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl disabled:opacity-40 active:scale-95 transition-all mt-2"
+                  className="w-full py-4 bg-[#0D3D31] text-[#C3562B] rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl disabled:opacity-40 active:scale-95 transition-all mt-2"
                 >
                   Continua →
                 </button>
@@ -222,7 +222,7 @@ export default function AtletaIscriviti() {
                       onChange={handleChange}
                       placeholder="es. Elena M."
                       required
-                      className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 font-bold text-[#0a1628] text-sm focus:outline-none focus:ring-2 focus:ring-[#0a1628] transition-all"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 font-bold text-[#0D3D31] text-sm focus:outline-none focus:ring-2 focus:ring-[#0D3D31] transition-all"
                     />
                   </div>
                   <div>
@@ -236,7 +236,7 @@ export default function AtletaIscriviti() {
                       onChange={handleChange}
                       placeholder="es. 333 1234567"
                       required
-                      className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 font-bold text-[#0a1628] text-sm focus:outline-none focus:ring-2 focus:ring-[#0a1628] transition-all"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 font-bold text-[#0D3D31] text-sm focus:outline-none focus:ring-2 focus:ring-[#0D3D31] transition-all"
                     />
                   </div>
                   <div>
@@ -249,7 +249,7 @@ export default function AtletaIscriviti() {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="tua@email.com"
-                      className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 font-bold text-[#0a1628] text-sm focus:outline-none focus:ring-2 focus:ring-[#0a1628] transition-all"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 font-bold text-[#0D3D31] text-sm focus:outline-none focus:ring-2 focus:ring-[#0D3D31] transition-all"
                     />
                   </div>
                 </div>
@@ -264,7 +264,7 @@ export default function AtletaIscriviti() {
                   <button
                     disabled={!formData.giocatore2 || !formData.telefono}
                     onClick={() => setStep(3)}
-                    className="flex-1 py-4 bg-[#0a1628] text-[#FFD700] rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl disabled:opacity-40 active:scale-95 transition-all"
+                    className="flex-1 py-4 bg-[#0D3D31] text-[#C3562B] rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl disabled:opacity-40 active:scale-95 transition-all"
                   >
                     Continua →
                   </button>
@@ -289,9 +289,9 @@ export default function AtletaIscriviti() {
                   </div>
                 </div>
 
-                <div className="bg-[#FFD700]/10 rounded-2xl p-4 border border-[#FFD700]/30">
-                  <p className="text-[10px] font-black text-[#0a1628] uppercase tracking-widest">
-                    ⚠️ La tua iscrizione sarà in attesa di approvazione dello staff BVI.
+                <div className="bg-[#C3562B]/10 rounded-2xl p-4 border border-[#C3562B]/30">
+                  <p className="text-[10px] font-black text-[#0D3D31] uppercase tracking-widest">
+                    ⚠️ La tua iscrizione sarà in attesa di approvazione dello staff Baia Beach Cup.
                   </p>
                 </div>
 
@@ -313,11 +313,11 @@ export default function AtletaIscriviti() {
                   <button
                     onClick={handleSubmit}
                     disabled={submitting}
-                    className="flex-1 py-4 bg-[#0a1628] text-[#FFD700] rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl disabled:opacity-60 active:scale-95 transition-all flex items-center justify-center gap-2"
+                    className="flex-1 py-4 bg-[#0D3D31] text-[#C3562B] rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl disabled:opacity-60 active:scale-95 transition-all flex items-center justify-center gap-2"
                   >
                     {submitting ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-[#FFD700] border-t-transparent rounded-full animate-spin" />
+                        <div className="w-4 h-4 border-2 border-[#C3562B] border-t-transparent rounded-full animate-spin" />
                         Invio...
                       </>
                     ) : (
@@ -336,17 +336,17 @@ export default function AtletaIscriviti() {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center z-[200] p-4">
           <div className="bg-white rounded-t-[2.5rem] sm:rounded-[2.5rem] p-8 w-full max-w-sm text-center shadow-2xl">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5 text-3xl">✅</div>
-            <h2 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter mb-2">Iscrizione Inviata!</h2>
+            <h2 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tighter mb-2">Iscrizione Inviata!</h2>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-loose mb-6">
               La richiesta è stata trasmessa allo staff. Riceverai conferma a{" "}
-              <span className="text-[#0a1628]">{formData.email}</span>.
+              <span className="text-[#0D3D31]">{formData.email}</span>.
             </p>
             <button
               onClick={() => {
                 setShowModal(false);
                 router.push("/atleta/dashboard");
               }}
-              className="w-full py-4 bg-[#0a1628] text-[#FFD700] rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl active:scale-95 transition-transform"
+              className="w-full py-4 bg-[#0D3D31] text-[#C3562B] rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl active:scale-95 transition-transform"
             >
               Torna alla Dashboard
             </button>
@@ -363,7 +363,7 @@ function RiepilogoRow({ label, value }) {
   return (
     <div className="flex justify-between items-center py-2">
       <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{label}</span>
-      <span className="text-xs font-black text-[#0a1628] max-w-[60%] text-right truncate">{value || "—"}</span>
+      <span className="text-xs font-black text-[#0D3D31] max-w-[60%] text-right truncate">{value || "—"}</span>
     </div>
   );
 }

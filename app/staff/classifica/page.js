@@ -221,7 +221,7 @@ function ClassificaContent() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
           {/* Gold Standings Card */}
           <div className="bg-white rounded-[2.5rem] shadow-xl p-8 border-t-8 border-yellow-400">
-            <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter mb-6 flex items-center gap-2">
+            <h3 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tighter mb-6 flex items-center gap-2">
               🏆 Classifica Finale GOLD
             </h3>
             <div className="space-y-4">
@@ -240,7 +240,7 @@ function ClassificaContent() {
                         {idx + 1}
                       </span>
                       <div>
-                        <p className="font-black text-lg text-[#0a1628]">{team}</p>
+                        <p className="font-black text-lg text-[#0D3D31]">{team}</p>
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">{labels[idx]}</p>
                       </div>
                     </div>
@@ -252,7 +252,7 @@ function ClassificaContent() {
 
           {/* Silver Standings Card */}
           <div className="bg-white rounded-[2.5rem] shadow-xl p-8 border-t-8 border-gray-400">
-            <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter mb-6 flex items-center gap-2">
+            <h3 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tighter mb-6 flex items-center gap-2">
               🥈 Classifica Finale SILVER
             </h3>
             <div className="space-y-4">
@@ -271,7 +271,7 @@ function ClassificaContent() {
                         {idx + 1}
                       </span>
                       <div>
-                        <p className="font-black text-lg text-[#0a1628]">{team}</p>
+                        <p className="font-black text-lg text-[#0D3D31]">{team}</p>
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">{labels[idx]}</p>
                       </div>
                     </div>
@@ -293,7 +293,7 @@ function ClassificaContent() {
 
       return (
         <div className="bg-white rounded-[2.5rem] shadow-xl p-8 border-t-8 border-blue-600 max-w-2xl mx-auto mt-6">
-          <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter mb-6 flex items-center gap-2 justify-center">
+          <h3 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tighter mb-6 flex items-center gap-2 justify-center">
             🏆 Classifica Finale
           </h3>
           <div className="space-y-4">
@@ -312,7 +312,7 @@ function ClassificaContent() {
                       {idx + 1}
                     </span>
                     <div>
-                      <p className="font-black text-lg text-[#0a1628]">{team}</p>
+                      <p className="font-black text-lg text-[#0D3D31]">{team}</p>
                       <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">{labels[idx]}</p>
                     </div>
                   </div>
@@ -332,11 +332,11 @@ function ClassificaContent() {
       <div className="max-w-6xl mx-auto mt-6 md:mt-10 px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
-                <h2 className="text-3xl md:text-5xl font-black text-[#0a1628] uppercase tracking-tighter">Classifiche 📊</h2>
+                <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter">Classifiche 📊</h2>
                 <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Verifica PF/PS e Quoziente</p>
             </div>
             <select 
-                className="w-full md:w-auto bg-white border-2 border-gray-100 rounded-2xl px-4 py-4 font-bold text-[#0a1628] shadow-xl outline-none focus:border-[#0a1628]"
+                className="w-full md:w-auto bg-white border-2 border-gray-100 rounded-2xl px-4 py-4 font-bold text-[#0D3D31] shadow-xl outline-none focus:border-[#0D3D31]"
                 value={selectedTorneo}
                 onChange={(e) => setSelectedTorneo(e.target.value)}
             >
@@ -358,8 +358,8 @@ function ClassificaContent() {
                 onClick={() => setActiveGirone(g)}
                 className={`px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
                   activeGirone === g
-                    ? "bg-[#0a1628] text-white shadow-md"
-                    : "bg-white text-gray-400 hover:text-[#0a1628] border border-gray-100 shadow-sm"
+                    ? "bg-[#0D3D31] text-white shadow-md"
+                    : "bg-white text-gray-400 hover:text-[#0D3D31] border border-gray-100 shadow-sm"
                 }`}
               >
                 Girone {g}
@@ -395,7 +395,7 @@ function ClassificaContent() {
                                           </span>
                                       </td>
                                       <td className="px-6 py-6">
-                                          <div className="leading-tight block font-black text-[#0a1628] text-lg mb-1">
+                                          <div className="leading-tight block font-black text-[#0D3D31] text-lg mb-1">
                                             {splitNames(team.nome).map(formatPlayerName).map((player, pIdx) => (
                                               <span key={pIdx} className="block truncate max-w-[200px]">
                                                 {player}
@@ -414,7 +414,7 @@ function ClassificaContent() {
                                       <td className="px-4 py-6 text-center font-black text-green-600">{team.vinte}</td>
                                       <td className="px-4 py-6 text-center font-bold text-gray-600">{team.puntiFatti}</td>
                                       <td className="px-4 py-6 text-center font-bold text-gray-400">{team.puntiSubiti}</td>
-                                      <td className="px-6 py-6 text-right font-black text-[#0a1628] font-mono">{quotient}</td>
+                                      <td className="px-6 py-6 text-right font-black text-[#0D3D31] font-mono">{quotient}</td>
                                   </tr>
                               );
                           })}
@@ -451,7 +451,7 @@ function ClassificaContent() {
                                           </span>
                                       </td>
                                       <td className="px-6 py-6">
-                                          <div className="leading-tight block font-black text-[#0a1628] text-lg mb-1">
+                                          <div className="leading-tight block font-black text-[#0D3D31] text-lg mb-1">
                                             {splitNames(team.nome).map(formatPlayerName).map((player, pIdx) => (
                                               <span key={pIdx} className="block truncate max-w-[200px]">
                                                 {player}
@@ -462,7 +462,7 @@ function ClassificaContent() {
                                       <td className="px-4 py-6 text-center font-black text-green-600">{team.vinte}</td>
                                       <td className="px-4 py-6 text-center font-bold text-gray-600">{team.puntiFatti}</td>
                                       <td className="px-4 py-6 text-center font-bold text-gray-400">{team.puntiSubiti}</td>
-                                      <td className="px-6 py-6 text-right font-black text-[#0a1628] font-mono">{quotient}</td>
+                                      <td className="px-6 py-6 text-right font-black text-[#0D3D31] font-mono">{quotient}</td>
                                   </tr>
                               );
                           })}

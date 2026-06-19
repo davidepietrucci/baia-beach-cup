@@ -32,13 +32,13 @@ export default function AthleteHeader() {
   return (
     <header
       className="bg-white/95 backdrop-blur-sm py-3 px-4 md:px-8 flex justify-between items-center shadow-sm border-b sticky top-0 z-[100]"
-      style={{ borderColor: "#FFD700" }}
+      style={{ borderColor: "#C3562B" }}
     >
       {/* Logo + Title */}
       <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push("/atleta/dashboard")}>
-        <Image src="/logo.png" alt="BVI Logo" width={36} height={36} className="object-contain" />
-        <h1 className="text-base font-black uppercase tracking-tighter hidden sm:block" style={{ color: "#0a1628" }}>
-          BVI Atleta
+        <Image src="/logo.png" alt="Baia Beach Cup Logo" width={36} height={36} className="object-contain" />
+        <h1 className="text-base font-black uppercase tracking-tighter hidden sm:block" style={{ color: "#0D3D31" }}>
+          Baia Beach Cup Atleta
         </h1>
       </div>
 
@@ -50,7 +50,7 @@ export default function AthleteHeader() {
             href={item.path}
             className={`px-3 py-2 rounded-lg text-[11px] font-bold transition-all whitespace-nowrap ${
               pathname === item.path
-                ? "bg-[#0a1628] text-white shadow-md"
+                ? "bg-[#0D3D31] text-white shadow-md"
                 : "text-gray-400 hover:text-gray-800 hover:bg-gray-100"
             }`}
           >
@@ -66,10 +66,10 @@ export default function AthleteHeader() {
           className="hidden sm:flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
           onClick={() => router.push("/atleta/profilo")}
         >
-          <div className="w-8 h-8 rounded-full bg-[#0a1628] flex items-center justify-center text-[#FFD700] font-black text-xs border-2 border-[#FFD700]">
+          <div className="w-8 h-8 rounded-full bg-[#0D3D31] flex items-center justify-center text-[#C3562B] font-black text-xs border-2 border-[#C3562B]">
             {initials}
           </div>
-          <span className="font-black text-[10px] text-[#0a1628] uppercase tracking-widest hidden md:block">
+          <span className="font-black text-[10px] text-[#0D3D31] uppercase tracking-widest hidden md:block">
             {session?.user?.name?.split(" ")[0] || "Atleta"}
           </span>
         </div>
@@ -84,7 +84,7 @@ export default function AthleteHeader() {
         {/* Mobile hamburger — solo xl hidden */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="xl:hidden w-9 h-9 flex items-center justify-center bg-gray-100 rounded-xl text-[#0a1628] active:scale-90 transition-transform"
+          className="xl:hidden w-9 h-9 flex items-center justify-center bg-gray-100 rounded-xl text-[#0D3D31] active:scale-90 transition-transform"
           aria-label="Menu"
         >
           {isMenuOpen ? (
@@ -110,16 +110,16 @@ export default function AthleteHeader() {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Sidebar header */}
-            <div className="p-5 border-b border-gray-100 flex items-center justify-between bg-[#0a1628]">
+            <div className="p-5 border-b border-gray-100 flex items-center justify-between bg-[#0D3D31]">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#FFD700] flex items-center justify-center text-[#0a1628] font-black text-base">
+                <div className="w-10 h-10 rounded-full bg-[#C3562B] flex items-center justify-center text-[#0D3D31] font-black text-base">
                   {initials}
                 </div>
                 <div>
                   <p className="font-black text-white text-xs uppercase tracking-wider">
                     {session?.user?.name?.split(" ")[0] || "Atleta"}
                   </p>
-                  <p className="text-[9px] font-bold text-[#FFD700]/70 truncate max-w-[100px]">
+                  <p className="text-[9px] font-bold text-[#C3562B]/70 truncate max-w-[100px]">
                     {session?.user?.email || ""}
                   </p>
                 </div>
@@ -139,7 +139,7 @@ export default function AthleteHeader() {
                   href={item.path}
                   className={`flex items-center gap-3 p-4 rounded-2xl text-sm font-black transition-all ${
                     pathname === item.path
-                      ? "bg-[#0a1628] text-white shadow-lg"
+                      ? "bg-[#0D3D31] text-white shadow-lg"
                       : "text-gray-600 hover:bg-gray-50"
                   }`}
                   onClick={() => setIsMenuOpen(false)}

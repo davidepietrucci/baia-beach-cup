@@ -9,7 +9,7 @@ async function sendMailHelper({ email, subject, htmlContent, plainTextSummary })
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
   const from = process.env.SMTP_FROM || "iscrizioni.tornei@beachvolleyinstitute.it";
-  const fromName = process.env.SMTP_FROM_NAME || "BVI Tornei";
+  const fromName = process.env.SMTP_FROM_NAME || "Baia Beach Cup";
   
   const resendApiKey = process.env.RESEND_API_KEY;
   const brevoApiKey = process.env.BREVO_API_KEY;
@@ -128,12 +128,12 @@ export async function sendConfirmationEmail({ email, torneo, giocatori, data, qu
   // Genera risposte custom in formato tabellare HTML
   const risposteHtml = risposte && risposte.length > 0
     ? `
-      <h3 style="color: #0a1628; margin-top: 20px;">Dettagli compilati nel modulo:</h3>
+      <h3 style="color: #0D3D31; margin-top: 20px;">Dettagli compilati nel modulo:</h3>
       <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px;">
         <thead>
           <tr style="background-color: #f4f7fe; text-align: left;">
-            <th style="padding: 10px; border: 1px solid #ddd; color: #0a1628;">Domanda</th>
-            <th style="padding: 10px; border: 1px solid #ddd; color: #0a1628;">Risposta</th>
+            <th style="padding: 10px; border: 1px solid #ddd; color: #0D3D31;">Domanda</th>
+            <th style="padding: 10px; border: 1px solid #ddd; color: #0D3D31;">Risposta</th>
           </tr>
         </thead>
         <tbody>
@@ -150,16 +150,16 @@ export async function sendConfirmationEmail({ email, torneo, giocatori, data, qu
 
   const htmlContent = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px 20px; border: 1px solid #eef2f6; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); color: #333;">
-      <div style="text-align: center; border-bottom: 3px solid #FFD700; padding-bottom: 25px; margin-bottom: 25px;">
-        <h2 style="color: #0a1628; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">BVI TORNEI</h2>
+      <div style="text-align: center; border-bottom: 3px solid #C3562B; padding-bottom: 25px; margin-bottom: 25px;">
+        <h2 style="color: #0D3D31; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">Baia Beach Cup TORNEI</h2>
         <p style="color: #888; margin: 5px 0 0 0; font-size: 13px; font-weight: 600; text-transform: uppercase; tracking-wider: 1px;">Conferma Iscrizione Torneo 🏆</p>
       </div>
       
       <p style="font-size: 15px; line-height: 1.6; color: #555;">Ciao,</p>
       <p style="font-size: 15px; line-height: 1.6; color: #555;">ti confermiamo che la tua iscrizione per il seguente torneo è stata registrata con successo:</p>
       
-      <div style="background-color: #f0f4ff; padding: 20px; border-radius: 12px; margin: 25px 0; border-left: 5px solid #0a1628;">
-        <h3 style="color: #0a1628; margin: 0 0 10px 0; font-size: 18px; font-weight: 800;">${torneo}</h3>
+      <div style="background-color: #f4f7f6; padding: 20px; border-radius: 12px; margin: 25px 0; border-left: 5px solid #0D3D31;">
+        <h3 style="color: #0D3D31; margin: 0 0 10px 0; font-size: 18px; font-weight: 800;">${torneo}</h3>
         <p style="margin: 6px 0; font-size: 14px; color: #444;"><strong>Giocatori/Squadra:</strong> ${giocatori}</p>
         ${data ? `<p style="margin: 6px 0; font-size: 14px; color: #444;"><strong>Data Gara:</strong> ${data}</p>` : ''}
         ${quota !== undefined ? `<p style="margin: 6px 0; font-size: 14px; color: #444;"><strong>Quota:</strong> €${quota}</p>` : ''}
@@ -171,7 +171,7 @@ export async function sendConfirmationEmail({ email, torneo, giocatori, data, qu
 
       <div style="margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 20px; text-align: center; color: #94a3b8; font-size: 11px; line-height: 1.5;">
         <p>Questa è una notifica automatica. Si prega di non rispondere direttamente a questa email.</p>
-        <p>© ${new Date().getFullYear()} Beach Volley Institute. Tutti i diritti riservati.</p>
+        <p>© ${new Date().getFullYear()} Baia Beach Cup. Tutti i diritti riservati.</p>
       </div>
     </div>
   `;

@@ -210,25 +210,25 @@ export default function AtletaGironi() {
           const isQualified = idx < 2;
           const highlight = isMe(team.nome);
           return (
-            <div key={team.nome} className={`bg-white rounded-2xl p-4 shadow-sm border ${highlight ? 'border-[#FFD700] ring-4 ring-[#FFD700]/5' : 'border-gray-100'} flex items-center justify-between transition-all hover:scale-[1.01] ${isQualified ? (highlight ? 'border-l-4 border-l-[#FFD700]' : 'border-l-4 border-l-yellow-400') : ''}`}>
+            <div key={team.nome} className={`bg-white rounded-2xl p-4 shadow-sm border ${highlight ? 'border-[#C3562B] ring-4 ring-[#C3562B]/5' : 'border-gray-100'} flex items-center justify-between transition-all hover:scale-[1.01] ${isQualified ? (highlight ? 'border-l-4 border-l-[#C3562B]' : 'border-l-4 border-l-yellow-400') : ''}`}>
               <div className="flex items-center gap-3 min-w-0">
                 <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${isQualified ? 'bg-yellow-400 text-white shadow-sm' : 'bg-gray-100 text-gray-500'}`}>
                   {idx + 1}
                 </span>
                 <div className="min-w-0">
-                  <p className="font-bold text-[#0a1628] text-sm truncate uppercase tracking-tight">
+                  <p className="font-bold text-[#0D3D31] text-sm truncate uppercase tracking-tight">
                     {team.nome}
-                    {highlight && <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#FFD700] ml-1.5"></span>}
+                    {highlight && <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#C3562B] ml-1.5"></span>}
                   </p>
                   <p className="text-[10px] text-gray-400 font-semibold mt-0.5 whitespace-nowrap">
-                    G: <span className="text-[#0a1628] font-bold">{team.giocate}</span> | 
+                    G: <span className="text-[#0D3D31] font-bold">{team.giocate}</span> | 
                     V/P: <span className="text-green-600 font-bold">{team.vinte}</span>/<span className="text-red-500 font-bold">{team.perse}</span> | 
                     Quoz: <span className="text-blue-600 font-bold">{quotient}</span>
                   </p>
                 </div>
               </div>
               <div className="text-right shrink-0">
-                <p className="text-lg font-black text-[#0a1628] tracking-tighter leading-none">{team.score}</p>
+                <p className="text-lg font-black text-[#0D3D31] tracking-tighter leading-none">{team.score}</p>
                 <p className="text-[8px] font-black text-gray-300 uppercase tracking-widest mt-1">Punti</p>
               </div>
             </div>
@@ -571,14 +571,14 @@ export default function AtletaGironi() {
                 return (
                   <tr key={team.nome} className={`hover:bg-blue-50/20 ${highlight ? 'bg-yellow-50/40' : ''}`}>
                     <td className="px-4 py-3">
-                      <span className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-black ${highlight ? 'bg-[#FFD700] text-[#0a1628]' : 'bg-gray-100 text-gray-500'}`}>
+                      <span className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-black ${highlight ? 'bg-[#C3562B] text-[#0D3D31]' : 'bg-gray-100 text-gray-500'}`}>
                         {idx + 1}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-gray-900">
                       <span className="flex items-center gap-1.5 font-bold">
                         {team.nome}
-                        {highlight && <span className="w-1.5 h-1.5 rounded-full bg-[#FFD700]"></span>}
+                        {highlight && <span className="w-1.5 h-1.5 rounded-full bg-[#C3562B]"></span>}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-center text-gray-400 hidden sm:table-cell">{team.giocate}</td>
@@ -589,8 +589,8 @@ export default function AtletaGironi() {
                     </td>
                     <td className="px-4 py-3 text-center text-gray-600 hidden sm:table-cell">{team.pf}</td>
                     <td className="px-4 py-3 text-center text-gray-400 hidden sm:table-cell">{team.ps}</td>
-                    <td className="px-4 py-3 text-center text-[#0a1628] hidden sm:table-cell">{quotient}</td>
-                    <td className="px-4 py-3 text-right text-lg font-black text-[#0a1628]">{team.punti}</td>
+                    <td className="px-4 py-3 text-center text-[#0D3D31] hidden sm:table-cell">{quotient}</td>
+                    <td className="px-4 py-3 text-right text-lg font-black text-[#0D3D31]">{team.punti}</td>
                   </tr>
                 );
               })}
@@ -606,7 +606,7 @@ export default function AtletaGironi() {
         {/* Matches Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {matches.map((m, idx) => (
-            <div key={idx} className={`bg-white p-6 rounded-[2rem] border shadow-sm transition-all hover:scale-[1.02] ${isMe(m.left) || isMe(m.right) ? 'border-[#FFD700] ring-4 ring-[#FFD700]/5' : 'border-gray-100'}`}>
+            <div key={idx} className={`bg-white p-6 rounded-[2rem] border shadow-sm transition-all hover:scale-[1.02] ${isMe(m.left) || isMe(m.right) ? 'border-[#C3562B] ring-4 ring-[#C3562B]/5' : 'border-gray-100'}`}>
               <div className="flex justify-between items-start mb-4">
                 <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest">{m.label}</span>
                 <div className="flex gap-1.5">
@@ -616,7 +616,7 @@ export default function AtletaGironi() {
               </div>
               <div className="flex justify-between items-center gap-4">
                 <div className="space-y-3 flex-1 min-w-0">
-                  <div className={`flex items-center gap-2 ${isMe(m.left) ? 'text-[#0a1628]' : 'text-gray-500'}`}>
+                  <div className={`flex items-center gap-2 ${isMe(m.left) ? 'text-[#0D3D31]' : 'text-gray-500'}`}>
                     <p className="font-black text-sm truncate uppercase tracking-tighter">
                       {m.left && m.left !== "—" && m.left !== "Slot Libero" ? splitNames(m.left).map(formatPlayerName).join(" - ") : (m.left || "Slot Libero")}
                     </p>
@@ -624,7 +624,7 @@ export default function AtletaGironi() {
                   <div className="h-px bg-gray-50 w-full relative">
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 bg-white px-1.5 text-[8px] font-black text-gray-200 uppercase tracking-widest">Contro</span>
                   </div>
-                  <div className={`flex items-center gap-2 ${isMe(m.right) ? 'text-[#0a1628]' : 'text-gray-500'}`}>
+                  <div className={`flex items-center gap-2 ${isMe(m.right) ? 'text-[#0D3D31]' : 'text-gray-500'}`}>
                     <p className="font-black text-sm truncate uppercase tracking-tighter">
                       {m.right && m.right !== "—" && m.right !== "Slot Libero" ? splitNames(m.right).map(formatPlayerName).join(" - ") : (m.right || "Slot Libero")}
                     </p>
@@ -632,7 +632,7 @@ export default function AtletaGironi() {
                 </div>
                 <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14 bg-gray-50 rounded-2xl border border-gray-100 shadow-inner">
                   {m.meta?.scoreL || m.meta?.scoreR ? (
-                    <p className="text-lg font-black text-[#0a1628] tracking-tighter">{m.meta.scoreL}<span className="text-gray-300 mx-0.5">:</span>{m.meta.scoreR}</p>
+                    <p className="text-lg font-black text-[#0D3D31] tracking-tighter">{m.meta.scoreL}<span className="text-gray-300 mx-0.5">:</span>{m.meta.scoreR}</p>
                   ) : (
                     <span className="text-[7px] font-black text-gray-300 uppercase tracking-widest text-center leading-tight">Attesa</span>
                   )}
@@ -651,7 +651,7 @@ export default function AtletaGironi() {
 
   if (status === "loading") return (
     <div className="min-h-screen bg-[#f8faff] flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-[#0a1628] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-16 h-16 border-4 border-[#0D3D31] border-t-transparent rounded-full animate-spin"></div>
     </div>
   );
 
@@ -663,20 +663,20 @@ export default function AtletaGironi() {
         
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
             <div>
-                <h2 className="text-4xl md:text-6xl font-black text-[#0a1628] uppercase tracking-tighter leading-none">Gironi & Calendario</h2>
+                <h2 className="text-4xl md:text-6xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Gironi & Calendario</h2>
                 <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-[0.3em] mt-4">Match in tempo reale 🏐</p>
             </div>
             
             <div className="w-full md:w-auto relative group">
-                <div className="absolute inset-0 bg-[#0a1628] rounded-3xl blur-xl opacity-10 group-hover:opacity-20 transition-opacity"></div>
+                <div className="absolute inset-0 bg-[#0D3D31] rounded-3xl blur-xl opacity-10 group-hover:opacity-20 transition-opacity"></div>
                 <select 
-                    className="w-full md:w-auto relative bg-white border-4 border-white rounded-[2rem] px-8 py-5 font-black text-[#0a1628] uppercase text-xs tracking-widest shadow-xl outline-none focus:ring-4 focus:ring-[#0a1628]/5 transition-all appearance-none pr-14" 
+                    className="w-full md:w-auto relative bg-white border-4 border-white rounded-[2rem] px-8 py-5 font-black text-[#0D3D31] uppercase text-xs tracking-widest shadow-xl outline-none focus:ring-4 focus:ring-[#0D3D31]/5 transition-all appearance-none pr-14" 
                     value={selectedTorneo} 
                     onChange={e=>setSelectedTorneo(e.target.value)}
                 >
                     {torneiAttivi.map(t=><option key={t.id} value={t.nome}>{t.nome}</option>)}
                 </select>
-                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-[#0a1628]">
+                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-[#0D3D31]">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={4} stroke="currentColor" className="w-4 h-4">
                         <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                     </svg>
@@ -691,14 +691,14 @@ export default function AtletaGironi() {
               <div className="flex bg-gray-200/60 p-1.5 rounded-2xl mb-8 max-w-md mx-auto border border-gray-200">
                 <button
                   onClick={() => setActiveTab("iniziali")}
-                  className={`flex-1 py-3 text-center rounded-xl font-black text-[10px] sm:text-xs uppercase tracking-wider transition-all ${activeTab === "iniziali" ? 'bg-[#0a1628] text-white shadow-md' : 'text-gray-500 hover:text-[#0a1628]'}`}
+                  className={`flex-1 py-3 text-center rounded-xl font-black text-[10px] sm:text-xs uppercase tracking-wider transition-all ${activeTab === "iniziali" ? 'bg-[#0D3D31] text-white shadow-md' : 'text-gray-500 hover:text-[#0D3D31]'}`}
                 >
                   Gironi Iniziali 📋
                 </button>
                 {bracketConfig?.phaseType === "gold_silver" && bracketConfig?.subPhaseType === "groups" && (
                   <button
                     onClick={() => setActiveTab("intermedi")}
-                    className={`flex-1 py-3 text-center rounded-xl font-black text-[10px] sm:text-xs uppercase tracking-wider transition-all ${activeTab === "intermedi" ? 'bg-[#0a1628] text-white shadow-md' : 'text-gray-500 hover:text-[#0a1628]'}`}
+                    className={`flex-1 py-3 text-center rounded-xl font-black text-[10px] sm:text-xs uppercase tracking-wider transition-all ${activeTab === "intermedi" ? 'bg-[#0D3D31] text-white shadow-md' : 'text-gray-500 hover:text-[#0D3D31]'}`}
                   >
                     Gironi Intermedi 🏆
                   </button>
@@ -706,7 +706,7 @@ export default function AtletaGironi() {
                 {bracketConfig?.tabellonePubblicato && (
                 <button
                   onClick={() => setActiveTab("finali")}
-                  className={`flex-1 py-3 text-center rounded-xl font-black text-[10px] sm:text-xs uppercase tracking-wider transition-all ${activeTab === "finali" ? 'bg-[#0a1628] text-white shadow-md' : 'text-gray-500 hover:text-[#0a1628]'}`}
+                  className={`flex-1 py-3 text-center rounded-xl font-black text-[10px] sm:text-xs uppercase tracking-wider transition-all ${activeTab === "finali" ? 'bg-[#0D3D31] text-white shadow-md' : 'text-gray-500 hover:text-[#0D3D31]'}`}
                 >
                   Fasi Finali ⚔️
                 </button>
@@ -725,7 +725,7 @@ export default function AtletaGironi() {
                       onClick={() => setActiveGirone(g)}
                       className={`px-5 py-2.5 rounded-xl font-black transition-all text-xs ${
                         activeGirone === g 
-                        ? 'bg-[#0a1628] text-white shadow-lg' 
+                        ? 'bg-[#0D3D31] text-white shadow-lg' 
                         : 'bg-white text-gray-400 hover:bg-gray-100 border border-gray-200'
                       }`}
                     >
@@ -741,15 +741,15 @@ export default function AtletaGironi() {
                 <div className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 mb-6 flex justify-around text-center text-xs">
                     <div>
                         <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Modalità</p>
-                        <p className="font-bold text-[#0a1628] mt-0.5">{config.gironeTypes[activeGirone]}</p>
+                        <p className="font-bold text-[#0D3D31] mt-0.5">{config.gironeTypes[activeGirone]}</p>
                     </div>
                     <div className="border-x border-gray-100 px-6 sm:px-8">
                         <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Formula</p>
-                        <p className="font-bold text-[#0a1628] mt-0.5">{config.gironeSets[activeGirone]}</p>
+                        <p className="font-bold text-[#0D3D31] mt-0.5">{config.gironeSets[activeGirone]}</p>
                     </div>
                     <div>
                         <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Squadre</p>
-                        <p className="font-bold text-[#0a1628] mt-0.5">{config.teamCounts[activeGirone]}</p>
+                        <p className="font-bold text-[#0D3D31] mt-0.5">{config.teamCounts[activeGirone]}</p>
                     </div>
                 </div>
 
@@ -787,7 +787,7 @@ export default function AtletaGironi() {
                       const highlightedMatch = isMe(match.left) || isMe(match.right);
 
                       return (
-                        <div key={idx} className={`bg-white rounded-2xl p-4 shadow-sm border ${highlightedMatch ? 'border-[#FFD700] ring-4 ring-[#FFD700]/5' : 'border-gray-100'}`}>
+                        <div key={idx} className={`bg-white rounded-2xl p-4 shadow-sm border ${highlightedMatch ? 'border-[#C3562B] ring-4 ring-[#C3562B]/5' : 'border-gray-100'}`}>
                           <div className="flex justify-between items-center mb-3 border-b border-gray-50 pb-2">
                             <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest">Partita {idx + 1}</span>
                             <div className="flex gap-1.5">
@@ -799,7 +799,7 @@ export default function AtletaGironi() {
                           <div className="space-y-3">
                             {/* Team Left */}
                             <div className="flex justify-between items-center">
-                              <span className={`text-xs uppercase font-bold truncate pr-4 ${isWinnerL ? 'text-[#0a1628] font-black' : 'text-gray-500'} ${isMe(match.left) ? 'text-[#0a1628] underline decoration-[#FFD700] decoration-2' : ''}`}>
+                              <span className={`text-xs uppercase font-bold truncate pr-4 ${isWinnerL ? 'text-[#0D3D31] font-black' : 'text-gray-500'} ${isMe(match.left) ? 'text-[#0D3D31] underline decoration-[#C3562B] decoration-2' : ''}`}>
                                 {match.left && match.left !== "—" && match.left !== "Slot Libero" ? splitNames(match.left).map(formatPlayerName).join(" - ") : (match.left || "Slot Libero")}
                               </span>
                               <div className="flex items-center gap-1.5">
@@ -812,7 +812,7 @@ export default function AtletaGironi() {
                             
                             {/* Team Right */}
                             <div className="flex justify-between items-center">
-                              <span className={`text-xs uppercase font-bold truncate pr-4 ${isWinnerR ? 'text-[#0a1628] font-black' : 'text-gray-500'} ${isMe(match.right) ? 'text-[#0a1628] underline decoration-[#FFD700] decoration-2' : ''}`}>
+                              <span className={`text-xs uppercase font-bold truncate pr-4 ${isWinnerR ? 'text-[#0D3D31] font-black' : 'text-gray-500'} ${isMe(match.right) ? 'text-[#0D3D31] underline decoration-[#C3562B] decoration-2' : ''}`}>
                                 {match.right && match.right !== "—" && match.right !== "Slot Libero" ? splitNames(match.right).map(formatPlayerName).join(" - ") : (match.right || "Slot Libero")}
                               </span>
                               <div className="flex items-center gap-1.5">
@@ -903,7 +903,7 @@ export default function AtletaGironi() {
                       );
 
                       return (
-                        <div key={idx} className={`bg-white rounded-2xl p-4 shadow-sm border ${highlightedMatch ? 'border-[#FFD700] ring-4 ring-[#FFD700]/5' : 'border-gray-100'}`}>
+                        <div key={idx} className={`bg-white rounded-2xl p-4 shadow-sm border ${highlightedMatch ? 'border-[#C3562B] ring-4 ring-[#C3562B]/5' : 'border-gray-100'}`}>
                           <div className="flex justify-between items-center mb-3 border-b border-gray-50 pb-2">
                             <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{m.label}</span>
                             <div className="flex gap-1.5">
@@ -914,13 +914,13 @@ export default function AtletaGironi() {
                           
                           <div className="space-y-2">
                             <div className="flex justify-between items-center">
-                              <span className={`text-xs uppercase font-bold truncate pr-4 ${isWinnerL ? 'text-[#0a1628] font-black' : 'text-gray-500'} ${isMe(m.left) ? 'text-[#0a1628] underline decoration-[#FFD700] decoration-2' : ''}`}>
+                              <span className={`text-xs uppercase font-bold truncate pr-4 ${isWinnerL ? 'text-[#0D3D31] font-black' : 'text-gray-500'} ${isMe(m.left) ? 'text-[#0D3D31] underline decoration-[#C3562B] decoration-2' : ''}`}>
                                 {m.left && m.left !== "—" && m.left !== "Slot Libero" ? splitNames(m.left).map(formatPlayerName).join(" - ") : (m.left || "TBD")}
                               </span>
                               <span className={`text-sm font-black ${isWinnerL ? 'text-green-600' : 'text-gray-400'}`}>{hasScore ? scoreL : "-"}</span>
                             </div>
                             <div className="flex justify-between items-center">
-                              <span className={`text-xs uppercase font-bold truncate pr-4 ${isWinnerR ? 'text-[#0a1628] font-black' : 'text-gray-500'} ${isMe(m.right) ? 'text-[#0a1628] underline decoration-[#FFD700] decoration-2' : ''}`}>
+                              <span className={`text-xs uppercase font-bold truncate pr-4 ${isWinnerR ? 'text-[#0D3D31] font-black' : 'text-gray-500'} ${isMe(m.right) ? 'text-[#0D3D31] underline decoration-[#C3562B] decoration-2' : ''}`}>
                                 {m.right && m.right !== "—" && m.right !== "Slot Libero" ? splitNames(m.right).map(formatPlayerName).join(" - ") : (m.right || "TBD")}
                               </span>
                               <span className={`text-sm font-black ${isWinnerR ? 'text-green-600' : 'text-gray-400'}`}>{hasScore ? scoreR : "-"}</span>
@@ -946,7 +946,7 @@ export default function AtletaGironi() {
         ) : (
           <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
             <span className="text-5xl mb-4 block">⏳</span>
-            <h3 className="text-lg font-black text-[#0a1628] uppercase tracking-tight mb-2">Gironi in Elaborazione</h3>
+            <h3 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight mb-2">Gironi in Elaborazione</h3>
             <p className="text-gray-400 font-medium text-xs max-w-sm mx-auto">
               {config ? "Lo staff sta completando la composizione dei gironi e dei calendari. Saranno visibili a breve!" : "I gironi per questo torneo non sono ancora stati configurati dallo staff."}
             </p>
@@ -956,7 +956,7 @@ export default function AtletaGironi() {
       
       <button 
         onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} 
-        className="fixed bottom-24 right-4 xl:bottom-8 xl:right-8 w-12 h-12 bg-[#0a1628] text-[#FFD700] rounded-2xl shadow-2xl flex items-center justify-center text-lg border-2 border-[#FFD700] hover:scale-110 active:scale-90 transition-all z-50 md:hidden"
+        className="fixed bottom-24 right-4 xl:bottom-8 xl:right-8 w-12 h-12 bg-[#0D3D31] text-[#C3562B] rounded-2xl shadow-2xl flex items-center justify-center text-lg border-2 border-[#C3562B] hover:scale-110 active:scale-90 transition-all z-50 md:hidden"
       >
         ↑
       </button>

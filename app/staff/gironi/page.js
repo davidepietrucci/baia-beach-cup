@@ -485,12 +485,12 @@ export default function StaffGironi() {
       <div className="max-w-[1400px] mx-auto px-4 mt-6 md:mt-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
             <div>
-                <h2 className="text-3xl md:text-5xl font-black text-[#0a1628] uppercase tracking-tighter leading-none">Gestione Gironi 🏐</h2>
+                <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Gestione Gironi 🏐</h2>
                 <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Composizione e Risultati</p>
             </div>
             <div className="flex flex-wrap gap-2 w-full md:w-auto">
                 <select 
-                    className="flex-1 md:w-64 bg-white border-2 border-gray-100 rounded-2xl px-4 py-3 font-bold text-[#0a1628] text-sm shadow-xl"
+                    className="flex-1 md:w-64 bg-white border-2 border-gray-100 rounded-2xl px-4 py-3 font-bold text-[#0D3D31] text-sm shadow-xl"
                     value={selectedTorneo}
                     onChange={(e) => setSelectedTorneo(e.target.value)}
                 >
@@ -503,7 +503,7 @@ export default function StaffGironi() {
                 <button 
                     onClick={handleRandomizeGironi}
                     disabled={!selectedTorneo}
-                    className="flex-1 md:flex-none bg-[#FFD700] text-[#0a1628] px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all disabled:opacity-50"
+                    className="flex-1 md:flex-none bg-[#C3562B] text-[#0D3D31] px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all disabled:opacity-50"
                 >
                     🎲 Sorteggia Coppie
                 </button>
@@ -517,7 +517,7 @@ export default function StaffGironi() {
                 <button 
                     onClick={handleSave}
                     disabled={!selectedTorneo}
-                    className="flex-1 md:flex-none bg-[#0a1628] text-white px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all disabled:opacity-50"
+                    className="flex-1 md:flex-none bg-[#0D3D31] text-white px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all disabled:opacity-50"
                 >
                     Salva Tutto
                 </button>
@@ -556,7 +556,7 @@ export default function StaffGironi() {
                                 <select
                                     value={rankingType}
                                     onChange={(e) => setRankingType(e.target.value)}
-                                    className="bg-gray-50 border-none rounded-xl px-3 py-2 font-bold text-[#0a1628] text-xs shadow-inner focus:ring-1 focus:ring-[#0a1628] cursor-pointer"
+                                    className="bg-gray-50 border-none rounded-xl px-3 py-2 font-bold text-[#0D3D31] text-xs shadow-inner focus:ring-1 focus:ring-[#0D3D31] cursor-pointer"
                                 >
                                     <option value="avulsa">Classifica Avulsa (Unica)</option>
                                     <option value="gironi">Classifiche Separate (Gironi)</option>
@@ -568,7 +568,7 @@ export default function StaffGironi() {
                                     type="number" 
                                     value={numGironi} 
                                     onChange={(e) => setNumGironi(Math.max(1, Math.min(8, parseInt(e.target.value) || 1)))}
-                                    className="w-16 bg-gray-50 border-none rounded-xl px-3 py-2 text-center font-black text-[#0a1628] shadow-inner" 
+                                    className="w-16 bg-gray-50 border-none rounded-xl px-3 py-2 text-center font-black text-[#0D3D31] shadow-inner" 
                                 />
                             </div>
                         </div>
@@ -609,7 +609,7 @@ export default function StaffGironi() {
                                                     key={idx} 
                                                     className={`flex items-center gap-3 p-1.5 rounded-2xl transition-all border-2 cursor-pointer ${
                                                         selectedSlot && selectedSlot.gironeId === g.id && selectedSlot.slotIdx === idx
-                                                            ? 'border-[#FFD700] bg-yellow-50/50 scale-[1.02] shadow-md'
+                                                            ? 'border-[#C3562B] bg-yellow-50/50 scale-[1.02] shadow-md'
                                                             : dragOverSlot === slotKey 
                                                                 ? `border-dashed ${c.border} ${c.light} scale-[1.02] shadow-sm` 
                                                                 : 'border-transparent hover:border-gray-200 hover:bg-gray-50/30'
@@ -630,7 +630,7 @@ export default function StaffGironi() {
                                                 >
                                                     <span className="text-[10px] font-black text-gray-300 w-4 cursor-default select-none">{idx + 1}</span>
                                                     <select 
-                                                        className="flex-1 bg-gray-50/80 border-none rounded-xl py-2.5 px-3 text-xs sm:text-sm font-bold text-gray-900 focus:ring-2 focus:ring-[#0a1628] cursor-pointer"
+                                                        className="flex-1 bg-gray-50/80 border-none rounded-xl py-2.5 px-3 text-xs sm:text-sm font-bold text-gray-900 focus:ring-2 focus:ring-[#0D3D31] cursor-pointer"
                                                         value={playerInSlot}
                                                         onChange={(e) => handleAssignmentChange(g.id, idx, e.target.value)}
                                                         onClick={(e) => e.stopPropagation()}
@@ -679,7 +679,7 @@ export default function StaffGironi() {
                                 <div key={`partite-${g.id}`} className="space-y-4">
                                     <div className="flex items-center gap-3 mb-2">
                                         <div className={`w-3 h-3 rounded-full ${c.main}`}></div>
-                                        <h4 className="text-sm font-black text-[#0a1628] uppercase tracking-widest">Girone {g.id}</h4>
+                                        <h4 className="text-sm font-black text-[#0D3D31] uppercase tracking-widest">Girone {g.id}</h4>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {schedule.map((row, idx) => {
@@ -694,14 +694,14 @@ export default function StaffGironi() {
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center justify-between gap-4">
-                                                        <span className="flex-1 text-[11px] font-black text-[#0a1628] text-right truncate">
+                                                        <span className="flex-1 text-[11px] font-black text-[#0D3D31] text-right truncate">
                                                             {row.left && row.left !== "—" && row.left !== "Slot Libero" ? splitNames(row.left).map(formatPlayerName).join(" - ") : (row.left || "Slot Libero")}
                                                         </span>
                                                         <div className="flex gap-1">
-                                                            <input type="text" value={meta.s1L || ""} onChange={(e) => handleMetadataChange(g.id, idx, 's1L', e.target.value)} className="w-8 h-8 bg-[#0a1628] text-white rounded-lg text-xs text-center font-black" />
-                                                            <input type="text" value={meta.s1R || ""} onChange={(e) => handleMetadataChange(g.id, idx, 's1R', e.target.value)} className="w-8 h-8 bg-[#0a1628] text-white rounded-lg text-xs text-center font-black" />
+                                                            <input type="text" value={meta.s1L || ""} onChange={(e) => handleMetadataChange(g.id, idx, 's1L', e.target.value)} className="w-8 h-8 bg-[#0D3D31] text-white rounded-lg text-xs text-center font-black" />
+                                                            <input type="text" value={meta.s1R || ""} onChange={(e) => handleMetadataChange(g.id, idx, 's1R', e.target.value)} className="w-8 h-8 bg-[#0D3D31] text-white rounded-lg text-xs text-center font-black" />
                                                         </div>
-                                                        <span className="flex-1 text-[11px] font-black text-[#0a1628] text-left truncate">
+                                                        <span className="flex-1 text-[11px] font-black text-[#0D3D31] text-left truncate">
                                                             {row.right && row.right !== "—" && row.right !== "Slot Libero" ? splitNames(row.right).map(formatPlayerName).join(" - ") : (row.right || "Slot Libero")}
                                                         </span>
                                                     </div>
@@ -763,7 +763,7 @@ export default function StaffGironi() {
                             >
                                 <div className="flex items-center gap-2">
                                     <span className="text-gray-300 group-hover:text-blue-500 transition-colors select-none">⋮⋮</span>
-                                    <span className={`font-bold text-xs ${isAssigned ? 'text-gray-400 line-through' : 'text-[#0a1628]'}`}>{g.giocatori}</span>
+                                    <span className={`font-bold text-xs ${isAssigned ? 'text-gray-400 line-through' : 'text-[#0D3D31]'}`}>{g.giocatori}</span>
                                 </div>
                                 <span className={`text-[10px] font-black ${isAssigned ? 'text-gray-300' : 'text-blue-600'}`}>#{g.id}</span>
                             </div>

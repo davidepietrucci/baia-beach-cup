@@ -37,28 +37,28 @@ export default function AtletaProfilo() {
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-[#f0f4ff] flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#0a1628] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#f4f7f6] flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-[#0D3D31] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#f0f4ff] pb-28 xl:pb-10">
+    <main className="min-h-screen bg-[#f4f7f6] pb-28 xl:pb-10">
       <AthleteHeader />
 
       <div className="max-w-2xl mx-auto px-4 pt-6">
 
         {/* Avatar hero */}
         <div className="flex items-center gap-5 mb-6">
-          <div className="w-20 h-20 rounded-[1.6rem] bg-[#0a1628] flex items-center justify-center text-[#FFD700] font-black text-3xl shadow-xl border-4 border-white shrink-0">
+          <div className="w-20 h-20 rounded-[1.6rem] bg-[#0D3D31] flex items-center justify-center text-[#C3562B] font-black text-3xl shadow-xl border-4 border-white shrink-0">
             {initials}
           </div>
           <div>
-            <h1 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter">{nome}</h1>
+            <h1 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tighter">{nome}</h1>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">{email}</p>
             <span className="mt-2 inline-block text-[9px] font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-widest border border-blue-100">
-              Atleta BVI
+              Atleta Baia Beach Cup
             </span>
           </div>
         </div>
@@ -71,7 +71,7 @@ export default function AtletaProfilo() {
               onClick={() => setTab(t)}
               className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                 tab === t
-                  ? "bg-[#0a1628] text-white shadow-md"
+                  ? "bg-[#0D3D31] text-white shadow-md"
                   : "text-gray-400 hover:text-gray-600"
               }`}
             >
@@ -109,7 +109,7 @@ export default function AtletaProfilo() {
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-2xl">🏥</div>
                   <div>
-                    <p className="font-black text-[#0a1628] text-xs uppercase tracking-tight">Certificato Agonistico</p>
+                    <p className="font-black text-[#0D3D31] text-xs uppercase tracking-tight">Certificato Agonistico</p>
                     <p className="text-[10px] text-gray-400 font-semibold mt-0.5">Necessario per partecipare ai tornei</p>
                   </div>
                 </div>
@@ -119,7 +119,7 @@ export default function AtletaProfilo() {
               </div>
               <div className="mt-4 pt-4 border-t border-gray-50">
                 <label className="block w-full">
-                  <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 flex flex-col items-center gap-2 cursor-pointer hover:border-[#0a1628] transition-colors group">
+                  <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 flex flex-col items-center gap-2 cursor-pointer hover:border-[#0D3D31] transition-colors group">
                     <span className="text-2xl group-hover:scale-110 transition-transform">📁</span>
                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">
                       Tocca per caricare il PDF
@@ -135,12 +135,12 @@ export default function AtletaProfilo() {
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center text-2xl">📋</div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-black text-[#0a1628] text-xs uppercase tracking-tight">Modulo BVI</p>
+                  <p className="font-black text-[#0D3D31] text-xs uppercase tracking-tight">Modulo Baia Beach Cup</p>
                   <p className="text-[10px] text-gray-400 font-semibold mt-0.5">Modulo iscrizione associazione</p>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white text-sm shadow-md shrink-0">✓</div>
               </div>
-              <button className="mt-4 w-full py-3 border-2 border-gray-100 text-gray-400 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:border-[#0a1628] hover:text-[#0a1628] transition-all active:scale-95">
+              <button className="mt-4 w-full py-3 border-2 border-gray-100 text-gray-400 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:border-[#0D3D31] hover:text-[#0D3D31] transition-all active:scale-95">
                 Download PDF
               </button>
             </div>
@@ -212,7 +212,7 @@ function InfoRow({ emoji, label, value }) {
       <span className="text-2xl shrink-0">{emoji}</span>
       <div className="min-w-0">
         <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{label}</p>
-        <p className="text-sm font-black text-[#0a1628] mt-0.5 truncate">{value}</p>
+        <p className="text-sm font-black text-[#0D3D31] mt-0.5 truncate">{value}</p>
       </div>
     </div>
   );
@@ -222,7 +222,7 @@ function ToggleRow({ label, desc, value, onChange }) {
   return (
     <div className="flex items-center justify-between gap-4 p-3 bg-gray-50 rounded-2xl">
       <div>
-        <p className="text-xs font-black text-[#0a1628] uppercase tracking-tight">{label}</p>
+        <p className="text-xs font-black text-[#0D3D31] uppercase tracking-tight">{label}</p>
         <p className="text-[9px] font-bold text-gray-400 mt-0.5">{desc}</p>
       </div>
       <button

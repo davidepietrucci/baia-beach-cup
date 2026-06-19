@@ -40,21 +40,21 @@ export default function MieIscrizioni() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen bg-[#f0f4ff] flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#0a1628] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#f4f7f6] flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-[#0D3D31] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#f0f4ff] pb-28 xl:pb-10">
+    <main className="min-h-screen bg-[#f4f7f6] pb-28 xl:pb-10">
       <AthleteHeader />
 
       <div className="max-w-2xl mx-auto px-4 pt-6">
 
         {/* Titolo */}
         <div className="mb-6">
-          <h1 className="text-3xl font-black text-[#0a1628] uppercase tracking-tighter">Le Mie Iscrizioni</h1>
+          <h1 className="text-3xl font-black text-[#0D3D31] uppercase tracking-tighter">Le Mie Iscrizioni</h1>
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
             {iscrizioni.length} iscrizioni trovate
           </p>
@@ -68,8 +68,8 @@ export default function MieIscrizioni() {
               onClick={() => setFilter(f)}
               className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all shrink-0 ${
                 filter === f
-                  ? "bg-[#0a1628] text-white shadow-md"
-                  : "bg-white text-gray-400 border border-gray-200 hover:border-[#0a1628] hover:text-[#0a1628]"
+                  ? "bg-[#0D3D31] text-white shadow-md"
+                  : "bg-white text-gray-400 border border-gray-200 hover:border-[#0D3D31] hover:text-[#0D3D31]"
               }`}
             >
               {f}
@@ -92,7 +92,7 @@ export default function MieIscrizioni() {
                 <div
                   key={isc.id}
                   className={`bg-white rounded-[1.8rem] shadow-sm border overflow-hidden transition-all duration-300 ${
-                    isOpen ? "border-[#0a1628] shadow-md" : "border-gray-100"
+                    isOpen ? "border-[#0D3D31] shadow-md" : "border-gray-100"
                   }`}
                 >
                   {/* Riga principale — tap per espandere */}
@@ -109,7 +109,7 @@ export default function MieIscrizioni() {
 
                     {/* Testo */}
                     <div className="min-w-0 flex-1">
-                      <p className="font-black text-[#0a1628] text-xs uppercase tracking-tight truncate">{isc.torneo}</p>
+                      <p className="font-black text-[#0D3D31] text-xs uppercase tracking-tight truncate">{isc.torneo}</p>
                       <p className="text-[10px] text-gray-400 font-semibold truncate mt-0.5">{isc.giocatori}</p>
                     </div>
 
@@ -140,22 +140,22 @@ export default function MieIscrizioni() {
                         <div className="grid grid-cols-2 gap-3">
                           <div className="bg-gray-50 rounded-2xl p-3">
                             <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Data</p>
-                            <p className="text-xs font-black text-[#0a1628] mt-0.5">{isc.data || "—"}</p>
+                            <p className="text-xs font-black text-[#0D3D31] mt-0.5">{isc.data || "—"}</p>
                           </div>
                           <div className="bg-gray-50 rounded-2xl p-3">
                             <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">ID Iscrizione</p>
-                            <p className="text-xs font-black text-[#0a1628] mt-0.5">#{isc.id}</p>
+                            <p className="text-xs font-black text-[#0D3D31] mt-0.5">#{isc.id}</p>
                           </div>
                           {isc.tel && (
                             <div className="bg-gray-50 rounded-2xl p-3">
                               <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Telefono</p>
-                              <p className="text-xs font-black text-[#0a1628] mt-0.5">{isc.tel}</p>
+                              <p className="text-xs font-black text-[#0D3D31] mt-0.5">{isc.tel}</p>
                             </div>
                           )}
                           {isc.quotaPagata !== undefined && (
                             <div className={`rounded-2xl p-3 ${isc.quotaPagata > 0 ? "bg-green-50" : "bg-gray-50"}`}>
                               <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Quota</p>
-                              <p className={`text-xs font-black mt-0.5 ${isc.quotaPagata > 0 ? "text-green-600" : "text-[#0a1628]"}`}>
+                              <p className={`text-xs font-black mt-0.5 ${isc.quotaPagata > 0 ? "text-green-600" : "text-[#0D3D31]"}`}>
                                 {isc.quotaPagata > 0 ? `€${isc.quotaPagata} pagata` : "Non ancora pagata"}
                               </p>
                             </div>
@@ -177,7 +177,7 @@ export default function MieIscrizioni() {
                           </a>
                           <button
                             onClick={() => router.push(`/atleta/gironi`)}
-                            className="flex-1 py-3 bg-[#0a1628] text-[#FFD700] rounded-2xl text-[10px] font-black uppercase tracking-widest text-center active:scale-95 transition-transform"
+                            className="flex-1 py-3 bg-[#0D3D31] text-[#C3562B] rounded-2xl text-[10px] font-black uppercase tracking-widest text-center active:scale-95 transition-transform"
                           >
                             Vedi Gironi →
                           </button>
@@ -194,7 +194,7 @@ export default function MieIscrizioni() {
           <div className="flex flex-col items-center justify-center py-20 gap-5 text-center">
             <span className="text-6xl">🏐</span>
             <div>
-              <p className="font-black text-[#0a1628] text-lg uppercase tracking-tighter">
+              <p className="font-black text-[#0D3D31] text-lg uppercase tracking-tighter">
                 {filter === "Tutte" ? "Nessuna iscrizione" : `Nessuna iscrizione ${filter.toLowerCase()}`}
               </p>
               <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">
@@ -204,7 +204,7 @@ export default function MieIscrizioni() {
             {filter === "Tutte" && (
               <button
                 onClick={() => router.push("/atleta/iscriviti")}
-                className="px-8 py-4 bg-[#0a1628] text-[#FFD700] rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl active:scale-95 transition-transform"
+                className="px-8 py-4 bg-[#0D3D31] text-[#C3562B] rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl active:scale-95 transition-transform"
               >
                 Iscriviti a un torneo 🏆
               </button>

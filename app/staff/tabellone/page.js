@@ -964,7 +964,7 @@ function TabelloneContent() {
               value={meta.scoreL || ""} 
               onChange={(e) => !isMultiSetMatch && handleMetadataChange(matchId, 'scoreL', e.target.value)} 
               readOnly={isMultiSetMatch}
-              className={`w-8 h-8 rounded text-center text-xs font-black focus:outline-none ${isMultiSetMatch ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-50 text-gray-900 focus:bg-[#0a1628] focus:text-white'}`} 
+              className={`w-8 h-8 rounded text-center text-xs font-black focus:outline-none ${isMultiSetMatch ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-50 text-gray-900 focus:bg-[#0D3D31] focus:text-white'}`} 
             />
           </div>
           <div className="flex items-center gap-2">
@@ -988,7 +988,7 @@ function TabelloneContent() {
               value={meta.scoreR || ""} 
               onChange={(e) => !isMultiSetMatch && handleMetadataChange(matchId, 'scoreR', e.target.value)} 
               readOnly={isMultiSetMatch}
-              className={`w-8 h-8 rounded text-center text-xs font-black focus:outline-none ${isMultiSetMatch ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-50 text-gray-900 focus:bg-[#0a1628] focus:text-white'}`} 
+              className={`w-8 h-8 rounded text-center text-xs font-black focus:outline-none ${isMultiSetMatch ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-50 text-gray-900 focus:bg-[#0D3D31] focus:text-white'}`} 
             />
           </div>
         </div>
@@ -1033,16 +1033,16 @@ function TabelloneContent() {
         </div>
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <span className="flex-1 text-xs font-bold truncate text-[#0a1628]" title={teamL}>
+            <span className="flex-1 text-xs font-bold truncate text-[#0D3D31]" title={teamL}>
               {teamL && teamL !== "—" && teamL !== "Slot Libero" ? splitNames(teamL).map(formatPlayerName).join(" - ") : (teamL || "Slot Libero")}
             </span>
-            <input type="text" placeholder="-" value={meta.scoreL || ""} onChange={(e) => handleMetadataChange(matchId, 'scoreL', e.target.value)} className="w-8 h-8 bg-gray-50 text-gray-900 rounded text-center text-xs font-black focus:bg-[#0a1628] focus:text-white" />
+            <input type="text" placeholder="-" value={meta.scoreL || ""} onChange={(e) => handleMetadataChange(matchId, 'scoreL', e.target.value)} className="w-8 h-8 bg-gray-50 text-gray-900 rounded text-center text-xs font-black focus:bg-[#0D3D31] focus:text-white" />
           </div>
           <div className="flex items-center gap-2">
-            <span className="flex-1 text-xs font-bold truncate text-[#0a1628]" title={teamR}>
+            <span className="flex-1 text-xs font-bold truncate text-[#0D3D31]" title={teamR}>
               {teamR && teamR !== "—" && teamR !== "Slot Libero" ? splitNames(teamR).map(formatPlayerName).join(" - ") : (teamR || "Slot Libero")}
             </span>
-            <input type="text" placeholder="-" value={meta.scoreR || ""} onChange={(e) => handleMetadataChange(matchId, 'scoreR', e.target.value)} className="w-8 h-8 bg-gray-50 text-gray-900 rounded text-center text-xs font-black focus:bg-[#0a1628] focus:text-white" />
+            <input type="text" placeholder="-" value={meta.scoreR || ""} onChange={(e) => handleMetadataChange(matchId, 'scoreR', e.target.value)} className="w-8 h-8 bg-gray-50 text-gray-900 rounded text-center text-xs font-black focus:bg-[#0D3D31] focus:text-white" />
           </div>
         </div>
       </div>
@@ -1079,7 +1079,7 @@ function TabelloneContent() {
                       setBracketAssignments(p => ({...p, [`${groupKey}-${idx}`]: formatted}));
                     }
                   }}
-                  className="flex-1 bg-transparent border-none text-xs font-bold focus:outline-none text-[#0a1628] w-full"
+                  className="flex-1 bg-transparent border-none text-xs font-bold focus:outline-none text-[#0D3D31] w-full"
                   placeholder="Slot Libero"
                 />
               </div>
@@ -1116,7 +1116,7 @@ function TabelloneContent() {
                     <td className="px-4 py-3 text-center text-green-600">{team.vinte}</td>
                     <td className="px-4 py-3 text-center text-gray-600">{team.pf}</td>
                     <td className="px-4 py-3 text-center text-gray-400">{team.ps}</td>
-                    <td className="px-4 py-3 text-center text-[#0a1628]">{quotient}</td>
+                    <td className="px-4 py-3 text-center text-[#0D3D31]">{quotient}</td>
                   </tr>
                 );
               })}
@@ -1225,12 +1225,12 @@ function TabelloneContent() {
       <div className="max-w-7xl mx-auto mt-6 md:mt-10 px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
             <div>
-                <h2 className="text-3xl md:text-5xl font-black text-[#0a1628] uppercase tracking-tighter leading-none">Tabellone ⚔️</h2>
+                <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Tabellone ⚔️</h2>
                 <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Progressione Automatica Vincitori</p>
             </div>
             <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
                 <select 
-                    className="flex-1 md:flex-none bg-white border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-[#0a1628] text-sm shadow-xl"
+                    className="flex-1 md:flex-none bg-white border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-[#0D3D31] text-sm shadow-xl"
                     value={selectedTorneo}
                     onChange={(e) => setSelectedTorneo(e.target.value)}
                 >
@@ -1240,17 +1240,17 @@ function TabelloneContent() {
                         <option value="">Nessun torneo attivo</option>
                     )}
                 </select>
-                <select className="flex-1 md:flex-none bg-white border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-[#0a1628] text-sm shadow-xl" value={phaseType} onChange={e=>setPhaseType(e.target.value)}>
+                <select className="flex-1 md:flex-none bg-white border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-[#0D3D31] text-sm shadow-xl" value={phaseType} onChange={e=>setPhaseType(e.target.value)}>
                     <option value="double">Doppia Elim.</option>
                     <option value="gold_silver">Gold & Silver</option>
                 </select>
                 {phaseType === "gold_silver" && (
-                  <select className="flex-1 md:flex-none bg-white border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-[#0a1628] text-sm shadow-xl" value={subPhaseType} onChange={e=>setSubPhaseType(e.target.value)}>
+                  <select className="flex-1 md:flex-none bg-white border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-[#0D3D31] text-sm shadow-xl" value={subPhaseType} onChange={e=>setSubPhaseType(e.target.value)}>
                       <option value="direct">⚡ Eliminazione Diretta</option>
                       <option value="groups">🔄 Gironi Intermedi + Finali</option>
                   </select>
                 )}
-                <button onClick={handleAutoFill} disabled={!selectedTorneo} className="flex-1 md:flex-none bg-[#FFD700] text-[#0a1628] px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50">🔄 GENERA</button>
+                <button onClick={handleAutoFill} disabled={!selectedTorneo} className="flex-1 md:flex-none bg-[#C3562B] text-[#0D3D31] px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50">🔄 GENERA</button>
                 <button onClick={handleSave} disabled={!selectedTorneo} className="flex-1 md:flex-none bg-[#10B981] hover:bg-[#059669] text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50">💾 SALVA</button>
                 <button
                   onClick={() => setTabellonePubblicato(v => !v)}
@@ -1279,7 +1279,7 @@ function TabelloneContent() {
                       <div className="flex-1 space-y-1">
                         <label className="text-[9px] font-bold text-gray-400 uppercase">Numero Gironi</label>
                         <select 
-                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] cursor-pointer"
+                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] cursor-pointer"
                           value={numGoldGironiOpt}
                           onChange={(e) => setNumGoldGironiOpt(parseInt(e.target.value))}
                         >
@@ -1293,7 +1293,7 @@ function TabelloneContent() {
                       <div className="flex-1 space-y-1">
                         <label className="text-[9px] font-bold text-gray-400 uppercase">Squadre per Girone</label>
                         <select 
-                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] cursor-pointer"
+                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] cursor-pointer"
                           value={teamsPerGoldGirone}
                           onChange={(e) => setTeamsPerGoldGirone(parseInt(e.target.value))}
                         >
@@ -1313,7 +1313,7 @@ function TabelloneContent() {
                       <div className="flex-1 space-y-1">
                         <label className="text-[9px] font-bold text-gray-400 uppercase">Numero Gironi</label>
                         <select 
-                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] cursor-pointer"
+                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] cursor-pointer"
                           value={numSilverGironiOpt}
                           onChange={(e) => setNumSilverGironiOpt(parseInt(e.target.value))}
                         >
@@ -1327,7 +1327,7 @@ function TabelloneContent() {
                       <div className="flex-1 space-y-1">
                         <label className="text-[9px] font-bold text-gray-400 uppercase">Squadre per Girone</label>
                         <select 
-                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] cursor-pointer"
+                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] cursor-pointer"
                           value={teamsPerSilverGirone}
                           onChange={(e) => setTeamsPerSilverGirone(parseInt(e.target.value))}
                         >
@@ -1348,7 +1348,7 @@ function TabelloneContent() {
                     <div className="space-y-1">
                       <label className="text-[9px] font-bold text-gray-400 uppercase">Avanzano al Gold</label>
                       <select 
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] cursor-pointer"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] cursor-pointer"
                         value={teamsToGold}
                         onChange={(e) => setTeamsToGold(parseInt(e.target.value))}
                       >
@@ -1366,7 +1366,7 @@ function TabelloneContent() {
                     <div className="space-y-1">
                       <label className="text-[9px] font-bold text-gray-400 uppercase">Avanzano al Silver</label>
                       <select 
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] cursor-pointer"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] cursor-pointer"
                         value={teamsToSilver}
                         onChange={(e) => setTeamsToSilver(parseInt(e.target.value))}
                       >
@@ -1388,7 +1388,7 @@ function TabelloneContent() {
                     {subPhaseType === "groups" ? "Composizione Gironi" : "Composizione Tabellone"}
                   </label>
                   <select 
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0a1628] focus:ring-2 focus:ring-[#0a1628] cursor-pointer"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] cursor-pointer"
                     value={groupCompositionMethod}
                     onChange={(e) => setGroupCompositionMethod(e.target.value)}
                   >
@@ -1401,9 +1401,9 @@ function TabelloneContent() {
               </div>
             </div>
 
-            <div className="bg-[#FFD700]/10 border border-[#FFD700]/30 rounded-2xl p-4 md:max-w-xs flex items-center gap-3">
+            <div className="bg-[#C3562B]/10 border border-[#C3562B]/30 rounded-2xl p-4 md:max-w-xs flex items-center gap-3">
               <span className="text-xl shrink-0">⚠️</span>
-              <p className="text-[9px] font-black text-[#0a1628]/80 uppercase tracking-wide leading-normal">
+              <p className="text-[9px] font-black text-[#0D3D31]/80 uppercase tracking-wide leading-normal">
                 Dopo aver modificato la configurazione o il metodo, clicca su <strong>GENERA</strong> per aggiornare il tabellone e riassegnare le squadre.
               </p>
             </div>
@@ -1412,13 +1412,13 @@ function TabelloneContent() {
 
         {!isLoaded ? (
             <div className="min-h-[400px] flex items-center justify-center">
-                <div className="w-16 h-16 border-4 border-[#0a1628] border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-16 h-16 border-4 border-[#0D3D31] border-t-transparent rounded-full animate-spin"></div>
             </div>
         ) : torneiAttivi.length === 0 ? (
             <div className="bg-white p-12 md:p-24 rounded-[3.5rem] shadow-2xl border border-gray-100 text-center relative overflow-hidden mt-10">
                 <div className="relative z-10">
                     <div className="text-9xl mb-10 inline-block">🏆</div>
-                    <h3 className="text-3xl md:text-5xl font-black text-[#0a1628] uppercase tracking-tighter mb-6">Nessun Torneo Attivo</h3>
+                    <h3 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter mb-6">Nessun Torneo Attivo</h3>
                     <p className="text-gray-400 mb-12 max-w-lg mx-auto text-sm md:text-lg font-bold uppercase tracking-widest leading-relaxed">
                         Crea un nuovo torneo nella sezione gestione o imposta lo stato su "Iscrizioni Aperte" o "In Programmazione" per configurare il tabellone.
                     </p>
@@ -1428,9 +1428,9 @@ function TabelloneContent() {
             <div className="space-y-16">
                 {renderSection("wb", "Winners Bracket 🏆", "blue")}
                 <div className="bg-gray-100/30 p-6 md:p-10 rounded-[2.5rem] border border-gray-100">{renderSection("lb", "Losers Bracket 🔄", "silver")}</div>
-                <section className="bg-[#0a1628] p-8 md:p-12 rounded-[3rem] text-white shadow-2xl relative overflow-hidden">
+                <section className="bg-[#0D3D31] p-8 md:p-12 rounded-[3rem] text-white shadow-2xl relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-400/10 rounded-full -mr-32 -mt-32"></div>
-                    <h3 className="text-2xl md:text-4xl font-black text-[#FFD700] uppercase mb-8 text-center relative z-10 tracking-tighter">GRAND FINAL 👑</h3>
+                    <h3 className="text-2xl md:text-4xl font-black text-[#C3562B] uppercase mb-8 text-center relative z-10 tracking-tighter">GRAND FINAL 👑</h3>
                     <div className="max-w-xl mx-auto relative z-10">{renderMatch('grand-final', 'Finalissima', 'gold')}</div>
                 </section>
             </div>

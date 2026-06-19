@@ -60,8 +60,8 @@ export default function StaffDashboard() {
     if (typeof window !== "undefined" && window.confirm("Vuoi caricare i dati di esempio per testare il sito con dati pre-compilati?")) {
       const mockTornei = [
         { id: 1, nome: "Torneo di Ferragosto", data: "15 Agosto 2026", location: "Ostia Lido (RM)", categoria: "Misto 2x2", stato: "Iscrizioni Aperte", iscritti: 16, maxSquadre: 16 },
-        { id: 2, nome: "BVI Summer Cup", data: "2 Settembre 2026", location: "Fregene", categoria: "Maschile 2x2 / Femminile 2x2", stato: "In Programmazione", iscritti: 2, maxSquadre: 24 },
-        { id: 3, nome: "Spring Classic BVI", data: "10 Maggio 2026", location: "Roma - BVI Center", categoria: "Misto 4x4", stato: "Concluso", iscritti: 16, maxSquadre: 16 }
+        { id: 2, nome: "Baia Beach Cup Summer Cup", data: "2 Settembre 2026", location: "Fregene", categoria: "Maschile 2x2 / Femminile 2x2", stato: "In Programmazione", iscritti: 2, maxSquadre: 24 },
+        { id: 3, nome: "Spring Classic Baia Beach Cup", data: "10 Maggio 2026", location: "Roma - Baia Beach Cup Center", categoria: "Misto 4x4", stato: "Concluso", iscritti: 16, maxSquadre: 16 }
       ];
       const mockIscrizioni = [
         { id: "101", data: "15 Maggio, 10:45", torneo: "Torneo di Ferragosto", giocatori: "Davide P. & Elena M.", tel: "333 1234567", stato: "Approvata", quotaPagata: 40 },
@@ -80,8 +80,8 @@ export default function StaffDashboard() {
         { id: "114", data: "16 Maggio, 12:00", torneo: "Torneo di Ferragosto", giocatori: "Federico P. & Giorgia D.", tel: "333 1212121", stato: "Approvata", quotaPagata: 0 },
         { id: "115", data: "16 Maggio, 12:30", torneo: "Torneo di Ferragosto", giocatori: "Mattia F. & Camilla T.", tel: "333 2323232", stato: "Approvata", quotaPagata: 40 },
         { id: "116", data: "16 Maggio, 13:00", torneo: "Torneo di Ferragosto", giocatori: "Edoardo M. & Lucrezia B.", tel: "333 3434343", stato: "Approvata", quotaPagata: 40 },
-        { id: "201", data: "Oggi, 09:12", torneo: "BVI Summer Cup", giocatori: "Marco R. & Luca B.", tel: "333 7654321", stato: "Approvata", quotaPagata: 0 },
-        { id: "202", data: "Ieri, 18:30", torneo: "BVI Summer Cup", giocatori: "Giulia M. & Sara L.", tel: "328 1122334", stato: "In Attesa", quotaPagata: 0 }
+        { id: "201", data: "Oggi, 09:12", torneo: "Baia Beach Cup Summer Cup", giocatori: "Marco R. & Luca B.", tel: "333 7654321", stato: "Approvata", quotaPagata: 0 },
+        { id: "202", data: "Ieri, 18:30", torneo: "Baia Beach Cup Summer Cup", giocatori: "Giulia M. & Sara L.", tel: "328 1122334", stato: "In Attesa", quotaPagata: 0 }
       ];
       const mockUsers = [
         { id: "1", nome: "Davide", cognome: "Pietrucci", email: "davide@example.com", dataRegistrazione: "01/01/2024" },
@@ -165,7 +165,7 @@ export default function StaffDashboard() {
         id: 4,
         nome: "Torneo Test 24",
         data: "20 Luglio 2026",
-        location: "BVI Arena (Roma)",
+        location: "Baia Beach Cup Arena (Roma)",
         categoria: "Maschile 2x2",
         stato: "Iscrizioni Aperte",
         iscritti: 24,
@@ -238,21 +238,21 @@ export default function StaffDashboard() {
 
       <div className="max-w-6xl mx-auto mt-6 md:mt-10 px-4">
         <div className="mb-8">
-            <h2 className="text-3xl md:text-5xl font-black text-[#0a1628] uppercase tracking-tighter leading-none">Dashboard 🏢</h2>
+            <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Dashboard 🏢</h2>
             <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Controllo Centrale Torneo</p>
         </div>
         
         {/* Widget Statistici - Mobile Optimized */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          <div className="bg-white rounded-[2rem] shadow-xl p-6 md:p-8 border-b-8 transition-transform active:scale-95" style={{borderColor: "#FFD700"}}>
+          <div className="bg-white rounded-[2rem] shadow-xl p-6 md:p-8 border-b-8 transition-transform active:scale-95" style={{borderColor: "#C3562B"}}>
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm font-black text-gray-400 uppercase tracking-widest">Tornei Attivi</span>
               <span className="w-10 h-10 bg-yellow-50 rounded-xl flex items-center justify-center text-xl">🏆</span>
             </div>
-            <p className="text-5xl md:text-6xl font-black text-[#0a1628]">{stats.torneiAttivi}</p>
+            <p className="text-5xl md:text-6xl font-black text-[#0D3D31]">{stats.torneiAttivi}</p>
           </div>
 
-          <div className="bg-white rounded-[2rem] shadow-xl p-6 md:p-8 border-b-8 transition-transform active:scale-95" style={{borderColor: "#0a1628"}}>
+          <div className="bg-white rounded-[2rem] shadow-xl p-6 md:p-8 border-b-8 transition-transform active:scale-95" style={{borderColor: "#0D3D31"}}>
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm font-black text-gray-400 uppercase tracking-widest">In Attesa</span>
               <span className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-xl">⏳</span>
@@ -272,15 +272,15 @@ export default function StaffDashboard() {
         {/* Quick Actions - Full width buttons on mobile */}
         <div className="mt-10 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full -mr-16 -mt-16"></div>
-          <h3 className="text-xl md:text-2xl font-black mb-6 uppercase tracking-tight text-[#0a1628] relative z-10">Azioni Rapide ⚡</h3>
+          <h3 className="text-xl md:text-2xl font-black mb-6 uppercase tracking-tight text-[#0D3D31] relative z-10">Azioni Rapide ⚡</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 relative z-10">
-            <button onClick={() => router.push('/staff/tornei/nuovo')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0a1628] hover:text-white text-[#0a1628] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+            <button onClick={() => router.push('/staff/tornei/nuovo')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
               Crea Torneo <span className="text-xl group-hover:translate-x-2 transition-transform">➕</span>
             </button>
-            <button onClick={() => router.push('/staff/iscrizioni')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0a1628] hover:text-white text-[#0a1628] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+            <button onClick={() => router.push('/staff/iscrizioni')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
               Valuta Iscrizioni <span className="text-xl group-hover:translate-x-2 transition-transform">📝</span>
             </button>
-            <button onClick={() => router.push('/staff/pagamenti')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0a1628] hover:text-white text-[#0a1628] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+            <button onClick={() => router.push('/staff/pagamenti')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
               Pagamenti <span className="text-xl group-hover:translate-x-2 transition-transform">💰</span>
             </button>
           </div>
@@ -290,7 +290,7 @@ export default function StaffDashboard() {
         {role === "admin" && (
           <div className="mt-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full -mr-16 -mt-16"></div>
-            <h3 className="text-xl md:text-2xl font-black mb-6 uppercase tracking-tight text-[#0a1628] relative z-10">Gestione Database ⚙️</h3>
+            <h3 className="text-xl md:text-2xl font-black mb-6 uppercase tracking-tight text-[#0D3D31] relative z-10">Gestione Database ⚙️</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
               <button 
                 onClick={handleResetData}

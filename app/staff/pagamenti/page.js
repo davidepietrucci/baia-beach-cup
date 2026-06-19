@@ -73,7 +73,7 @@ export default function StaffPagamenti() {
       <div className="max-w-6xl mx-auto mt-6 md:mt-10 px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
             <div>
-                <h2 className="text-3xl md:text-5xl font-black text-[#0a1628] uppercase tracking-tighter leading-none">Pagamenti 💰</h2>
+                <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Pagamenti 💰</h2>
                 <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Gestione Incassi e Saldi</p>
             </div>
             
@@ -82,7 +82,7 @@ export default function StaffPagamenti() {
                 <select 
                     value={filtroTorneo} 
                     onChange={(e) => setFiltroTorneo(e.target.value)}
-                    className="bg-transparent text-sm font-black focus:outline-none cursor-pointer text-[#0a1628]"
+                    className="bg-transparent text-sm font-black focus:outline-none cursor-pointer text-[#0D3D31]"
                 >
                     {torneiDisponibili.map(t => (
                         <option key={t} value={t}>{t}</option>
@@ -131,14 +131,14 @@ export default function StaffPagamenti() {
                     )}
                   </div>
                   
-                  <h3 className="text-2xl font-black text-[#0a1628] leading-tight mb-2">{isc.giocatori}</h3>
+                  <h3 className="text-2xl font-black text-[#0D3D31] leading-tight mb-2">{isc.giocatori}</h3>
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{isc.torneo}</p>
                 </div>
 
                 <div className="flex flex-col md:items-end gap-1">
                     <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Stato Contabile</span>
                     <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-black text-[#0a1628]">€{isc.quotaPagata}</span>
+                        <span className="text-3xl font-black text-[#0D3D31]">€{isc.quotaPagata}</span>
                         <span className="text-gray-300 font-bold text-lg">/ €{isc.quotaTotale}</span>
                     </div>
                 </div>
@@ -160,13 +160,13 @@ export default function StaffPagamenti() {
                     <>
                       <button 
                         onClick={() => registraAcconto(isc.id, Math.ceil(isc.quotaTotale / 2))}
-                        className="flex-1 md:flex-none bg-gray-50 text-[#0a1628] px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-100 transition-all active:scale-95"
+                        className="flex-1 md:flex-none bg-gray-50 text-[#0D3D31] px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-100 transition-all active:scale-95"
                       >
                         +€{Math.ceil(isc.quotaTotale / 2)}
                       </button>
                       <button 
                         onClick={() => segnaSaldato(isc.id)}
-                        className="flex-1 md:flex-none bg-[#0a1628] text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all"
+                        className="flex-1 md:flex-none bg-[#0D3D31] text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all"
                       >
                         Salda Ora
                       </button>

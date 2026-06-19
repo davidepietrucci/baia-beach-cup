@@ -201,13 +201,13 @@ export default function GestioneStaff() {
       <div className="max-w-6xl mx-auto mt-6 md:mt-10 px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
             <div>
-                <h2 className="text-3xl md:text-5xl font-black text-[#0a1628] uppercase tracking-tighter leading-none">Gestione Staff 👥</h2>
+                <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Gestione Staff 👥</h2>
                 <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Profili di Accesso al Portale</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto items-center">
                 <button 
                     onClick={() => setShowAddModal(true)}
-                    className="w-full sm:w-auto px-6 py-4 bg-[#0a1628] text-white rounded-[1.2rem] font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                    className="w-full sm:w-auto px-6 py-4 bg-[#0D3D31] text-white rounded-[1.2rem] font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
                 >
                     + Nuovo Profilo Staff
                 </button>
@@ -215,7 +215,7 @@ export default function GestioneStaff() {
                     <input 
                         type="text" 
                         placeholder="Cerca staff..." 
-                        className="w-full pl-12 pr-4 py-4 bg-white border-2 border-gray-100 rounded-[1.5rem] focus:border-[#0a1628] outline-none transition-all shadow-xl text-sm font-bold text-gray-900"
+                        className="w-full pl-12 pr-4 py-4 bg-white border-2 border-gray-100 rounded-[1.5rem] focus:border-[#0D3D31] outline-none transition-all shadow-xl text-sm font-bold text-gray-900"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -238,11 +238,11 @@ export default function GestioneStaff() {
                 {filteredStaff.map((member) => (
                     <div key={member.id} className="bg-white p-6 rounded-[2rem] shadow-xl md:shadow-none md:rounded-none md:grid md:grid-cols-5 md:items-center hover:bg-blue-50/20 transition-all">
                         <div className="flex items-center gap-4 md:px-4 mb-4 md:mb-0 md:col-span-2">
-                            <div className="w-12 h-12 rounded-2xl bg-[#0a1628] text-white flex items-center justify-center font-black text-sm shadow-lg shadow-blue-900/20">
+                            <div className="w-12 h-12 rounded-2xl bg-[#0D3D31] text-white flex items-center justify-center font-black text-sm shadow-lg shadow-blue-900/20">
                                 {(member.name || "S").charAt(0)}
                             </div>
                             <div>
-                                <h4 className="font-black text-lg text-[#0a1628] leading-none flex items-center gap-2">
+                                <h4 className="font-black text-lg text-[#0D3D31] leading-none flex items-center gap-2">
                                   {member.name}
                                   {member.type === "system" && (
                                     <span className="text-[8px] bg-gray-100 text-gray-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-widest">
@@ -275,7 +275,7 @@ export default function GestioneStaff() {
                             <div className="flex gap-2 justify-end w-full md:w-auto">
                               <button 
                                 onClick={() => handleOpenEditModal(member)}
-                                className="w-full md:w-auto px-5 py-3 bg-gray-50 hover:bg-[#0a1628] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-600 transition-all border border-gray-100 cursor-pointer"
+                                className="w-full md:w-auto px-5 py-3 bg-gray-50 hover:bg-[#0D3D31] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-600 transition-all border border-gray-100 cursor-pointer"
                               >
                                 Modifica
                               </button>
@@ -306,7 +306,7 @@ export default function GestioneStaff() {
           <div className="bg-white rounded-[2.5rem] p-8 md:p-10 w-full max-w-lg shadow-2xl border border-gray-100 animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter leading-none">Nuovo Staff 👥</h3>
+                <h3 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Nuovo Staff 👥</h3>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">Crea un account operatore</p>
               </div>
               <button 
@@ -336,7 +336,7 @@ export default function GestioneStaff() {
                   value={newStaffData.name}
                   onChange={handleModalChange}
                   placeholder="es. Francesca Neri"
-                  className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0a1628] text-sm focus:ring-2 focus:ring-[#0a1628] transition-all outline-none"
+                  className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0D3D31] text-sm focus:ring-2 focus:ring-[#0D3D31] transition-all outline-none"
                 />
               </div>
 
@@ -350,7 +350,7 @@ export default function GestioneStaff() {
                     value={newStaffData.username}
                     onChange={handleModalChange}
                     placeholder="es. francesca"
-                    className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0a1628] text-sm focus:ring-2 focus:ring-[#0a1628] transition-all outline-none"
+                    className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0D3D31] text-sm focus:ring-2 focus:ring-[#0D3D31] transition-all outline-none"
                   />
                 </div>
                 <div className="space-y-1">
@@ -363,7 +363,7 @@ export default function GestioneStaff() {
                     value={newStaffData.password}
                     onChange={handleModalChange}
                     placeholder="Password di accesso"
-                    className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0a1628] text-sm focus:ring-2 focus:ring-[#0a1628] transition-all outline-none"
+                    className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0D3D31] text-sm focus:ring-2 focus:ring-[#0D3D31] transition-all outline-none"
                   />
                 </div>
               </div>
@@ -374,7 +374,7 @@ export default function GestioneStaff() {
                   name="role"
                   value={newStaffData.role}
                   onChange={handleModalChange}
-                  className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0a1628] text-sm focus:ring-2 focus:ring-[#0a1628] transition-all outline-none cursor-pointer"
+                  className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0D3D31] text-sm focus:ring-2 focus:ring-[#0D3D31] transition-all outline-none cursor-pointer"
                 >
                   <option value="staff">Staff (Accesso Limitato)</option>
                   <option value="admin">Admin (Accesso Completo)</option>
@@ -395,7 +395,7 @@ export default function GestioneStaff() {
                 <button 
                   type="submit" 
                   disabled={modalSubmitting}
-                  className="flex-1 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest text-white bg-[#0a1628] shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
+                  className="flex-1 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest text-white bg-[#0D3D31] shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
                   {modalSubmitting ? "Salvataggio..." : "Crea Profilo 💾"}
                 </button>
@@ -411,7 +411,7 @@ export default function GestioneStaff() {
           <div className="bg-white rounded-[2.5rem] p-8 md:p-10 w-full max-w-lg shadow-2xl border border-gray-100 animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter leading-none">Modifica Staff 👥</h3>
+                <h3 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Modifica Staff 👥</h3>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">ID: {editingStaffMember.id}</p>
               </div>
               <button 
@@ -442,7 +442,7 @@ export default function GestioneStaff() {
                   value={editingStaffMember.name}
                   onChange={handleEditModalChange}
                   placeholder="es. Francesca Neri"
-                  className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0a1628] text-sm focus:ring-2 focus:ring-[#0a1628] transition-all outline-none"
+                  className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0D3D31] text-sm focus:ring-2 focus:ring-[#0D3D31] transition-all outline-none"
                 />
               </div>
 
@@ -456,7 +456,7 @@ export default function GestioneStaff() {
                     value={editingStaffMember.username}
                     onChange={handleEditModalChange}
                     placeholder="es. francesca"
-                    className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0a1628] text-sm focus:ring-2 focus:ring-[#0a1628] transition-all outline-none"
+                    className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0D3D31] text-sm focus:ring-2 focus:ring-[#0D3D31] transition-all outline-none"
                   />
                 </div>
                 <div className="space-y-1">
@@ -469,7 +469,7 @@ export default function GestioneStaff() {
                     value={editingStaffMember.password}
                     onChange={handleEditModalChange}
                     placeholder="Password di accesso"
-                    className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0a1628] text-sm focus:ring-2 focus:ring-[#0a1628] transition-all outline-none"
+                    className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0D3D31] text-sm focus:ring-2 focus:ring-[#0D3D31] transition-all outline-none"
                   />
                 </div>
               </div>
@@ -480,7 +480,7 @@ export default function GestioneStaff() {
                   name="role"
                   value={editingStaffMember.role}
                   onChange={handleEditModalChange}
-                  className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0a1628] text-sm focus:ring-2 focus:ring-[#0a1628] transition-all outline-none cursor-pointer"
+                  className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3.5 font-bold text-[#0D3D31] text-sm focus:ring-2 focus:ring-[#0D3D31] transition-all outline-none cursor-pointer"
                 >
                   <option value="staff">Staff (Accesso Limitato)</option>
                   <option value="admin">Admin (Accesso Completo)</option>
@@ -502,7 +502,7 @@ export default function GestioneStaff() {
                 <button 
                   type="submit" 
                   disabled={editModalSubmitting}
-                  className="flex-1 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest text-white bg-[#0a1628] shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
+                  className="flex-1 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest text-white bg-[#0D3D31] shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
                   {editModalSubmitting ? "Salvataggio..." : "Salva Modifiche 💾"}
                 </button>

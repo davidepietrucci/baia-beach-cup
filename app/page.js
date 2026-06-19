@@ -27,13 +27,13 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen" style={{ backgroundColor: "#f0f4ff" }}>
+    <main className="min-h-screen" style={{ backgroundColor: "#f4f7f6" }}>
 
       {/* Header */}
-      <header style={{ backgroundColor: "#0a1628" }} className="text-white py-4 px-8 flex flex-col sm:flex-row justify-between items-center shadow-md gap-4">
+      <header style={{ backgroundColor: "#0D3D31" }} className="text-white py-4 px-8 flex flex-col sm:flex-row justify-between items-center shadow-md gap-4">
         <div className="flex items-center gap-3">
-          <Image src="/logo.png" alt="BVI Logo" width={50} height={50} className="rounded-full" />
-          <h1 className="text-2xl font-bold" style={{ color: "#FFD700" }}>BVI Tornei</h1>
+          <Image src="/logo.png" alt="Baia Beach Cup Logo" width={50} height={50} className="rounded-full" />
+          <h1 className="text-2xl font-bold" style={{ color: "#C3562B" }}>Baia Beach Cup</h1>
         </div>
         <nav className="flex gap-6 items-center">
           <div className="flex gap-4">
@@ -50,14 +50,14 @@ export default function Home() {
             <div className="absolute inset-0 bg-yellow-400 blur-2xl opacity-20 rounded-full"></div>
             <Image
               src="/logo.png"
-              alt="BVI Logo"
+              alt="Baia Beach Cup Logo"
               width={160}
               height={160}
               className="object-contain relative drop-shadow-xl"
               priority
             />
           </div>
-          <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 leading-tight" style={{ color: "#0a1628" }}>
+          <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 leading-tight" style={{ color: "#0D3D31" }}>
             #Live your passion
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 mb-10 font-medium max-w-2xl leading-relaxed">
@@ -74,7 +74,7 @@ export default function Home() {
               <div className="w-full flex flex-col gap-6 divide-y divide-gray-100">
                 {torneiLive.map((t, idx) => (
                   <div key={idx} className={`w-full text-center flex flex-col items-center ${idx > 0 ? "pt-6" : ""}`}>
-                    <h3 className="text-2xl sm:text-3xl font-black text-[#0a1628] leading-tight mb-2">
+                    <h3 className="text-2xl sm:text-3xl font-black text-[#0D3D31] leading-tight mb-2">
                       {t.nome}
                     </h3>
                     <div className="flex flex-wrap justify-center gap-2 mb-6">
@@ -106,9 +106,9 @@ export default function Home() {
 
       {/* Sezione Tornei in Evidenza */}
       <section className="px-4 sm:px-8 pb-24 max-w-6xl mx-auto">
-        <div className="flex items-center gap-4 mb-8 border-b-2 pb-4" style={{ borderColor: "#FFD700" }}>
+        <div className="flex items-center gap-4 mb-8 border-b-2 pb-4" style={{ borderColor: "#C3562B" }}>
           <span className="text-3xl">🔥</span>
-          <h3 className="text-2xl font-extrabold" style={{ color: "#0a1628" }}>
+          <h3 className="text-2xl font-extrabold" style={{ color: "#0D3D31" }}>
             Tornei in Evidenza
           </h3>
         </div>
@@ -131,7 +131,7 @@ export default function Home() {
                     </span>
                     <span className="text-sm font-semibold text-gray-400">{t.data}</span>
                   </div>
-                  <h4 className="text-2xl font-black mb-2 leading-tight" style={{ color: "#0a1628" }}>{t.nome}</h4>
+                  <h4 className="text-2xl font-black mb-2 leading-tight" style={{ color: "#0D3D31" }}>{t.nome}</h4>
                   <div className="flex flex-col gap-2 mb-6">
                     <span className="text-sm font-bold text-gray-500 bg-gray-50 inline-block px-3 py-1 rounded-lg self-start">
                       {t.categoria || 'Categoria Libera'}
@@ -148,21 +148,21 @@ export default function Home() {
                         href={t.googleFormUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 py-3 text-center rounded-xl font-bold text-sm text-[#0a1628] hover:bg-gray-50 transition-colors border-2"
-                        style={{ borderColor: "#0a1628" }}
+                        className="flex-1 py-3 text-center rounded-xl font-bold text-sm text-[#0D3D31] hover:bg-gray-50 transition-colors border-2"
+                        style={{ borderColor: "#0D3D31" }}
                       >
                         📋 Iscriviti
                       </a>
                     ) : (
                       <a
                         href={`/iscrizioni?tour=${encodeURIComponent(t.nome)}`}
-                        className="flex-1 py-3 text-center rounded-xl font-bold text-sm text-[#0a1628] hover:bg-gray-50 transition-colors border-2"
-                        style={{ borderColor: "#0a1628" }}
+                        className="flex-1 py-3 text-center rounded-xl font-bold text-sm text-[#0D3D31] hover:bg-gray-50 transition-colors border-2"
+                        style={{ borderColor: "#0D3D31" }}
                       >
                         📋 Iscriviti
                       </a>
                     )}
-                    <a href={`/gironi?tour=${encodeURIComponent(t.nome)}`} className="flex-1 py-3 text-center rounded-xl font-bold text-sm text-white bg-[#0a1628] hover:bg-opacity-90 transition-colors shadow-sm">
+                    <a href={`/gironi?tour=${encodeURIComponent(t.nome)}`} className="flex-1 py-3 text-center rounded-xl font-bold text-sm text-white bg-[#0D3D31] hover:bg-opacity-90 transition-colors shadow-sm">
                       🏆 Gironi
                     </a>
                   </div>
@@ -178,7 +178,7 @@ export default function Home() {
         <section className="px-4 sm:px-8 pb-24 max-w-6xl mx-auto">
           <div className="flex items-center gap-4 mb-8 border-b-2 pb-4" style={{ borderColor: "#cbd5e1" }}>
             <span className="text-3xl">🏁</span>
-            <h3 className="text-2xl font-extrabold" style={{ color: "#0a1628" }}>
+            <h3 className="text-2xl font-extrabold" style={{ color: "#0D3D31" }}>
               Tornei Conclusi
             </h3>
           </div>
@@ -193,7 +193,7 @@ export default function Home() {
                     </span>
                     <span className="text-sm font-semibold text-gray-400">{t.data}</span>
                   </div>
-                  <h4 className="text-2xl font-black mb-2 leading-tight" style={{ color: "#0a1628" }}>{t.nome}</h4>
+                  <h4 className="text-2xl font-black mb-2 leading-tight" style={{ color: "#0D3D31" }}>{t.nome}</h4>
                   <div className="flex flex-col gap-2 mb-6">
                     <span className="text-sm font-bold text-gray-500 bg-gray-50 inline-block px-3 py-1 rounded-lg self-start">
                       {t.categoria || 'Categoria Libera'}
@@ -207,7 +207,7 @@ export default function Home() {
                   <div className="mt-auto pt-6 border-t border-gray-100">
                     <a
                       href={`/classifica?tour=${encodeURIComponent(t.nome)}`}
-                      className="block w-full py-3 text-center rounded-xl font-bold text-sm text-[#0a1628] bg-yellow-400 hover:bg-yellow-500 transition-colors shadow-md"
+                      className="block w-full py-3 text-center rounded-xl font-bold text-sm text-[#0D3D31] bg-yellow-400 hover:bg-yellow-500 transition-colors shadow-md"
                     >
                       🏆 Vedi Classifica Finale
                     </a>
@@ -220,12 +220,12 @@ export default function Home() {
       )}
 
       {/* Footer */}
-      <footer className="text-white py-12 px-8 mt-auto border-t-4" style={{ borderColor: "#FFD700", backgroundColor: "#0a1628" }}>
+      <footer className="text-white py-12 px-8 mt-auto border-t-4" style={{ borderColor: "#C3562B", backgroundColor: "#0D3D31" }}>
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-3">
-            <Image src="/logo.png" alt="BVI Logo" width={50} height={50} className="rounded-full bg-white p-0.5" />
+            <Image src="/logo.png" alt="Baia Beach Cup Logo" width={50} height={50} className="rounded-full bg-white p-0.5" />
             <div className="flex flex-col text-left">
-              <h4 className="text-lg font-bold" style={{ color: "#FFD700" }}>Beach Volley Institute</h4>
+              <h4 className="text-lg font-bold" style={{ color: "#C3562B" }}>Baia Beach Cup</h4>
               <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">#Live your passion 🏐</p>
             </div>
           </div>
@@ -237,7 +237,7 @@ export default function Home() {
               rel="noopener noreferrer"
               className="px-6 py-3.5 bg-white/10 hover:bg-white/20 rounded-2xl text-xs font-black uppercase tracking-widest transition-all text-white border border-white/10 hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
             >
-              🌐 Sito BVI
+              🌐 Sito Baia Beach Cup
             </a>
             <a
               href="https://www.instagram.com/beachvolleyinstitutebvi/"
@@ -255,7 +255,7 @@ export default function Home() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto mt-8 pt-8 border-t border-white/10 text-center text-xs text-gray-500 font-medium">
-          &copy; {new Date().getFullYear()} Beach Volley Institute. Tutti i diritti riservati.
+          &copy; {new Date().getFullYear()} Baia Beach Cup. Tutti i diritti riservati.
         </div>
       </footer>
     </main>

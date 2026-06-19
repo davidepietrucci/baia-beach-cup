@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Beach Volley Institute",
-  description: "Gestione tornei e iscrizioni Beach Volley Institute",
+  title: "Baia Beach Cup",
+  description: "Gestione tornei e iscrizioni Baia Beach Cup",
   manifest: "/manifest.json",
   icons: {
     apple: "/webapp-icon.png",
@@ -23,12 +23,12 @@ export const metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "BVI Tornei",
+    title: "Baia Beach Cup",
   },
 };
 
 export const viewport = {
-  themeColor: "#0a1628",
+  themeColor: "#0D3D31",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,

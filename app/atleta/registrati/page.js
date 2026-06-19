@@ -58,15 +58,15 @@ export default function AtletaRegistrati() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-4" style={{backgroundColor: "#f0f4ff"}}>
-      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full border-t-4 my-8" style={{borderColor: "#FFD700"}}>
+    <main className="min-h-screen flex flex-col items-center justify-center px-4" style={{backgroundColor: "#f4f7f6"}}>
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full border-t-4 my-8" style={{borderColor: "#C3562B"}}>
         
         {/* Intestazione */}
         <div className="flex justify-center mb-6">
-          <Image src="/logo.png" alt="BVI Logo" width={80} height={80} className="object-contain" priority />
+          <Image src="/logo.png" alt="Baia Beach Cup Logo" width={80} height={80} className="object-contain" priority />
         </div>
-        <h2 className="text-2xl font-bold text-center mb-2" style={{color: "#0a1628"}}>Crea Account</h2>
-        <p className="text-center text-gray-500 mb-6 text-sm">Registrati per partecipare ai tornei BVI</p>
+        <h2 className="text-2xl font-bold text-center mb-2" style={{color: "#0D3D31"}}>Crea Account</h2>
+        <p className="text-center text-gray-500 mb-6 text-sm">Registrati per partecipare ai tornei Baia Beach Cup</p>
         
         {/* Registrazione Social */}
         <button 
@@ -96,7 +96,7 @@ export default function AtletaRegistrati() {
               <input 
                 type="text" 
                 name="nome"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0a1628] text-gray-900 bg-white" 
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0D3D31] text-gray-900 bg-white" 
                 placeholder="es. Mario" 
                 value={formData.nome}
                 onChange={handleChange}
@@ -108,7 +108,7 @@ export default function AtletaRegistrati() {
               <input 
                 type="text" 
                 name="cognome"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0a1628] text-gray-900 bg-white" 
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0D3D31] text-gray-900 bg-white" 
                 placeholder="es. Rossi" 
                 value={formData.cognome}
                 onChange={handleChange}
@@ -122,7 +122,7 @@ export default function AtletaRegistrati() {
             <input 
               type="email" 
               name="email"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0a1628] text-gray-900 bg-white" 
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0D3D31] text-gray-900 bg-white" 
               placeholder="es. mario.rossi@email.com" 
               value={formData.email}
               onChange={handleChange}
@@ -135,7 +135,7 @@ export default function AtletaRegistrati() {
             <input 
               type="password" 
               name="password"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0a1628] text-gray-900 bg-white" 
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0D3D31] text-gray-900 bg-white" 
               placeholder="Crea una password sicura" 
               value={formData.password}
               onChange={handleChange}
@@ -147,7 +147,7 @@ export default function AtletaRegistrati() {
           <button 
             type="submit"
             className="w-full py-3 mt-4 rounded-lg font-semibold text-white transition-all shadow-md hover:opacity-90 block text-center" 
-            style={{backgroundColor: "#0a1628"}}
+            style={{backgroundColor: "#0D3D31"}}
           >
             Completa Registrazione
           </button>
@@ -155,7 +155,7 @@ export default function AtletaRegistrati() {
 
         {/* Link utili */}
         <div className="mt-6 text-center text-sm text-gray-500">
-          Hai già un account? <a href="/atleta" className="font-semibold hover:underline" style={{color: "#0a1628"}}>Accedi</a>
+          Hai già un account? <a href="/atleta" className="font-semibold hover:underline" style={{color: "#0D3D31"}}>Accedi</a>
         </div>
       </div>
     </main>

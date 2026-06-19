@@ -348,7 +348,7 @@ export default function StaffIscrizioni() {
       <div className="max-w-6xl mx-auto mt-6 md:mt-10 px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 w-full">
             <div>
-                <h2 className="text-3xl md:text-5xl font-black text-[#0a1628] uppercase tracking-tighter">Iscrizioni 📝</h2>
+                <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter">Iscrizioni 📝</h2>
                 <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Approvazione e gestione richieste</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
@@ -360,7 +360,7 @@ export default function StaffIscrizioni() {
                 </button>
                 <button 
                   onClick={exportToExcel}
-                  className="text-xs bg-[#0a1628] text-white px-6 py-3 rounded-2xl font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-transform"
+                  className="text-xs bg-[#0D3D31] text-white px-6 py-3 rounded-2xl font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-transform"
                 >
                   ⬇️ Scarica CSV
                 </button>
@@ -373,7 +373,7 @@ export default function StaffIscrizioni() {
               onClick={() => setSelectedTorneoFilter("Tutti")}
               className={`px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
                 selectedTorneoFilter === "Tutti"
-                  ? "bg-[#0a1628] text-white shadow-md shadow-[#0a1628]/10"
+                  ? "bg-[#0D3D31] text-white shadow-md shadow-[#0D3D31]/10"
                   : "bg-gray-50 text-gray-500 hover:bg-gray-100"
               }`}
             >
@@ -387,7 +387,7 @@ export default function StaffIscrizioni() {
                   onClick={() => setSelectedTorneoFilter(t.nome)}
                   className={`px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
                     selectedTorneoFilter === t.nome
-                      ? "bg-[#0a1628] text-white shadow-md shadow-[#0a1628]/10"
+                      ? "bg-[#0D3D31] text-white shadow-md shadow-[#0D3D31]/10"
                       : "bg-gray-50 text-gray-500 hover:bg-gray-100"
                   }`}
                 >
@@ -420,7 +420,7 @@ export default function StaffIscrizioni() {
 
                         {/* Squadra e Torneo */}
                         <div className="mb-4 md:mb-0 md:col-span-2 md:px-4">
-                            <h4 className="text-lg font-black text-[#0a1628] leading-tight mb-1">{req.giocatori}</h4>
+                            <h4 className="text-lg font-black text-[#0D3D31] leading-tight mb-1">{req.giocatori}</h4>
                             <div className="flex flex-wrap gap-1.5 items-center">
                                 <span className="inline-block px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-[10px] font-black uppercase border border-blue-100">
                                     {req.torneo}
@@ -494,16 +494,16 @@ export default function StaffIscrizioni() {
 
       {/* Google Form Import Modal */}
       {isImportModalOpen && (
-        <div className="fixed inset-0 bg-[#0a1628]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+        <div className="fixed inset-0 bg-[#0D3D31]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-10 relative">
             <button 
               onClick={() => { setIsImportModalOpen(false); setImportStep(1); }}
-              className="absolute top-6 right-6 text-gray-400 hover:text-[#0a1628] font-black text-xl w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 rounded-full transition-all"
+              className="absolute top-6 right-6 text-gray-400 hover:text-[#0D3D31] font-black text-xl w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 rounded-full transition-all"
             >
               ✕
             </button>
 
-            <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tight mb-2">Importazione Iscrizioni 🟢</h3>
+            <h3 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tight mb-2">Importazione Iscrizioni 🟢</h3>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">
               Carica un file Excel/CSV o incolla i dati per il torneo selezionato
             </p>
@@ -516,7 +516,7 @@ export default function StaffIscrizioni() {
                   <select
                     value={selectedTorneoImport}
                     onChange={(e) => setSelectedTorneoImport(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#0a1628] outline-none focus:ring-4 focus:ring-blue-500/5 transition-all appearance-none"
+                    className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#0D3D31] outline-none focus:ring-4 focus:ring-blue-500/5 transition-all appearance-none"
                   >
                     {tornei.map(t => <option key={t.id} value={t.nome}>{t.nome}</option>)}
                     {tornei.length === 0 && <option value="">Nessun torneo attivo</option>}
@@ -551,14 +551,14 @@ export default function StaffIscrizioni() {
                     <button
                       type="button"
                       onClick={() => setInputMethod("paste")}
-                      className={`flex-1 py-2 text-center rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${inputMethod === "paste" ? 'bg-white text-[#0a1628] shadow-sm' : 'text-gray-400 hover:text-[#0a1628]'}`}
+                      className={`flex-1 py-2 text-center rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${inputMethod === "paste" ? 'bg-white text-[#0D3D31] shadow-sm' : 'text-gray-400 hover:text-[#0D3D31]'}`}
                     >
                       Copia-Incolla da Fogli
                     </button>
                     <button
                       type="button"
                       onClick={() => setInputMethod("file")}
-                      className={`flex-1 py-2 text-center rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${inputMethod === "file" ? 'bg-white text-[#0a1628] shadow-sm' : 'text-gray-400 hover:text-[#0a1628]'}`}
+                      className={`flex-1 py-2 text-center rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${inputMethod === "file" ? 'bg-white text-[#0D3D31] shadow-sm' : 'text-gray-400 hover:text-[#0D3D31]'}`}
                     >
                       Carica CSV (.csv)
                     </button>
@@ -571,7 +571,7 @@ export default function StaffIscrizioni() {
                         value={pastedText}
                         onChange={(e) => setPastedText(e.target.value)}
                         rows={6}
-                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-5 font-mono text-xs text-[#0a1628] outline-none focus:ring-4 focus:ring-blue-500/5 transition-all resize-none"
+                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-5 font-mono text-xs text-[#0D3D31] outline-none focus:ring-4 focus:ring-blue-500/5 transition-all resize-none"
                       ></textarea>
                       <div className="mt-2 flex flex-col gap-2">
                         <p className="text-[10px] text-gray-400 font-semibold">
@@ -603,7 +603,7 @@ export default function StaffIscrizioni() {
                           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                         />
                         <span className="text-4xl block mb-2">📁</span>
-                        <p className="text-xs font-bold text-[#0a1628] uppercase tracking-wider mb-1">Trascina o clicca per caricare</p>
+                        <p className="text-xs font-bold text-[#0D3D31] uppercase tracking-wider mb-1">Trascina o clicca per caricare</p>
                         <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-widest">File CSV (.csv)</p>
                       </div>
                     </div>
@@ -613,14 +613,14 @@ export default function StaffIscrizioni() {
                 <div className="pt-4 border-t border-gray-50 flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={() => { setIsImportModalOpen(false); setImportStep(1); }}
-                    className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#0a1628] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
+                    className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#0D3D31] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
                   >
                     Annulla
                   </button>
                   {inputMethod === "paste" && (
                     <button
                       onClick={() => handleParseData(pastedText)}
-                      className="flex-1 py-4 bg-[#0a1628] hover:bg-blue-900 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg transition-all"
+                      className="flex-1 py-4 bg-[#0D3D31] hover:bg-blue-900 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg transition-all"
                     >
                       Avanti ➡️
                     </button>
@@ -641,7 +641,7 @@ export default function StaffIscrizioni() {
                     <select
                       value={mapGiocatori}
                       onChange={(e) => setMapGiocatori(parseInt(e.target.value))}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 font-bold text-xs text-[#0a1628] outline-none"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 font-bold text-xs text-[#0D3D31] outline-none"
                     >
                       {parsedHeaders.map((h, idx) => (
                         <option key={idx} value={idx}>{h || `Colonna ${idx + 1}`}</option>
@@ -655,7 +655,7 @@ export default function StaffIscrizioni() {
                     <select
                       value={mapContatto}
                       onChange={(e) => setMapContatto(parseInt(e.target.value))}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 font-bold text-xs text-[#0a1628] outline-none"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 font-bold text-xs text-[#0D3D31] outline-none"
                     >
                       {parsedHeaders.map((h, idx) => (
                         <option key={idx} value={idx}>{h || `Colonna ${idx + 1}`}</option>
@@ -669,7 +669,7 @@ export default function StaffIscrizioni() {
                     <select
                       value={mapDate}
                       onChange={(e) => setMapDate(parseInt(e.target.value))}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 font-bold text-xs text-[#0a1628] outline-none"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 font-bold text-xs text-[#0D3D31] outline-none"
                     >
                       <option value="-1">Usa data odierna</option>
                       {parsedHeaders.map((h, idx) => (
@@ -697,7 +697,7 @@ export default function StaffIscrizioni() {
                             <td className="px-4 py-2.5 text-gray-400">
                               {mapDate === -1 ? "Oggi" : (row[mapDate] || "-")}
                             </td>
-                            <td className="px-4 py-2.5 text-[#0a1628] font-bold">
+                            <td className="px-4 py-2.5 text-[#0D3D31] font-bold">
                               {row[mapGiocatori] || "—"}
                             </td>
                             <td className="px-4 py-2.5 text-gray-500">
@@ -719,7 +719,7 @@ export default function StaffIscrizioni() {
                 <div className="pt-4 border-t border-gray-50 flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={() => setImportStep(1)}
-                    className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#0a1628] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
+                    className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#0D3D31] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
                   >
                     ⬅️ Indietro
                   </button>
@@ -738,23 +738,23 @@ export default function StaffIscrizioni() {
 
       {/* Details Modal */}
       {selectedIscrizioneDetail && (
-        <div className="fixed inset-0 bg-[#0a1628]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+        <div className="fixed inset-0 bg-[#0D3D31]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 max-w-xl w-full p-6 sm:p-10 relative">
             <button 
               onClick={() => setSelectedIscrizioneDetail(null)}
-              className="absolute top-6 right-6 text-gray-400 hover:text-[#0a1628] font-black text-xl w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 rounded-full transition-all"
+              className="absolute top-6 right-6 text-gray-400 hover:text-[#0D3D31] font-black text-xl w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 rounded-full transition-all"
             >
               ✕
             </button>
 
-            <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tight mb-1">Dettagli Iscrizione 📋</h3>
+            <h3 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tight mb-1">Dettagli Iscrizione 📋</h3>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">
               Risposte fornite nel modulo personalizzato
             </p>
 
             <div className="bg-blue-50 border border-blue-100 p-4 rounded-2xl mb-6">
                <p className="text-[10px] font-black text-blue-600 uppercase tracking-wider mb-1">Squadra / Atleti</p>
-               <h4 className="text-lg font-black text-[#0a1628]">{selectedIscrizioneDetail.giocatori}</h4>
+               <h4 className="text-lg font-black text-[#0D3D31]">{selectedIscrizioneDetail.giocatori}</h4>
                <p className="text-xs text-gray-500 font-bold mt-1 uppercase">Torneo: {selectedIscrizioneDetail.torneo}</p>
             </div>
 
@@ -763,7 +763,7 @@ export default function StaffIscrizioni() {
                 selectedIscrizioneDetail.risposte.map((r, rIdx) => (
                   <div key={rIdx} className="border-b border-gray-100 pb-3 last:border-b-0">
                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{r.label}</p>
-                    <p className="text-sm font-bold text-[#0a1628] whitespace-pre-wrap">{r.valore || "—"}</p>
+                    <p className="text-sm font-bold text-[#0D3D31] whitespace-pre-wrap">{r.valore || "—"}</p>
                   </div>
                 ))
               ) : (
@@ -775,7 +775,7 @@ export default function StaffIscrizioni() {
               {selectedIscrizioneDetail.note && (
                 <div className="border-t border-gray-200 pt-3 mt-3">
                   <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Note Aggiuntive</p>
-                  <p className="text-sm font-bold text-[#0a1628] whitespace-pre-wrap">{selectedIscrizioneDetail.note}</p>
+                  <p className="text-sm font-bold text-[#0D3D31] whitespace-pre-wrap">{selectedIscrizioneDetail.note}</p>
                 </div>
               )}
             </div>
@@ -783,7 +783,7 @@ export default function StaffIscrizioni() {
             <div className="pt-6 border-t border-gray-100 mt-6 flex justify-end">
               <button
                 onClick={() => setSelectedIscrizioneDetail(null)}
-                className="px-8 py-3 bg-[#0a1628] hover:bg-blue-900 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg transition-all"
+                className="px-8 py-3 bg-[#0D3D31] hover:bg-blue-900 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg transition-all"
               >
                 Chiudi
               </button>
@@ -794,16 +794,16 @@ export default function StaffIscrizioni() {
 
       {/* Edit Modal */}
       {editingIscrizione && (
-        <div className="fixed inset-0 bg-[#0a1628]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+        <div className="fixed inset-0 bg-[#0D3D31]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 max-w-md w-full p-6 sm:p-10 relative">
             <button 
               onClick={() => setEditingIscrizione(null)}
-              className="absolute top-6 right-6 text-gray-400 hover:text-[#0a1628] font-black text-xl w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 rounded-full transition-all"
+              className="absolute top-6 right-6 text-gray-400 hover:text-[#0D3D31] font-black text-xl w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 rounded-full transition-all"
             >
               ✕
             </button>
 
-            <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tight mb-1">Modifica Iscrizione ✏️</h3>
+            <h3 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tight mb-1">Modifica Iscrizione ✏️</h3>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">
               Modifica i dettagli del contatto e dei giocatori
             </p>
@@ -815,7 +815,7 @@ export default function StaffIscrizioni() {
                   type="text"
                   value={editFormData.giocatori}
                   onChange={(e) => setEditFormData(prev => ({ ...prev, giocatori: e.target.value }))}
-                  className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#0a1628] outline-none focus:ring-4 focus:ring-blue-500/5 transition-all"
+                  className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#0D3D31] outline-none focus:ring-4 focus:ring-blue-500/5 transition-all"
                 />
               </div>
 
@@ -825,7 +825,7 @@ export default function StaffIscrizioni() {
                   type="text"
                   value={editFormData.tel}
                   onChange={(e) => setEditFormData(prev => ({ ...prev, tel: e.target.value }))}
-                  className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#0a1628] outline-none focus:ring-4 focus:ring-blue-500/5 transition-all"
+                  className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#0D3D31] outline-none focus:ring-4 focus:ring-blue-500/5 transition-all"
                 />
               </div>
 
@@ -835,7 +835,7 @@ export default function StaffIscrizioni() {
                   type="email"
                   value={editFormData.email}
                   onChange={(e) => setEditFormData(prev => ({ ...prev, email: e.target.value }))}
-                  className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#0a1628] outline-none focus:ring-4 focus:ring-blue-500/5 transition-all"
+                  className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#0D3D31] outline-none focus:ring-4 focus:ring-blue-500/5 transition-all"
                 />
               </div>
             </div>
@@ -843,7 +843,7 @@ export default function StaffIscrizioni() {
             <div className="pt-6 border-t border-gray-100 mt-6 flex flex-col sm:flex-row gap-3">
               <button
                 onClick={() => setEditingIscrizione(null)}
-                className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#0a1628] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
+                className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#0D3D31] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
               >
                 Annulla
               </button>

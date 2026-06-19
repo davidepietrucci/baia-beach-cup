@@ -170,7 +170,7 @@ export default function ClassificaPubblica() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
           {/* Gold Standings Card */}
           <div className="bg-white rounded-[2.5rem] shadow-xl p-8 border-t-8 border-yellow-400">
-            <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter mb-6 flex items-center gap-2">
+            <h3 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tighter mb-6 flex items-center gap-2">
               🏆 Classifica Finale GOLD
             </h3>
             <div className="space-y-4">
@@ -189,7 +189,7 @@ export default function ClassificaPubblica() {
                         {idx + 1}
                       </span>
                       <div>
-                        <p className="font-black text-lg text-[#0a1628]">{team}</p>
+                        <p className="font-black text-lg text-[#0D3D31]">{team}</p>
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">{labels[idx]}</p>
                       </div>
                     </div>
@@ -201,7 +201,7 @@ export default function ClassificaPubblica() {
 
           {/* Silver Standings Card */}
           <div className="bg-white rounded-[2.5rem] shadow-xl p-8 border-t-8 border-gray-400">
-            <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter mb-6 flex items-center gap-2">
+            <h3 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tighter mb-6 flex items-center gap-2">
               🥈 Classifica Finale SILVER
             </h3>
             <div className="space-y-4">
@@ -220,7 +220,7 @@ export default function ClassificaPubblica() {
                         {idx + 1}
                       </span>
                       <div>
-                        <p className="font-black text-lg text-[#0a1628]">{team}</p>
+                        <p className="font-black text-lg text-[#0D3D31]">{team}</p>
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">{labels[idx]}</p>
                       </div>
                     </div>
@@ -242,7 +242,7 @@ export default function ClassificaPubblica() {
 
       return (
         <div className="bg-white rounded-[2.5rem] shadow-xl p-8 border-t-8 border-blue-600 max-w-2xl mx-auto">
-          <h3 className="text-2xl font-black text-[#0a1628] uppercase tracking-tighter mb-6 flex items-center gap-2 justify-center">
+          <h3 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tighter mb-6 flex items-center gap-2 justify-center">
             🏆 Classifica Finale
           </h3>
           <div className="space-y-4">
@@ -261,7 +261,7 @@ export default function ClassificaPubblica() {
                       {idx + 1}
                     </span>
                     <div>
-                      <p className="font-black text-lg text-[#0a1628]">{team}</p>
+                      <p className="font-black text-lg text-[#0D3D31]">{team}</p>
                       <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">{labels[idx]}</p>
                     </div>
                   </div>
@@ -275,16 +275,16 @@ export default function ClassificaPubblica() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 pb-20 text-[#0a1628]">
-      <header style={{backgroundColor: "#0a1628"}} className="text-white py-6 px-8 flex justify-between items-center shadow-lg border-b-4 border-[#FFD700]">
+    <main className="min-h-screen bg-gray-50 pb-20 text-[#0D3D31]">
+      <header style={{backgroundColor: "#0D3D31"}} className="text-white py-6 px-8 flex justify-between items-center shadow-lg border-b-4 border-[#C3562B]">
         <div className="flex items-center gap-4">
-          <Image src="/logo.png" alt="BVI Logo" width={50} height={50} />
+          <Image src="/logo.png" alt="Baia Beach Cup Logo" width={50} height={50} />
           <div>
             <h1 className="text-2xl font-black tracking-tighter uppercase">Classifica Live</h1>
             <p className="text-[10px] text-yellow-400 font-bold uppercase tracking-[0.3em]">Real-time Rankings</p>
           </div>
         </div>
-        <a href="/" className="bg-[#FFD700] text-[#0a1628] px-6 py-2 rounded-full font-black text-sm hover:scale-105 transition-transform">HOME</a>
+        <a href="/" className="bg-[#C3562B] text-[#0D3D31] px-6 py-2 rounded-full font-black text-sm hover:scale-105 transition-transform">HOME</a>
       </header>
 
       <div className="max-w-6xl mx-auto mt-10 px-4">
@@ -292,19 +292,19 @@ export default function ClassificaPubblica() {
             <div className="flex items-center gap-3">
                 <span className="text-3xl">🏆</span>
                 {!hasUrlTour ? (
-                  <select className="bg-transparent text-2xl font-black focus:outline-none cursor-pointer uppercase text-[#0a1628]"
+                  <select className="bg-transparent text-2xl font-black focus:outline-none cursor-pointer uppercase text-[#0D3D31]"
                       value={selectedTorneo} onChange={(e) => setSelectedTorneo(e.target.value)}>
                       {tornei.map(t => <option key={t.id} value={t.nome}>{t.nome}</option>)}
                   </select>
                 ) : (
-                  <span className="text-2xl font-black uppercase text-[#0a1628]">{selectedTorneo || "Nessun Torneo"}</span>
+                  <span className="text-2xl font-black uppercase text-[#0D3D31]">{selectedTorneo || "Nessun Torneo"}</span>
                 )}
             </div>
             {gironiDisponibili.length > 0 && !isConcluso && (
               <div className="flex gap-2 bg-gray-100 p-1.5 rounded-2xl">
                   {gironiDisponibili.map(g => (
                       <button key={g} onClick={() => setActiveGirone(g)}
-                          className={`px-6 py-2.5 rounded-xl font-black text-sm transition-all ${activeGirone === g ? 'bg-[#0a1628] text-white shadow-md' : 'text-gray-400 hover:text-[#0a1628]'}`}>
+                          className={`px-6 py-2.5 rounded-xl font-black text-sm transition-all ${activeGirone === g ? 'bg-[#0D3D31] text-white shadow-md' : 'text-gray-400 hover:text-[#0D3D31]'}`}>
                           GIRONE {g}
                       </button>
                   ))}
@@ -355,9 +355,9 @@ export default function ClassificaPubblica() {
                                 </td>
                                 <td className="px-4 py-6 text-center font-bold text-gray-600">{team.puntiFatti}</td>
                                 <td className="px-4 py-6 text-center font-bold text-gray-400">{team.puntiSubiti}</td>
-                                <td className="px-4 py-6 text-center font-black text-[#0a1628] bg-gray-50/30">{quotient}</td>
+                                <td className="px-4 py-6 text-center font-black text-[#0D3D31] bg-gray-50/30">{quotient}</td>
                                 <td className="px-8 py-6 text-right">
-                                    <span className="text-2xl font-black text-[#0a1628]">{team.score}</span>
+                                    <span className="text-2xl font-black text-[#0D3D31]">{team.score}</span>
                                 </td>
                             </tr>
                         );

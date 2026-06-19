@@ -255,9 +255,9 @@ export default function AtletaClassifica() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen bg-[#f0f4ff] flex items-center justify-center">
+      <div className="min-h-screen bg-[#f4f7f6] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-[#0a1628] border-t-transparent rounded-full animate-spin" />
+          <div className="w-12 h-12 border-4 border-[#0D3D31] border-t-transparent rounded-full animate-spin" />
           <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Caricamento...</p>
         </div>
       </div>
@@ -265,16 +265,16 @@ export default function AtletaClassifica() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f0f4ff] pb-28 xl:pb-10">
+    <main className="min-h-screen bg-[#f4f7f6] pb-28 xl:pb-10">
       <AthleteHeader />
 
       <div className="max-w-2xl mx-auto px-4 pt-6 space-y-5">
         {/* Title Section */}
-        <div className="relative bg-[#0a1628] rounded-[2rem] p-6 overflow-hidden shadow-xl">
-          <div className="absolute top-0 right-0 w-40 h-40 bg-[#FFD700]/5 rounded-full -mr-20 -mt-20" />
+        <div className="relative bg-[#0D3D31] rounded-[2rem] p-6 overflow-hidden shadow-xl">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-[#C3562B]/5 rounded-full -mr-20 -mt-20" />
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/3 rounded-full -ml-16 -mb-16" />
           <div className="relative z-10">
-            <p className="text-[10px] font-black text-[#FFD700] uppercase tracking-[0.3em] mb-1">
+            <p className="text-[10px] font-black text-[#C3562B] uppercase tracking-[0.3em] mb-1">
               Statistiche Live 🏆
             </p>
             <h1 className="text-3xl font-black text-white uppercase tracking-tighter leading-none">
@@ -296,7 +296,7 @@ export default function AtletaClassifica() {
                 </span>
                 <div className="relative">
                   <select
-                    className="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 font-black text-[#0a1628] text-sm focus:ring-2 focus:ring-[#0a1628] appearance-none cursor-pointer"
+                    className="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 font-black text-[#0D3D31] text-sm focus:ring-2 focus:ring-[#0D3D31] appearance-none cursor-pointer"
                     value={selectedTorneo}
                     onChange={(e) => setSelectedTorneo(e.target.value)}
                   >
@@ -306,7 +306,7 @@ export default function AtletaClassifica() {
                       </option>
                     ))}
                   </select>
-                  <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-[#0a1628]">
+                  <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-[#0D3D31]">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -356,12 +356,12 @@ export default function AtletaClassifica() {
                             key={team.nome}
                             className={`bg-white rounded-3xl p-5 shadow-sm border ${
                               highlight
-                                ? "border-[#FFD700] ring-4 ring-[#FFD700]/5 scale-[1.01]"
+                                ? "border-[#C3562B] ring-4 ring-[#C3562B]/5 scale-[1.01]"
                                 : "border-gray-100"
                             } flex items-center justify-between transition-all hover:scale-[1.01] ${
                               isGold
                                 ? highlight
-                                  ? "border-l-4 border-l-[#FFD700]"
+                                  ? "border-l-4 border-l-[#C3562B]"
                                   : "border-l-4 border-l-yellow-400"
                                 : ""
                             }`}
@@ -379,7 +379,7 @@ export default function AtletaClassifica() {
                                 {idx + 1}
                               </span>
                               <div className="min-w-0">
-                                <p className="font-black text-[#0a1628] text-[15px] sm:text-[16px] tracking-tight truncate flex items-center gap-1.5 flex-wrap">
+                                <p className="font-black text-[#0D3D31] text-[15px] sm:text-[16px] tracking-tight truncate flex items-center gap-1.5 flex-wrap">
                                   <span className="leading-tight block">
                                     {splitNames(team.nome).map(formatPlayerName).map((player, pIdx) => (
                                       <span key={pIdx} className="block truncate max-w-[140px]">
@@ -391,7 +391,7 @@ export default function AtletaClassifica() {
                                     Girone {team.girone}
                                   </span>
                                   {highlight && (
-                                    <span className="bg-[#FFD700]/20 text-[#0a1628] text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">
+                                    <span className="bg-[#C3562B]/20 text-[#0D3D31] text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">
                                       Tu
                                     </span>
                                   )}
@@ -446,8 +446,8 @@ export default function AtletaClassifica() {
                           onClick={() => setActiveGirone(g)}
                           className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
                             activeGirone === g
-                              ? "bg-[#0a1628] text-white shadow-md"
-                              : "bg-white text-gray-400 hover:text-[#0a1628]"
+                              ? "bg-[#0D3D31] text-white shadow-md"
+                              : "bg-white text-gray-400 hover:text-[#0D3D31]"
                           }`}
                         >
                           Girone {g}
@@ -469,12 +469,12 @@ export default function AtletaClassifica() {
                             key={team.nome}
                             className={`bg-white rounded-3xl p-5 shadow-sm border ${
                               highlight
-                                ? "border-[#FFD700] ring-4 ring-[#FFD700]/5 scale-[1.01]"
+                                ? "border-[#C3562B] ring-4 ring-[#C3562B]/5 scale-[1.01]"
                                 : "border-gray-100"
                             } flex items-center justify-between transition-all hover:scale-[1.01] ${
                               isQualified
                                 ? highlight
-                                  ? "border-l-4 border-l-[#FFD700]"
+                                  ? "border-l-4 border-l-[#C3562B]"
                                   : "border-l-4 border-l-yellow-400"
                                 : ""
                             }`}
@@ -490,7 +490,7 @@ export default function AtletaClassifica() {
                                 {idx + 1}
                               </span>
                               <div className="min-w-0">
-                                <p className="font-black text-[#0a1628] text-[15px] sm:text-[16px] tracking-tight truncate flex items-center gap-1.5 flex-wrap">
+                                <p className="font-black text-[#0D3D31] text-[15px] sm:text-[16px] tracking-tight truncate flex items-center gap-1.5 flex-wrap">
                                   <span className="leading-tight block">
                                     {splitNames(team.nome).map(formatPlayerName).map((player, pIdx) => (
                                       <span key={pIdx} className="block truncate max-w-[140px]">
@@ -499,7 +499,7 @@ export default function AtletaClassifica() {
                                     ))}
                                   </span>
                                   {highlight && (
-                                    <span className="bg-[#FFD700]/20 text-[#0a1628] text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">
+                                    <span className="bg-[#C3562B]/20 text-[#0D3D31] text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">
                                       Tu
                                     </span>
                                   )}
@@ -541,7 +541,7 @@ export default function AtletaClassifica() {
             ) : (
               <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
                 <span className="text-5xl mb-4 block">⏳</span>
-                <h3 className="text-lg font-black text-[#0a1628] uppercase tracking-tight mb-2">
+                <h3 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight mb-2">
                   Classifica in Elaborazione
                 </h3>
                 <p className="text-gray-400 font-medium text-xs max-w-sm mx-auto">
@@ -556,7 +556,7 @@ export default function AtletaClassifica() {
           /* Empty state - not registered to any active tournament */
           <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100 text-center flex flex-col items-center gap-4">
             <span className="text-5xl">🏆</span>
-            <h3 className="text-lg font-black text-[#0a1628] uppercase tracking-tight">
+            <h3 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight">
               Nessun Torneo Attivo
             </h3>
             <p className="text-gray-400 font-semibold text-xs max-w-sm">
@@ -564,7 +564,7 @@ export default function AtletaClassifica() {
             </p>
             <button
               onClick={() => router.push("/atleta/iscriviti")}
-              className="mt-2 bg-[#0a1628] text-white text-[10px] font-black px-6 py-3.5 rounded-2xl uppercase tracking-widest hover:scale-105 active:scale-95 transition-transform"
+              className="mt-2 bg-[#0D3D31] text-white text-[10px] font-black px-6 py-3.5 rounded-2xl uppercase tracking-widest hover:scale-105 active:scale-95 transition-transform"
             >
               Scopri Tornei Aperti
             </button>

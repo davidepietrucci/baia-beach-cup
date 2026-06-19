@@ -791,7 +791,7 @@ export default function GironiPubblici() {
               </span>
             )}
             {hasScore && (scoreL > 0 || scoreR > 0) ? (
-              <div className="text-[#0a1628] font-black text-base sm:text-lg flex items-center gap-1.5">
+              <div className="text-[#0D3D31] font-black text-base sm:text-lg flex items-center gap-1.5">
                 <span>{scoreL}</span>
                 <span className="opacity-40">-</span>
                 <span>{scoreR}</span>
@@ -837,21 +837,21 @@ export default function GironiPubblici() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f0f4ff] pb-24">
+    <main className="min-h-screen bg-[#f4f7f6] pb-24">
       {/* Header Mobile Premium */}
       <header
-        style={{ backgroundColor: "#0a1628" }}
-        className="text-white py-4 px-5 flex justify-between items-center shadow-md border-b-4 border-[#FFD700] sticky top-0 z-50"
+        style={{ backgroundColor: "#0D3D31" }}
+        className="text-white py-4 px-5 flex justify-between items-center shadow-md border-b-4 border-[#C3562B] sticky top-0 z-50"
       >
         <div className="flex items-center gap-2.5">
-          <Image src="/logo.png" alt="BVI Logo" width={32} height={32} />
+          <Image src="/logo.png" alt="Baia Beach Cup Logo" width={32} height={32} />
           <div>
-            <h1 className="text-sm font-black tracking-tight uppercase leading-none">BVI Live</h1>
+            <h1 className="text-sm font-black tracking-tight uppercase leading-none">Baia Beach Cup Live</h1>
           </div>
         </div>
         <a
           href="/"
-          className="text-[9px] font-black bg-[#FFD700] text-[#0a1628] px-4 py-1.5 rounded-xl transition-transform active:scale-95 shadow-sm uppercase tracking-wider"
+          className="text-[9px] font-black bg-[#C3562B] text-[#0D3D31] px-4 py-1.5 rounded-xl transition-transform active:scale-95 shadow-sm uppercase tracking-wider"
         >
           Home
         </a>
@@ -869,7 +869,7 @@ export default function GironiPubblici() {
               Torneo Attivo 🟢
             </span>
           )}
-          <h2 className="text-xl font-black text-[#0a1628] uppercase tracking-tighter leading-tight">
+          <h2 className="text-xl font-black text-[#0D3D31] uppercase tracking-tighter leading-tight">
             {selectedTorneo || "Nessun Torneo"}
           </h2>
           <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mt-1.5">
@@ -896,7 +896,7 @@ export default function GironiPubblici() {
                         key={group.id}
                         className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm"
                       >
-                        <h4 className="text-sm font-black text-[#0a1628] uppercase tracking-tight border-b border-gray-50 pb-3 mb-3 flex items-center justify-between">
+                        <h4 className="text-sm font-black text-[#0D3D31] uppercase tracking-tight border-b border-gray-50 pb-3 mb-3 flex items-center justify-between">
                           <span>{group.label}</span>
                           <span className="text-[9px] font-black bg-blue-50 text-blue-600 px-2 py-0.5 rounded-lg uppercase tracking-wider">
                             {teams.length} Squadre
@@ -936,7 +936,7 @@ export default function GironiPubblici() {
                                         {idx + 1}
                                       </span>
                                     </td>
-                                    <td className="px-2 py-3.5 text-[#0a1628] font-black tracking-tight leading-tight text-[13px] sm:text-[14px]">
+                                    <td className="px-2 py-3.5 text-[#0D3D31] font-black tracking-tight leading-tight text-[13px] sm:text-[14px]">
                                       {splitNames(team.nome).map(formatPlayerName).map((player, pIdx) => (
                                         <span key={pIdx} className="block truncate max-w-[140px]">
                                           {player}
@@ -952,7 +952,7 @@ export default function GironiPubblici() {
                                     <td className="px-2 py-3.5 text-center text-gray-400">
                                       {team.puntiSubiti}
                                     </td>
-                                    <td className="pr-4 py-3.5 text-right font-black text-xs text-[#0a1628]">
+                                    <td className="pr-4 py-3.5 text-right font-black text-xs text-[#0D3D31]">
                                       {quotient}
                                     </td>
                                   </tr>
@@ -989,8 +989,8 @@ export default function GironiPubblici() {
                     onClick={() => setViewMode("cronologico")}
                     className={`flex-1 py-2 text-center rounded-xl font-black text-[10px] uppercase tracking-wider transition-all ${
                       viewMode === "cronologico"
-                        ? "bg-[#0a1628] text-white shadow-md"
-                        : "text-gray-400 hover:text-[#0a1628]"
+                        ? "bg-[#0D3D31] text-white shadow-md"
+                        : "text-gray-400 hover:text-[#0D3D31]"
                     }`}
                   >
                     Cronologico 📅
@@ -999,8 +999,8 @@ export default function GironiPubblici() {
                     onClick={() => setViewMode("girone")}
                     className={`flex-1 py-2 text-center rounded-xl font-black text-[10px] uppercase tracking-wider transition-all ${
                       viewMode === "girone"
-                        ? "bg-[#0a1628] text-white shadow-md"
-                        : "text-gray-400 hover:text-[#0a1628]"
+                        ? "bg-[#0D3D31] text-white shadow-md"
+                        : "text-gray-400 hover:text-[#0D3D31]"
                     }`}
                   >
                     Per Girone 📋
@@ -1009,7 +1009,7 @@ export default function GironiPubblici() {
 
                 {viewMode === "cronologico" ? (
                   <div className="space-y-4">
-                    <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-[#FFD700] pl-2 mb-2">
+                    <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-[#C3562B] pl-2 mb-2">
                       Calendario Incontri (Ordine Cronologico)
                     </h3>
                     <div className="space-y-3">
@@ -1045,7 +1045,7 @@ export default function GironiPubblici() {
 
                       return (
                         <div key={group.id} className="space-y-3">
-                          <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-[#FFD700] pl-2">
+                          <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-[#C3562B] pl-2">
                             Partite {group.label}
                           </h3>
                           <div className="space-y-3">
@@ -1120,7 +1120,7 @@ export default function GironiPubblici() {
                                       {idx + 1}
                                     </span>
                                   </td>
-                                  <td className="px-2 py-3.5 text-[#0a1628] font-black tracking-tight leading-tight text-[13px] sm:text-[14px]">
+                                  <td className="px-2 py-3.5 text-[#0D3D31] font-black tracking-tight leading-tight text-[13px] sm:text-[14px]">
                                     {splitNames(team.nome).map(formatPlayerName).map((player, pIdx) => (
                                       <span key={pIdx} className="block truncate max-w-[200px]">
                                         {player}
@@ -1141,7 +1141,7 @@ export default function GironiPubblici() {
                                   <td className="px-2 py-3.5 text-center text-gray-400">
                                     {team.puntiSubiti}
                                   </td>
-                                  <td className="pr-4 py-3.5 text-right text-[#0a1628] font-mono text-[10px]">
+                                  <td className="pr-4 py-3.5 text-right text-[#0D3D31] font-mono text-[10px]">
                                     {quotient}
                                   </td>
                                 </tr>
@@ -1172,7 +1172,7 @@ export default function GironiPubblici() {
                             key={group.id}
                             className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm"
                           >
-                            <h4 className="text-sm font-black text-[#0a1628] uppercase tracking-tight border-b border-gray-50 pb-3 mb-3 flex items-center justify-between">
+                            <h4 className="text-sm font-black text-[#0D3D31] uppercase tracking-tight border-b border-gray-50 pb-3 mb-3 flex items-center justify-between">
                               <span>{group.label}</span>
                               <span className="text-[9px] font-black bg-blue-50 text-blue-600 px-2 py-0.5 rounded-lg uppercase tracking-wider">
                                 {teams.length} Squadre
@@ -1212,7 +1212,7 @@ export default function GironiPubblici() {
                                             {idx + 1}
                                           </span>
                                         </td>
-                                        <td className="px-2 py-3.5 text-[#0a1628] font-black tracking-tight leading-tight text-[13px] sm:text-[14px]">
+                                        <td className="px-2 py-3.5 text-[#0D3D31] font-black tracking-tight leading-tight text-[13px] sm:text-[14px]">
                                           {splitNames(team.nome).map(formatPlayerName).map((player, pIdx) => (
                                             <span key={pIdx} className="block truncate max-w-[140px]">
                                               {player}
@@ -1228,7 +1228,7 @@ export default function GironiPubblici() {
                                         <td className="px-2 py-3.5 text-center text-gray-400">
                                           {team.puntiSubiti}
                                         </td>
-                                        <td className="pr-4 py-3.5 text-right font-black text-xs text-[#0a1628]">
+                                        <td className="pr-4 py-3.5 text-right font-black text-xs text-[#0D3D31]">
                                           {quotient}
                                         </td>
                                       </tr>
@@ -1263,8 +1263,8 @@ export default function GironiPubblici() {
                       onClick={() => setFasiFinaliCategory("gold")}
                       className={`flex-1 py-2 text-center rounded-xl font-black text-xs uppercase tracking-wider transition-all ${
                         fasiFinaliCategory === "gold"
-                          ? "bg-[#0a1628] text-white shadow-md"
-                          : "text-gray-400 hover:text-[#0a1628]"
+                          ? "bg-[#0D3D31] text-white shadow-md"
+                          : "text-gray-400 hover:text-[#0D3D31]"
                       }`}
                     >
                       Gold 🏆
@@ -1273,8 +1273,8 @@ export default function GironiPubblici() {
                       onClick={() => setFasiFinaliCategory("silver")}
                       className={`flex-1 py-2 text-center rounded-xl font-black text-xs uppercase tracking-wider transition-all ${
                         fasiFinaliCategory === "silver"
-                          ? "bg-[#0a1628] text-white shadow-md"
-                          : "text-gray-400 hover:text-[#0a1628]"
+                          ? "bg-[#0D3D31] text-white shadow-md"
+                          : "text-gray-400 hover:text-[#0D3D31]"
                       }`}
                     >
                       Silver 🥈
@@ -1290,7 +1290,7 @@ export default function GironiPubblici() {
                       const groupMatches = getIntermediateGroupMatches(group.id);
                       return (
                         <div key={group.id} className="space-y-3">
-                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-[#FFD700] pl-2">
+                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-[#C3562B] pl-2">
                             Partite {group.label}
                           </h4>
                           <div className="space-y-3">
@@ -1359,7 +1359,7 @@ export default function GironiPubblici() {
                   ) && (
                     <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
                       <span className="text-5xl mb-4 block">⚔️</span>
-                      <h3 className="text-lg font-black text-[#0a1628] uppercase tracking-tight mb-2">
+                      <h3 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight mb-2">
                         Fasi Finali in Preparazione
                       </h3>
                       <p className="text-gray-400 font-medium text-xs max-w-xs mx-auto">
@@ -1376,7 +1376,7 @@ export default function GironiPubblici() {
           /* Messaggio Gironi non Pubblicati */
           <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
             <span className="text-5xl mb-4 block">⏳</span>
-            <h3 className="text-lg font-black text-[#0a1628] uppercase tracking-tight mb-2">
+            <h3 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight mb-2">
               Calendario in Elaborazione
             </h3>
             <p className="text-gray-400 font-medium text-xs max-w-xs mx-auto">
@@ -1390,13 +1390,13 @@ export default function GironiPubblici() {
       {/* BOTTOM NAV BAR FISSA - 4 Pulsanti */}
       {isPublished && (
         <nav className="fixed bottom-0 left-0 right-0 z-50">
-          <div className="absolute inset-0 bg-[#0a1628]/95 backdrop-blur-xl border-t border-blue-950/80 shadow-[0_-4px_30px_rgba(0,0,0,0.25)]" />
+          <div className="absolute inset-0 bg-[#0D3D31]/95 backdrop-blur-xl border-t border-blue-950/80 shadow-[0_-4px_30px_rgba(0,0,0,0.25)]" />
           <div className="relative flex justify-around px-1 pb-safe">
             {/* Pulsante Gironi (Composizione) */}
             <button
               onClick={() => setActiveTab("gironi")}
               className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform ${
-                activeTab === "gironi" ? "text-[#FFD700]" : "text-slate-400"
+                activeTab === "gironi" ? "text-[#C3562B]" : "text-slate-400"
               }`}
             >
               <svg
@@ -1417,7 +1417,7 @@ export default function GironiPubblici() {
                 Gironi
               </span>
               {activeTab === "gironi" && (
-                <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#FFD700]" />
+                <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />
               )}
             </button>
 
@@ -1425,7 +1425,7 @@ export default function GironiPubblici() {
             <button
               onClick={() => setActiveTab("partite")}
               className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform ${
-                activeTab === "partite" ? "text-[#FFD700]" : "text-slate-400"
+                activeTab === "partite" ? "text-[#C3562B]" : "text-slate-400"
               }`}
             >
               <svg
@@ -1446,7 +1446,7 @@ export default function GironiPubblici() {
                 Partite
               </span>
               {activeTab === "partite" && (
-                <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#FFD700]" />
+                <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />
               )}
             </button>
 
@@ -1454,7 +1454,7 @@ export default function GironiPubblici() {
             <button
               onClick={() => setActiveTab("classifica")}
               className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform ${
-                activeTab === "classifica" ? "text-[#FFD700]" : "text-slate-400"
+                activeTab === "classifica" ? "text-[#C3562B]" : "text-slate-400"
               }`}
             >
               <svg
@@ -1475,7 +1475,7 @@ export default function GironiPubblici() {
                 {rankingType === "avulsa" ? "Classifica Avulsa" : "Classifiche"}
               </span>
               {activeTab === "classifica" && (
-                <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#FFD700]" />
+                <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />
               )}
             </button>
 
@@ -1484,7 +1484,7 @@ export default function GironiPubblici() {
             <button
               onClick={() => setActiveTab("finali")}
               className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform ${
-                activeTab === "finali" ? "text-[#FFD700]" : "text-slate-400"
+                activeTab === "finali" ? "text-[#C3562B]" : "text-slate-400"
               }`}
             >
               <svg
@@ -1505,13 +1505,13 @@ export default function GironiPubblici() {
                 Fasi Finali
               </span>
               {activeTab === "finali" && (
-                <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#FFD700]" />
+                <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />
               )}
             </button>
             )}
           </div>
           {/* iOS spacer */}
-          <div className="h-safe-area-inset-bottom bg-[#0a1628]" />
+          <div className="h-safe-area-inset-bottom bg-[#0D3D31]" />
         </nav>
       )}
     </main>

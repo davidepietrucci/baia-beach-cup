@@ -39,14 +39,14 @@ export default function AtletaNotifiche() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen bg-[#f0f4ff] flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#0a1628] border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#f4f7f6] flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-[#0D3D31] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#f0f4ff] pb-28 xl:pb-10">
+    <main className="min-h-screen bg-[#f4f7f6] pb-28 xl:pb-10">
       <AthleteHeader />
 
       <div className="max-w-2xl mx-auto px-4 pt-6">
@@ -54,11 +54,11 @@ export default function AtletaNotifiche() {
         {/* Titolo */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-black text-[#0a1628] uppercase tracking-tighter">Notifiche</h1>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Avvisi dallo staff BVI</p>
+            <h1 className="text-3xl font-black text-[#0D3D31] uppercase tracking-tighter">Notifiche</h1>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Avvisi dallo staff Baia Beach Cup</p>
           </div>
           {notifiche.length > 0 && (
-            <span className="w-8 h-8 rounded-full bg-[#0a1628] text-[#FFD700] text-xs font-black flex items-center justify-center">
+            <span className="w-8 h-8 rounded-full bg-[#0D3D31] text-[#C3562B] text-xs font-black flex items-center justify-center">
               {notifiche.length}
             </span>
           )}
@@ -78,7 +78,7 @@ export default function AtletaNotifiche() {
                     <span className="text-2xl shrink-0 mt-0.5">{cfg.emoji}</span>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2 mb-1">
-                        <p className="font-black text-[#0a1628] text-sm uppercase tracking-tight truncate">
+                        <p className="font-black text-[#0D3D31] text-sm uppercase tracking-tight truncate">
                           {n.titolo || "Comunicazione Staff"}
                         </p>
                         <span className={`shrink-0 text-[9px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider ${cfg.badge}`}>
@@ -105,14 +105,14 @@ export default function AtletaNotifiche() {
               🔔
             </div>
             <div>
-              <p className="font-black text-[#0a1628] text-base uppercase tracking-tighter">Nessuna notifica</p>
+              <p className="font-black text-[#0D3D31] text-base uppercase tracking-tighter">Nessuna notifica</p>
               <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
                 Lo staff non ha ancora inviato avvisi
               </p>
             </div>
             <button
               onClick={() => router.push("/atleta/dashboard")}
-              className="px-8 py-3.5 bg-[#0a1628] text-[#FFD700] rounded-2xl font-black text-[10px] uppercase tracking-widest active:scale-95 transition-transform"
+              className="px-8 py-3.5 bg-[#0D3D31] text-[#C3562B] rounded-2xl font-black text-[10px] uppercase tracking-widest active:scale-95 transition-transform"
             >
               ← Torna alla Dashboard
             </button>
@@ -123,7 +123,7 @@ export default function AtletaNotifiche() {
         {notifiche.length > 0 && (
           <div className="mt-6 p-4 bg-white/60 rounded-2xl border border-gray-100 text-center">
             <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">
-              Le notifiche vengono inviate dallo staff BVI per aggiornamenti importanti sui tornei
+              Le notifiche vengono inviate dallo staff Baia Beach Cup per aggiornamenti importanti sui tornei
             </p>
           </div>
         )}

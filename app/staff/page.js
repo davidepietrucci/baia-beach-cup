@@ -41,15 +41,15 @@ export default function StaffLogin() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-4" style={{backgroundColor: "#f0f4ff"}}>
-      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full border-t-4" style={{borderColor: "#0a1628"}}>
+    <main className="min-h-screen flex flex-col items-center justify-center px-4" style={{backgroundColor: "#f4f7f6"}}>
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full border-t-4" style={{borderColor: "#0D3D31"}}>
         
         {/* Intestazione */}
         <div className="flex justify-center mb-6">
-          <Image src="/logo.png" alt="BVI Logo" width={80} height={80} className="object-contain" priority />
+          <Image src="/logo.png" alt="Baia Beach Cup Logo" width={80} height={80} className="object-contain" priority />
         </div>
-        <h2 className="text-2xl font-bold text-center mb-2" style={{color: "#0a1628"}}>Area Staff</h2>
-        <p className="text-center text-gray-500 mb-6 text-sm">Accesso riservato agli organizzatori BVI</p>
+        <h2 className="text-2xl font-bold text-center mb-2" style={{color: "#0D3D31"}}>Area Staff</h2>
+        <p className="text-center text-gray-500 mb-6 text-sm">Accesso riservato agli organizzatori Baia Beach Cup</p>
         
         {/* Form di Login */}
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
@@ -85,8 +85,8 @@ export default function StaffLogin() {
           
           <button 
             type="submit" 
-            className="w-full py-3 mt-4 rounded-lg font-semibold text-[#0a1628] transition-all shadow-md hover:opacity-90" 
-            style={{backgroundColor: "#FFD700"}}
+            className="w-full py-3 mt-4 rounded-lg font-semibold text-[#0D3D31] transition-all shadow-md hover:opacity-90" 
+            style={{backgroundColor: "#C3562B"}}
           >
             Accedi allo Staff
           </button>

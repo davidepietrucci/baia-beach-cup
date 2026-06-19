@@ -91,7 +91,7 @@ export default function AthleteBottomNav({ notificheCount = 0 }) {
               <button
                 key={item.path}
                 onClick={() => router.push(item.path)}
-                className="relative -top-5 flex items-center justify-center w-16 h-16 rounded-[1.4rem] bg-[#0a1628] text-[#FFD700] shadow-[0_8px_30px_rgba(10,22,40,0.4)] border-4 border-white active:scale-90 transition-transform"
+                className="relative -top-5 flex items-center justify-center w-16 h-16 rounded-[1.4rem] bg-[#0D3D31] text-[#C3562B] shadow-[0_8px_30px_rgba(10,22,40,0.4)] border-4 border-white active:scale-90 transition-transform"
                 aria-label="Iscriviti"
               >
                 {item.icon()}
@@ -115,7 +115,7 @@ export default function AthleteBottomNav({ notificheCount = 0 }) {
 
               <span
                 className={`transition-all duration-200 ${
-                  isActive ? "text-[#0a1628] scale-110" : "text-gray-400"
+                  isActive ? "text-[#0D3D31] scale-110" : "text-gray-400"
                 }`}
               >
                 {item.icon(isActive)}
@@ -124,14 +124,14 @@ export default function AthleteBottomNav({ notificheCount = 0 }) {
               {/* Active dot */}
               <span
                 className={`text-[9px] font-black uppercase tracking-widest transition-all ${
-                  isActive ? "text-[#0a1628]" : "text-gray-300"
+                  isActive ? "text-[#0D3D31]" : "text-gray-300"
                 }`}
               >
                 {item.name}
               </span>
 
               {isActive && (
-                <span className="absolute top-2 w-1 h-1 rounded-full bg-[#FFD700]" />
+                <span className="absolute top-2 w-1 h-1 rounded-full bg-[#C3562B]" />
               )}
             </button>
           );

@@ -218,7 +218,7 @@ export default function ModuliPage() {
   if (loading) {
     return (
       <main className="min-h-screen bg-[#f8faff] flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-[#0a1628] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-16 h-16 border-4 border-[#0D3D31] border-t-transparent rounded-full animate-spin"></div>
       </main>
     );
   }
@@ -232,12 +232,12 @@ export default function ModuliPage() {
         <div className="max-w-6xl mx-auto mt-6 md:mt-10 px-4">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
-              <h2 className="text-3xl md:text-5xl font-black text-[#0a1628] uppercase tracking-tighter">Moduli Iscrizione 📝</h2>
+              <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter">Moduli Iscrizione 📝</h2>
               <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Personalizza i campi dei moduli d'iscrizione in stile Google Forms</p>
             </div>
             <button 
               onClick={handleCreateNew}
-              className="text-xs bg-[#0a1628] hover:bg-blue-900 text-white px-6 py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl hover:scale-105 transition-all"
+              className="text-xs bg-[#0D3D31] hover:bg-blue-900 text-white px-6 py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl hover:scale-105 transition-all"
             >
               ＋ Nuovo Modulo 📄
             </button>
@@ -246,10 +246,10 @@ export default function ModuliPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Card Modulo Standard */}
             <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-md relative overflow-hidden flex flex-col justify-between min-h-[200px]">
-              <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFD700]"></div>
+              <div className="absolute top-0 left-0 right-0 h-2 bg-[#C3562B]"></div>
               <div>
                 <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full uppercase tracking-wider inline-block mb-3">Predefinito di Sistema</span>
-                <h3 className="text-xl font-bold text-[#0a1628] mb-2">Modulo Standard BVI</h3>
+                <h3 className="text-xl font-bold text-[#0D3D31] mb-2">Modulo Standard Baia Beach Cup</h3>
                 <p className="text-xs text-gray-400 font-medium">Contiene i campi base: Nome Squadra, Giocatore 1 & 2 (Nome, Tel, Email) e Note.</p>
               </div>
               <div className="mt-4 pt-4 border-t border-gray-50 flex items-center text-[10px] font-bold text-gray-400 uppercase">
@@ -265,7 +265,7 @@ export default function ModuliPage() {
                   <div className="absolute top-0 left-0 right-0 h-2 bg-indigo-500"></div>
                   <div>
                     <span className="text-[9px] font-black text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full uppercase tracking-wider inline-block mb-3">Modulo Personalizzato</span>
-                    <h3 className="text-xl font-bold text-[#0a1628] mb-2">{m.titolo}</h3>
+                    <h3 className="text-xl font-bold text-[#0D3D31] mb-2">{m.titolo}</h3>
                     <p className="text-xs text-gray-400 font-medium line-clamp-2">{m.descrizione || "Nessuna descrizione."}</p>
                     <p className="text-[10px] text-gray-500 font-bold mt-2 uppercase tracking-wide">
                       📋 Campi configurati: {m.campi?.length || 0}
@@ -308,14 +308,14 @@ export default function ModuliPage() {
           <div className="flex items-center gap-6 mb-8">
             <button 
               onClick={() => setEditingForm(null)}
-              className="w-12 h-12 flex items-center justify-center bg-white rounded-2xl shadow-xl border border-gray-100 text-[#0a1628] hover:scale-110 active:scale-90 transition-all"
+              className="w-12 h-12 flex items-center justify-center bg-white rounded-2xl shadow-xl border border-gray-100 text-[#0D3D31] hover:scale-110 active:scale-90 transition-all"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
               </svg>
             </button>
             <div>
-              <h2 className="text-3xl font-black text-[#0a1628] uppercase tracking-tighter leading-none">Costruttore Moduli</h2>
+              <h2 className="text-3xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Costruttore Moduli</h2>
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2">Interfaccia stile Google Forms</p>
             </div>
           </div>
@@ -330,7 +330,7 @@ export default function ModuliPage() {
                   value={editingForm?.titolo || ""} 
                   onChange={(e) => setEditingForm(prev => prev ? { ...prev, titolo: e.target.value } : null)}
                   placeholder="Titolo del modulo" 
-                  className="w-full text-3xl font-black text-[#0a1628] border-b border-transparent hover:border-gray-200 focus:border-indigo-600 outline-none pb-2 transition-colors placeholder-gray-300"
+                  className="w-full text-3xl font-black text-[#0D3D31] border-b border-transparent hover:border-gray-200 focus:border-indigo-600 outline-none pb-2 transition-colors placeholder-gray-300"
                   required
                 />
                 <textarea 
@@ -353,7 +353,7 @@ export default function ModuliPage() {
                         { name: "Rosso", hex: "#f44336" },
                         { name: "Arancione", hex: "#ff9800" },
                         { name: "Verde", hex: "#4caf50" },
-                        { name: "Navy BVI", hex: "#0a1628" }
+                        { name: "Navy Baia Beach Cup", hex: "#0D3D31" }
                       ].map(c => (
                         <button
                           key={c.hex}
@@ -397,7 +397,7 @@ export default function ModuliPage() {
                           value={campo.label}
                           onChange={(e) => updateFieldProp(idx, "label", e.target.value)}
                           placeholder="es. Taglia Canotta o Email Socio"
-                          className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 font-bold text-sm text-[#0a1628] focus:ring-2 focus:ring-indigo-600 transition-all outline-none"
+                          className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 font-bold text-sm text-[#0D3D31] focus:ring-2 focus:ring-indigo-600 transition-all outline-none"
                           required
                         />
                       </div>
@@ -407,7 +407,7 @@ export default function ModuliPage() {
                         <select
                           value={campo.tipo}
                           onChange={(e) => updateFieldProp(idx, "tipo", e.target.value)}
-                          className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 font-bold text-sm text-[#0a1628] focus:ring-2 focus:ring-indigo-600 transition-all outline-none cursor-pointer"
+                          className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 font-bold text-sm text-[#0D3D31] focus:ring-2 focus:ring-indigo-600 transition-all outline-none cursor-pointer"
                         >
                           <option value="text">Testo Breve</option>
                           <option value="textarea">Paragrafo (Testo Lungo)</option>
@@ -436,7 +436,7 @@ export default function ModuliPage() {
                                 value={opt}
                                 onChange={(e) => updateOption(idx, optIdx, e.target.value)}
                                 placeholder={`Opzione ${optIdx + 1}`}
-                                className="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs font-semibold text-[#0a1628] outline-none focus:ring-1 focus:ring-indigo-600"
+                                className="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs font-semibold text-[#0D3D31] outline-none focus:ring-1 focus:ring-indigo-600"
                                 required
                               />
                               <button
