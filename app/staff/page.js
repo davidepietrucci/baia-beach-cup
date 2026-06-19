@@ -1,48 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
+import { SignIn } from "@clerk/nextjs";
 
 export default function StaffLogin() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const router = useRouter();
-  const { data: session, status } = useSession();
-
-  useEffect(() => {
-    if (status === "authenticated" && (session?.user?.role === "admin" || session?.user?.role === "staff")) {
-      router.push("/staff/dashboard");
-    }
-  }, [session, status, router]);
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    try {
-      const res = await signIn("credentials", {
-        username,
-        password,
-        redirect: false,
-      });
-
-      if (res?.error) {
-        setError("Credenziali errate. Riprova.");
-      } else {
-        router.push("/staff/dashboard");
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      setError("Si è verificato un errore durante l'accesso.");
-    }
-  };
-
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-4" style={{backgroundColor: "#f4f7f6"}}>
-      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full border-t-4" style={{borderColor: "#0D3D31"}}>
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full border-t-4 flex flex-col items-center" style={{borderColor: "#0D3D31"}}>
         
         {/* Intestazione */}
         <div className="flex justify-center mb-6">
@@ -51,49 +15,21 @@ export default function StaffLogin() {
         <h2 className="text-2xl font-bold text-center mb-2" style={{color: "#0D3D31"}}>Area Staff</h2>
         <p className="text-center text-gray-500 mb-6 text-sm">Accesso riservato agli organizzatori Baia Beach Cup</p>
         
-        {/* Form di Login */}
-        <form onSubmit={handleLogin} className="flex flex-col gap-4">
-          
-          {error && (
-            <div className="bg-red-50 text-red-600 border border-red-200 p-3 rounded-lg text-sm text-center font-medium">
-              {error}
-            </div>
-          )}
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Utente</label>
-            <input 
-              type="text" 
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" 
-              placeholder="Inserisci l'utente" 
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input 
-              type="password" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" 
-              placeholder="••••••••" 
-              required
-            />
-          </div>
-          
-          <button 
-            type="submit" 
-            className="w-full py-3 mt-4 rounded-lg font-semibold text-[#0D3D31] transition-all shadow-md hover:opacity-90" 
-            style={{backgroundColor: "#C3562B"}}
-          >
-            Accedi allo Staff
-          </button>
-        </form>
+        {/* Form di Login di Clerk */}
+        <SignIn 
+          signUpUrl="/staff/register" 
+          forceRedirectUrl="/staff/dashboard" 
+          appearance={{
+            elements: {
+              formButtonPrimary: 'bg-[#C3562B] hover:bg-opacity-90 text-white font-semibold transition-all shadow-md',
+              card: 'border-0 shadow-none p-0',
+              rootBox: 'w-full'
+            }
+          }}
+        />
 
         {/* Link utili */}
-        <div className="mt-4 text-center border-t border-gray-100 pt-4">
+        <div className="mt-6 text-center border-t border-gray-100 pt-4 w-full">
           <a href="/" className="text-sm font-medium hover:underline text-gray-400">← Torna alla selezione</a>
         </div>
       </div>

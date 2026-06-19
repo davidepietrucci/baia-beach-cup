@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import StaffHeader from "@/app/components/StaffHeader";
 import { getUsers, saveUsers } from "@/app/utils/db";
 
 export default function StaffAtleti() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { user, isLoaded } = useUser();
   const [atleti, setAtleti] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   
@@ -24,13 +24,14 @@ export default function StaffAtleti() {
   const [modalSubmitting, setModalSubmitting] = useState(false);
 
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (isLoaded && !user) {
       router.push("/staff");
       return;
     }
 
-    if (session?.user) {
-      if (session.user.role !== "admin") {
+    if (user) {
+      const userRole = user.publicMetadata?.role || "staff";
+      if (userRole !== "admin") {
         router.push("/staff/dashboard");
         return;
       }
@@ -39,7 +40,7 @@ export default function StaffAtleti() {
         setAtleti(users);
       });
     }
-  }, [router, session, status]);
+  }, [router, user, isLoaded]);
 
   const handleModalChange = (e) => {
     setNewUserData(prev => ({ ...prev, [e.target.name]: e.target.value }));

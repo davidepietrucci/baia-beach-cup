@@ -3,14 +3,15 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { useUser, useClerk } from "@clerk/nextjs";
 import { isUsingFirebase } from "@/app/utils/db";
 
 export default function StaffHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { data: session, status } = useSession();
+  const { user, isLoaded } = useUser();
+  const { signOut } = useClerk();
   const [role, setRole] = useState("admin");
   const [username, setUsername] = useState("");
   const [dbConnected, setDbConnected] = useState(false);
@@ -18,25 +19,25 @@ export default function StaffHeader() {
   useEffect(() => {
     setDbConnected(isUsingFirebase());
     
-    if (status === "unauthenticated") {
+    if (isLoaded && !user) {
       router.push("/staff");
       return;
     }
 
-    if (session?.user) {
-      const userRole = session.user.role || "staff";
+    if (user) {
+      const userRole = user.publicMetadata?.role || "staff";
       setRole(userRole);
-      setUsername(session.user.username || session.user.name || "Staff");
+      setUsername(user.firstName || user.username || user.emailAddresses[0]?.emailAddress || "Staff");
 
       if (userRole !== "admin" && pathname === "/staff/atleti") {
         router.push("/staff/dashboard");
       }
     }
-  }, [router, pathname, session, status]);
+  }, [router, pathname, user, isLoaded]);
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    await signOut({ callbackUrl: "/staff" });
+    await signOut({ redirectUrl: "/staff" });
   };
 
   const menuItems = [

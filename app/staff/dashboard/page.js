@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import StaffHeader from "@/app/components/StaffHeader";
 import { getTornei, getIscrizioni, saveTornei, saveIscrizioni, saveUsers, saveGironi } from "@/app/utils/db";
 
 export default function StaffDashboard() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { user } = useUser();
   const [stats, setStats] = useState({
     torneiAttivi: 0,
     iscrizioniInAttesa: 0,
@@ -31,10 +31,11 @@ export default function StaffDashboard() {
   }, []);
 
   useEffect(() => {
-    if (session?.user?.role) {
-      setRole(session.user.role);
+    if (user) {
+      const userRole = user.publicMetadata?.role || "staff";
+      setRole(userRole);
     }
-  }, [session]);
+  }, [user]);
 
   const handleResetData = async () => {
     if (typeof window !== "undefined" && window.confirm("Sei sicuro di voler cancellare TUTTI i dati (tornei, iscritti, atleti, gironi) dal database? Questa azione non è reversibile.")) {

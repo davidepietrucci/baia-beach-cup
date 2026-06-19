@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import StaffHeader from "@/app/components/StaffHeader";
 import { getStaff, saveStaff } from "@/app/utils/db";
 
@@ -17,7 +17,7 @@ const systemStaff = [
 
 export default function GestioneStaff() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { user, isLoaded } = useUser();
   const [dynamicStaff, setDynamicStaff] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   
@@ -39,13 +39,14 @@ export default function GestioneStaff() {
   const [editModalSubmitting, setEditModalSubmitting] = useState(false);
 
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (isLoaded && !user) {
       router.push("/staff");
       return;
     }
 
-    if (session?.user) {
-      if (session.user.role !== "admin") {
+    if (user) {
+      const userRole = user.publicMetadata?.role || "staff";
+      if (userRole !== "admin") {
         router.push("/staff/dashboard");
         return;
       }
@@ -54,7 +55,7 @@ export default function GestioneStaff() {
         setDynamicStaff(list);
       });
     }
-  }, [router, session, status]);
+  }, [router, user, isLoaded]);
 
   // Create Handlers
   const handleModalChange = (e) => {

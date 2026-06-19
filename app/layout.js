@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./components/Providers";
@@ -37,16 +38,18 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="it"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        <Providers>
-          {children}
-          <CookieBanner />
-        </Providers>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html
+        lang="it"
+        className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      >
+        <body className="min-h-full flex flex-col">
+          <Providers>
+            {children}
+            <CookieBanner />
+          </Providers>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

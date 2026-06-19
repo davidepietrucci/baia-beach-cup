@@ -1,27 +1,27 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-export async function proxy(req) {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+// Definisce quali rotte dello staff proteggere tramite Clerk (tutte tranne la pagina di login principale)
+const isStaffProtectedRoute = createRouteMatcher(["/staff/(.*)"]);
+
+const clerk = clerkMiddleware(async (auth, req) => {
+  if (isStaffProtectedRoute(req)) {
+    await auth.protect();
+  }
+});
+
+export async function proxy(req, event) {
   const { pathname } = req.nextUrl;
 
-  // 1. Protezione Area Staff
-  if (pathname.startsWith("/staff") && pathname !== "/staff") {
-    // Se non c'è token o il ruolo non è autorizzato come staff/admin
-    if (!token || (token.role !== "admin" && token.role !== "staff")) {
-      const loginUrl = new URL("/staff", req.url);
-      return NextResponse.redirect(loginUrl);
-    }
-
-    // Se un utente staff semplice prova ad accedere ad aree riservate all'admin (es. anagrafica atleti, gestione staff)
-    if (token.role === "staff" && (pathname.startsWith("/staff/atleti") || pathname.startsWith("/staff/gestione-staff"))) {
-      const dashboardUrl = new URL("/staff/dashboard", req.url);
-      return NextResponse.redirect(dashboardUrl);
-    }
+  // 1. Protezione Area Staff tramite Clerk
+  if (pathname.startsWith("/staff")) {
+    return clerk(req, event);
   }
 
-  // 2. Protezione Area Atleta
+  // 2. Protezione Area Atleta tramite NextAuth (mantenendo la compatibilità esistente)
   if (pathname.startsWith("/atleta") && pathname !== "/atleta") {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     if (!token) {
       const loginUrl = new URL("/atleta", req.url);
       return NextResponse.redirect(loginUrl);
