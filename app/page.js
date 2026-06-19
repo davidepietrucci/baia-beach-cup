@@ -214,45 +214,7 @@ export default function Home() {
         </section>
       )}
 
-      {/* Footer */}
-      <footer className="text-white py-12 px-8 mt-auto border-t-4" style={{ borderColor: "#C3562B", backgroundColor: "#0D3D31" }}>
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-3">
-            <Image src="/logo.png" alt="Baia Beach Cup Logo" width={50} height={50} className="rounded-full bg-white p-0.5" />
-            <div className="flex flex-col text-left">
-              <h4 className="text-lg font-bold" style={{ color: "#C3562B" }}>Baia Beach Cup</h4>
-              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">#Live your passion 🏐</p>
-            </div>
-          </div>
 
-          <div className="flex gap-6 items-center">
-            <a
-              href="https://www.beachvolleyinstitute.it"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-3.5 bg-white/10 hover:bg-white/20 rounded-2xl text-xs font-black uppercase tracking-widest transition-all text-white border border-white/10 hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
-            >
-              🌐 Sito Baia Beach Cup
-            </a>
-            <a
-              href="https://www.instagram.com/beachvolleyinstitutebvi/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:scale-110 active:scale-95 transition-all cursor-pointer flex items-center justify-center bg-gradient-to-tr from-[#f9ce3f] via-[#e1306c] to-[#833ab4] p-3 rounded-2xl shadow-lg border border-white/10"
-              aria-label="Seguici su Instagram"
-            >
-              <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-              </svg>
-            </a>
-          </div>
-        </div>
-        <div className="max-w-6xl mx-auto mt-8 pt-8 border-t border-white/10 text-center text-xs text-gray-500 font-medium">
-          &copy; {new Date().getFullYear()} Baia Beach Cup. Tutti i diritti riservati.
-        </div>
-      </footer>
     </main>
   );
 }
