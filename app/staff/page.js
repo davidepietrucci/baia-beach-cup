@@ -17,6 +17,7 @@ export default function StaffLogin() {
         
         {/* Form di Login di Clerk */}
         <SignIn 
+          routing="hash"
           signUpUrl="/staff/register" 
           forceRedirectUrl="/staff/dashboard" 
           appearance={{
