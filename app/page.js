@@ -224,7 +224,7 @@ export default function Home() {
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-300 font-medium">Seguici su Instagram</span>
             <a
-              href="https://www.instagram.com/beachvolleyinstitutebvi/"
+              href="https://www.instagram.com/baia_beach_cup/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:scale-110 active:scale-95 transition-all cursor-pointer flex items-center justify-center bg-gradient-to-tr from-[#f9ce3f] via-[#e1306c] to-[#833ab4] p-2.5 rounded-xl shadow-lg border border-white/10"
