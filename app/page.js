@@ -57,12 +57,7 @@ export default function Home() {
               priority
             />
           </div>
-          <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 leading-tight" style={{ color: "#0D3D31" }}>
-            #Live your passion
-          </h2>
-          <p className="text-lg sm:text-xl text-gray-600 mb-10 font-medium max-w-2xl leading-relaxed">
-            Qui puoi iscriverti ai tornei attivi e guardare i risultati in diretta
-          </p>
+
 
           {torneiLive.length > 0 && (
             <div className="w-full max-w-xl bg-white rounded-3xl p-6 border-2 border-red-500/30 shadow-xl flex flex-col items-center gap-6 mt-2 ring-8 ring-red-500/5">
