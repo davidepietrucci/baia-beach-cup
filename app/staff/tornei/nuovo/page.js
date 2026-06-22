@@ -14,9 +14,7 @@ export default function NuovoTorneo() {
     categoria: "Misto 2x2",
     stato: "In Programmazione",
     maxSquadre: 16,
-    quota: 40,
-    tipoIscrizione: "interno",
-    googleFormUrl: ""
+    quota: 40
   });
 
   const handleSubmit = async (e) => {
@@ -163,42 +161,7 @@ export default function NuovoTorneo() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-gray-50">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Tipo Iscrizione</label>
-                <select 
-                  name="tipoIscrizione" 
-                  value={formData.tipoIscrizione} 
-                  onChange={handleChange}
-                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all cursor-pointer"
-                >
-                  <option value="interno">Modulo del Sito (Standard)</option>
-                  <option value="esterno">Modulo Google Esterno (Link)</option>
-                </select>
-              </div>
 
-              {formData.tipoIscrizione === "esterno" ? (
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Link Modulo Google (URL)</label>
-                  <input 
-                    type="url" 
-                    name="googleFormUrl" 
-                    required={formData.tipoIscrizione === "esterno"}
-                    value={formData.googleFormUrl} 
-                    onChange={handleChange}
-                    placeholder="https://docs.google.com/forms/d/e/.../viewform" 
-                    className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all" 
-                  />
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Modulo Iscrizione</label>
-                  <div className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31]">
-                    Standard (Default Baia Beach Cup)
-                  </div>
-                </div>
-              )}
-            </div>
 
           </div>
           
