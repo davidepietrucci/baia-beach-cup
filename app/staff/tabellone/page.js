@@ -666,13 +666,13 @@ function TabelloneContent() {
         {/* Header toolbar */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
           <div>
-            <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Tabellone ⚔️</h2>
+            <h2 className="text-3xl md:text-5xl font-black text-[#295dab] uppercase tracking-tighter leading-none">Tabellone ⚔️</h2>
             <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Eliminazione Diretta ad Albero</p>
           </div>
           <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
             {/* Tournament Selector */}
             <select 
-              className="flex-1 md:flex-none bg-white border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-[#0D3D31] text-sm shadow-xl cursor-pointer"
+              className="flex-1 md:flex-none bg-white border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-[#295dab] text-sm shadow-xl cursor-pointer"
               value={selectedTorneo}
               onChange={(e) => setSelectedTorneo(e.target.value)}
             >
@@ -685,7 +685,7 @@ function TabelloneContent() {
 
             {/* Bracket Size Selector */}
             <select 
-              className="flex-1 md:flex-none bg-white border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-[#0D3D31] text-sm shadow-xl cursor-pointer"
+              className="flex-1 md:flex-none bg-white border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-[#295dab] text-sm shadow-xl cursor-pointer"
               value={bracketSize}
               onChange={e => setBracketSize(parseInt(e.target.value))}
             >
@@ -695,7 +695,7 @@ function TabelloneContent() {
               <option value={4}>4 Squadre (Semifinali)</option>
             </select>
 
-            <button onClick={handleAutoFill} disabled={!selectedTorneo} className="flex-1 md:flex-none bg-[#C3562B] text-[#0D3D31] px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50 cursor-pointer">🔄 GENERA</button>
+            <button onClick={handleAutoFill} disabled={!selectedTorneo} className="flex-1 md:flex-none bg-[#C3562B] text-[#295dab] px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50 cursor-pointer">🔄 GENERA</button>
             <button onClick={handleSave} disabled={!selectedTorneo} className="flex-1 md:flex-none bg-[#10B981] hover:bg-[#059669] text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50 cursor-pointer">💾 SALVA</button>
             <button
               onClick={() => setTabellonePubblicato(v => !v)}
@@ -715,13 +715,13 @@ function TabelloneContent() {
         {/* Bracket visual representation */}
         {!isLoaded ? (
           <div className="min-h-[400px] flex items-center justify-center">
-            <div className="w-16 h-16 border-4 border-[#0D3D31] border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-16 h-16 border-4 border-[#295dab] border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : torneiAttivi.length === 0 ? (
           <div className="bg-white p-12 md:p-24 rounded-[3.5rem] shadow-2xl border border-gray-100 text-center relative overflow-hidden mt-10">
             <div className="relative z-10">
               <div className="text-9xl mb-10 inline-block">🏆</div>
-              <h3 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter mb-6">Nessun Torneo Attivo</h3>
+              <h3 className="text-3xl md:text-5xl font-black text-[#295dab] uppercase tracking-tighter mb-6">Nessun Torneo Attivo</h3>
               <p className="text-gray-400 mb-12 max-w-lg mx-auto text-sm md:text-lg font-bold uppercase tracking-widest leading-relaxed">
                 Crea un nuovo torneo nella sezione gestione o imposta lo stato su "Iscrizioni Aperte" o "In Programmazione" per configurare il tabellone.
               </p>
@@ -734,18 +734,18 @@ function TabelloneContent() {
                 {/* Headers Row */}
                 <div className="flex gap-8 mb-6 border-b border-gray-100 pb-3 sticky top-0 bg-white z-20">
                   {bracketSize >= 32 && (
-                    <div className="flex-1 text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 bg-white">Sedicesimi</div>
+                    <div className="flex-1 text-[10px] font-black text-[#295dab] uppercase tracking-widest text-center py-2 bg-white">Sedicesimi</div>
                   )}
                   {bracketSize >= 16 && (
-                    <div className="flex-1 text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 bg-white">Ottavi</div>
+                    <div className="flex-1 text-[10px] font-black text-[#295dab] uppercase tracking-widest text-center py-2 bg-white">Ottavi</div>
                   )}
                   {bracketSize >= 8 && (
-                    <div className="flex-1 text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 bg-white">Quarti</div>
+                    <div className="flex-1 text-[10px] font-black text-[#295dab] uppercase tracking-widest text-center py-2 bg-white">Quarti</div>
                   )}
                   {bracketSize >= 4 && (
-                    <div className="flex-1 text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 bg-white">Semifinali</div>
+                    <div className="flex-1 text-[10px] font-black text-[#295dab] uppercase tracking-widest text-center py-2 bg-white">Semifinali</div>
                   )}
-                  <div className="flex-1 text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 bg-white">Finali</div>
+                  <div className="flex-1 text-[10px] font-black text-[#295dab] uppercase tracking-widest text-center py-2 bg-white">Finali</div>
                 </div>
 
                 {/* Columns Row */}
@@ -875,13 +875,13 @@ function TabelloneContent() {
 
       {/* Edit Match Popup Modal */}
       {editingMatch && (
-        <div className="fixed inset-0 bg-[#0D3D31]/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-[#295dab]/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl p-6 shadow-2xl max-w-md w-full border border-gray-100 flex flex-col gap-4 animate-scale-up">
             
             {/* Title bar */}
             <div className="flex justify-between items-start border-b border-gray-100 pb-3">
               <div>
-                <h4 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight leading-none">{editingMatch.label}</h4>
+                <h4 className="text-lg font-black text-[#295dab] uppercase tracking-tight leading-none">{editingMatch.label}</h4>
                 <p className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mt-1">Configurazione Incontro & Risultato</p>
               </div>
               <button onClick={closeEditModal} className="text-gray-400 hover:text-gray-600 transition-colors font-black text-lg p-1">✕</button>
@@ -896,7 +896,7 @@ function TabelloneContent() {
                   placeholder="es. 10:30" 
                   value={modalMeta.time} 
                   onChange={(e) => setModalMeta(p => ({ ...p, time: e.target.value }))}
-                  className="w-full text-xs font-bold border border-gray-200 rounded-xl px-3 py-2 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#0D3D31] outline-none text-gray-900"
+                  className="w-full text-xs font-bold border border-gray-200 rounded-xl px-3 py-2 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#295dab] outline-none text-gray-900"
                 />
               </div>
               <div className="space-y-1">
@@ -906,7 +906,7 @@ function TabelloneContent() {
                   placeholder="es. 1" 
                   value={modalMeta.court} 
                   onChange={(e) => setModalMeta(p => ({ ...p, court: e.target.value }))}
-                  className="w-full text-xs font-bold border border-gray-200 rounded-xl px-3 py-2 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#0D3D31] outline-none text-gray-900"
+                  className="w-full text-xs font-bold border border-gray-200 rounded-xl px-3 py-2 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#295dab] outline-none text-gray-900"
                 />
               </div>
             </div>
@@ -927,7 +927,7 @@ function TabelloneContent() {
                       setModalTeams(p => ({ ...p, left: formatTeamNameClean(val) }));
                     }
                   }}
-                  className="w-full text-xs font-bold border border-gray-200 rounded-xl px-3.5 py-2.5 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#0D3D31] outline-none text-gray-900"
+                  className="w-full text-xs font-bold border border-gray-200 rounded-xl px-3.5 py-2.5 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#295dab] outline-none text-gray-900"
                 />
               </div>
 
@@ -945,7 +945,7 @@ function TabelloneContent() {
                       setModalTeams(p => ({ ...p, right: formatTeamNameClean(val) }));
                     }
                   }}
-                  className="w-full text-xs font-bold border border-gray-200 rounded-xl px-3.5 py-2.5 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#0D3D31] outline-none text-gray-900"
+                  className="w-full text-xs font-bold border border-gray-200 rounded-xl px-3.5 py-2.5 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#295dab] outline-none text-gray-900"
                 />
               </div>
             </div>
@@ -981,7 +981,7 @@ function TabelloneContent() {
               <button onClick={clearModalScores} className="px-4 py-2 border border-gray-200 rounded-xl text-xs font-bold text-gray-500 hover:bg-gray-50 transition-colors cursor-pointer">Svuota Punteggi</button>
               <div className="flex gap-2">
                 <button onClick={closeEditModal} className="px-4 py-2 border border-gray-200 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer">Annulla</button>
-                <button onClick={saveModalChanges} className="px-5 py-2 bg-[#0D3D31] text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-md hover:bg-opacity-95 transition-all cursor-pointer">Conferma</button>
+                <button onClick={saveModalChanges} className="px-5 py-2 bg-[#295dab] text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-md hover:bg-opacity-95 transition-all cursor-pointer">Conferma</button>
               </div>
             </div>
 

@@ -29,12 +29,12 @@ export default function StaffTornei() {
       <div className="max-w-6xl mx-auto mt-6 md:mt-10 px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
             <div>
-                <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Gestione Tornei 🏆</h2>
+                <h2 className="text-3xl md:text-5xl font-black text-[#295dab] uppercase tracking-tighter leading-none">Gestione Tornei 🏆</h2>
                 <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Programmazione e Status Gare</p>
             </div>
             <button 
                 onClick={() => router.push('/staff/tornei/nuovo')}
-                className="w-full md:w-auto px-8 py-4 bg-[#0D3D31] text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all"
+                className="w-full md:w-auto px-8 py-4 bg-[#295dab] text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all"
             >
                 + Crea Nuovo Torneo
             </button>
@@ -56,7 +56,7 @@ export default function StaffTornei() {
                   <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 font-black">#{torneo.id}</div>
                 </div>
                 
-                <h3 className="text-2xl font-black text-[#0D3D31] leading-tight mb-6 group-hover:text-blue-600 transition-colors">{torneo.nome}</h3>
+                <h3 className="text-2xl font-black text-[#295dab] leading-tight mb-6 group-hover:text-blue-600 transition-colors">{torneo.nome}</h3>
                 
                 <div className="space-y-4 text-sm font-bold text-gray-500">
                   <div className="flex items-center gap-3">
@@ -74,7 +74,7 @@ export default function StaffTornei() {
                   <div className="flex justify-between items-end mb-3">
                     <div>
                         <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Riempimento</span>
-                        <span className="text-xl font-black text-[#0D3D31]">{torneo.iscritti} <span className="text-gray-300 font-medium">/ {torneo.maxSquadre}</span></span>
+                        <span className="text-xl font-black text-[#295dab]">{torneo.iscritti} <span className="text-gray-300 font-medium">/ {torneo.maxSquadre}</span></span>
                     </div>
                     <span className="text-[10px] font-black text-green-600">
                         {Math.round((torneo.iscritti / torneo.maxSquadre) * 100)}%
@@ -95,7 +95,7 @@ export default function StaffTornei() {
               <div className="bg-gray-50/50 p-4 sm:p-6 flex gap-3">
                 <button 
                   onClick={() => router.push(`/staff/tornei/modifica/${torneo.id}`)}
-                  className="flex-1 bg-white border-2 border-gray-100 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest text-gray-600 hover:bg-[#0D3D31] hover:text-white hover:border-[#0D3D31] transition-all shadow-sm cursor-pointer"
+                  className="flex-1 bg-white border-2 border-gray-100 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest text-gray-600 hover:bg-[#295dab] hover:text-white hover:border-[#295dab] transition-all shadow-sm cursor-pointer"
                 >
                   Modifica
                 </button>

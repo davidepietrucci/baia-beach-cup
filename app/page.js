@@ -128,7 +128,7 @@ export default function Home() {
 
       {/* Header */}
       <header
-        style={{ backgroundImage: "linear-gradient(to right, #0D3D31, #581c87)" }}
+        style={{ backgroundImage: "linear-gradient(to right, #295dab, #581c87)" }}
         className="relative text-white py-5 px-8 flex flex-col sm:flex-row justify-center items-center shadow-lg gap-4"
       >
         <div className="flex items-center gap-3.5">
@@ -167,7 +167,7 @@ export default function Home() {
       {/* Logo Centrato (Al posto del vecchio countdown) */}
       <div className="w-full flex justify-center mt-10 px-4 relative z-20">
         <div className="relative group">
-          <div className="absolute inset-0 bg-[#0d3d31]/20 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
+          <div className="absolute inset-0 bg-[#295dab]/20 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
           <Image
             src="/logo.png"
             alt="Baia Beach Cup Logo"
@@ -202,7 +202,7 @@ export default function Home() {
           {torneiLive.map((t, idx) => (
             <div
               key={idx}
-              style={{ backgroundImage: "linear-gradient(135deg, #0d3d31 0%, #1e1b4b 100%)" }}
+              style={{ backgroundImage: "linear-gradient(135deg, #295dab 0%, #1e1b4b 100%)" }}
               className="w-full max-w-xl rounded-[2.5rem] p-6 sm:p-8 text-center flex flex-col items-center justify-center gap-6 border border-white/10 shadow-2xl ring-8 ring-white/5 relative overflow-hidden group"
             >
               {/* Glow effect */}
@@ -231,7 +231,7 @@ export default function Home() {
                 <div className="w-full mt-4">
                   <a
                     href={`/gironi?tour=${encodeURIComponent(t.nome)}`}
-                    className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-black text-xs text-[#0D3D31] bg-white hover:bg-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] uppercase tracking-widest w-full sm:w-auto"
+                    className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-black text-xs text-[#295dab] bg-white hover:bg-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] uppercase tracking-widest w-full sm:w-auto"
                   >
                     📊 Guarda Gironi e Tabellone
                   </a>
@@ -247,7 +247,7 @@ export default function Home() {
         <section className="px-4 sm:px-8 pb-24 max-w-6xl mx-auto">
           <div className="flex items-center gap-4 mb-8 border-b-2 pb-4" style={{ borderColor: "#cbd5e1" }}>
             <span className="text-3xl">🏁</span>
-            <h3 className="text-2xl font-extrabold" style={{ color: "#0D3D31" }}>
+            <h3 className="text-2xl font-extrabold" style={{ color: "#295dab" }}>
               Tornei Conclusi
             </h3>
           </div>
@@ -262,7 +262,7 @@ export default function Home() {
                     </span>
                     <span className="text-sm font-semibold text-gray-400">{t.data}</span>
                   </div>
-                  <h4 className="text-2xl font-black mb-2 leading-tight" style={{ color: "#0D3D31" }}>{t.nome}</h4>
+                  <h4 className="text-2xl font-black mb-2 leading-tight" style={{ color: "#295dab" }}>{t.nome}</h4>
                   <div className="flex flex-col gap-2 mb-6">
                     <span className="text-sm font-bold text-gray-500 bg-gray-50 inline-block px-3 py-1 rounded-lg self-start">
                       {t.categoria || 'Categoria Libera'}

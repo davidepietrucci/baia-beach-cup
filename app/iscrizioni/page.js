@@ -101,7 +101,7 @@ export default function Iscrizioni() {
   return (
     <main className="min-h-screen pb-20 relative" style={{ backgroundColor: "#f4f7f6" }}>
       {/* Header */}
-      <header style={{ backgroundColor: "#0D3D31" }} className="text-white py-4 px-8 flex justify-between items-center shadow-md">
+      <header style={{ backgroundColor: "#295dab" }} className="text-white py-4 px-8 flex justify-between items-center shadow-md">
         <div className="flex items-center gap-3">
           <Image src="/logo.png" alt="Baia Beach Cup Logo" width={50} height={50} className="object-contain" />
           <h1 className="text-2xl font-bold" style={{ color: "#C3562B" }}>Baia Beach Cup</h1>
@@ -127,12 +127,12 @@ export default function Iscrizioni() {
         ) : (
           <form className="space-y-6 animate-fade-in" onSubmit={handleSubmit}>
             {/* Card Selezione Torneo */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border-t-8" style={{ borderColor: "#0D3D31" }}>
-              <h2 className="text-3xl font-extrabold mb-2" style={{ color: "#0D3D31" }}>Modulo d'Iscrizione al Torneo 📝</h2>
+            <div className="bg-white rounded-2xl shadow-xl p-8 border-t-8" style={{ borderColor: "#295dab" }}>
+              <h2 className="text-3xl font-extrabold mb-2" style={{ color: "#295dab" }}>Modulo d'Iscrizione al Torneo 📝</h2>
               <p className="text-gray-500 mb-6 font-medium text-sm">Seleziona il torneo a cui intendi iscriverti per caricare i dettagli.</p>
               
               <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl">
-                <label className="block text-xs font-black text-[#0D3D31] uppercase tracking-wider mb-2">Torneo Attivo</label>
+                <label className="block text-xs font-black text-[#295dab] uppercase tracking-wider mb-2">Torneo Attivo</label>
                 <select 
                   name="torneo"
                   required
@@ -154,7 +154,7 @@ export default function Iscrizioni() {
                   <span className="text-4xl">📋</span>
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-2xl font-black text-[#0D3D31]">Iscrizione tramite Google Moduli</h3>
+                  <h3 className="text-2xl font-black text-[#295dab]">Iscrizione tramite Google Moduli</h3>
                   <p className="text-gray-500 text-sm max-w-md mx-auto font-medium">
                     Per questo torneo, Baia Beach Cup utilizza un modulo esterno per la raccolta dei dati. Clicca sul pulsante qui sotto per completare la tua iscrizione su Google Moduli.
                   </p>
@@ -181,7 +181,7 @@ export default function Iscrizioni() {
                 <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8 border-t-4 space-y-6" style={{ borderColor: "#C3562B" }}>
                   {/* Giocatori */}
                   <div>
-                    <h3 className="text-xl font-bold border-b pb-2 mb-4" style={{ color: "#0D3D31" }}>Anagrafica Giocatori</h3>
+                    <h3 className="text-xl font-bold border-b pb-2 mb-4" style={{ color: "#295dab" }}>Anagrafica Giocatori</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {/* Giocatore 1 */}
                       <div className="space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
@@ -213,7 +213,7 @@ export default function Iscrizioni() {
                     type="submit" 
                     disabled={submitting}
                     className="w-full py-4 rounded-full font-bold text-white text-lg transition-all shadow-md hover:opacity-90 hover:shadow-lg disabled:opacity-55 flex items-center justify-center gap-2" 
-                    style={{ backgroundColor: "#0D3D31" }}
+                    style={{ backgroundColor: "#295dab" }}
                   >
                     {submitting ? (
                       <>
@@ -248,7 +248,7 @@ export default function Iscrizioni() {
                 router.push("/");
               }}
               className="w-full py-4 rounded-xl font-bold text-white shadow-md hover:opacity-90 transition-all text-lg"
-              style={{ backgroundColor: "#0D3D31" }}
+              style={{ backgroundColor: "#295dab" }}
             >
               Torna alla Home
             </button>

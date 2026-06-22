@@ -360,12 +360,12 @@ export default function StaffGironi() {
       <div className="max-w-[1400px] mx-auto px-4 mt-6 md:mt-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
             <div>
-                <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Gestione Gironi 🏐</h2>
+                <h2 className="text-3xl md:text-5xl font-black text-[#295dab] uppercase tracking-tighter leading-none">Gestione Gironi 🏐</h2>
                 <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Composizione e Risultati</p>
             </div>
             <div className="flex flex-wrap gap-2 w-full md:w-auto">
                 <select 
-                    className="flex-1 md:w-64 bg-white border-2 border-gray-100 rounded-2xl px-4 py-3 font-bold text-[#0D3D31] text-sm shadow-xl"
+                    className="flex-1 md:w-64 bg-white border-2 border-gray-100 rounded-2xl px-4 py-3 font-bold text-[#295dab] text-sm shadow-xl"
                     value={selectedTorneo}
                     onChange={(e) => setSelectedTorneo(e.target.value)}
                 >
@@ -379,7 +379,7 @@ export default function StaffGironi() {
                 <button 
                     onClick={handleSave}
                     disabled={!selectedTorneo}
-                    className="flex-1 md:flex-none bg-[#0D3D31] text-white px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all disabled:opacity-50"
+                    className="flex-1 md:flex-none bg-[#295dab] text-white px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all disabled:opacity-50"
                 >
                     Salva Tutto
                 </button>
@@ -418,7 +418,7 @@ export default function StaffGironi() {
                                 <select
                                     value={rankingType}
                                     onChange={(e) => setRankingType(e.target.value)}
-                                    className="bg-gray-50 border-none rounded-xl px-3 py-2 font-bold text-[#0D3D31] text-xs shadow-inner focus:ring-1 focus:ring-[#0D3D31] cursor-pointer"
+                                    className="bg-gray-50 border-none rounded-xl px-3 py-2 font-bold text-[#295dab] text-xs shadow-inner focus:ring-1 focus:ring-[#295dab] cursor-pointer"
                                 >
                                     <option value="avulsa">Classifica Avulsa (Unica)</option>
                                     <option value="gironi">Classifiche Separate (Gironi)</option>
@@ -430,7 +430,7 @@ export default function StaffGironi() {
                                     type="number" 
                                     value={numGironi} 
                                     onChange={(e) => setNumGironi(Math.max(1, Math.min(12, parseInt(e.target.value) || 1)))}
-                                    className="w-16 bg-gray-50 border-none rounded-xl px-3 py-2 text-center font-black text-[#0D3D31] shadow-inner" 
+                                    className="w-16 bg-gray-50 border-none rounded-xl px-3 py-2 text-center font-black text-[#295dab] shadow-inner" 
                                 />
                             </div>
                         </div>
@@ -492,7 +492,7 @@ export default function StaffGironi() {
                                                 >
                                                     <span className="text-[10px] font-black text-gray-300 w-4 cursor-default select-none">{idx + 1}</span>
                                                     <select 
-                                                        className="flex-1 bg-gray-50/80 border-none rounded-xl py-2.5 px-3 text-xs sm:text-sm font-bold text-gray-900 focus:ring-2 focus:ring-[#0D3D31] cursor-pointer"
+                                                        className="flex-1 bg-gray-50/80 border-none rounded-xl py-2.5 px-3 text-xs sm:text-sm font-bold text-gray-900 focus:ring-2 focus:ring-[#295dab] cursor-pointer"
                                                         value={playerInSlot}
                                                         onChange={(e) => handleAssignmentChange(g.id, idx, e.target.value)}
                                                         onClick={(e) => e.stopPropagation()}
@@ -576,7 +576,7 @@ export default function StaffGironi() {
                             >
                                 <div className="flex items-center gap-2">
                                     <span className="text-gray-300 group-hover:text-blue-500 transition-colors select-none">⋮⋮</span>
-                                    <span className={`font-bold text-xs ${isAssigned ? 'text-gray-400 line-through' : 'text-[#0D3D31]'}`}>{g.giocatori}</span>
+                                    <span className={`font-bold text-xs ${isAssigned ? 'text-gray-400 line-through' : 'text-[#295dab]'}`}>{g.giocatori}</span>
                                 </div>
                                 <span className={`text-[10px] font-black ${isAssigned ? 'text-gray-300' : 'text-blue-600'}`}>#{g.id}</span>
                             </div>

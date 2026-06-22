@@ -87,13 +87,13 @@ export default function StaffClassifiche() {
       <div className="max-w-[1200px] mx-auto px-4 mt-6 md:mt-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
           <div>
-            <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Classifiche Staff 📊</h2>
+            <h2 className="text-3xl md:text-5xl font-black text-[#295dab] uppercase tracking-tighter leading-none">Classifiche Staff 📊</h2>
             <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">
               Classifica avulsa e posizioni dei gironi
             </p>
           </div>
           <select 
-            className="w-full md:w-64 bg-white border-2 border-gray-100 rounded-2xl px-4 py-3 font-bold text-[#0D3D31] text-sm shadow-xl cursor-pointer"
+            className="w-full md:w-64 bg-white border-2 border-gray-100 rounded-2xl px-4 py-3 font-bold text-[#295dab] text-sm shadow-xl cursor-pointer"
             value={selectedTorneo}
             onChange={(e) => setSelectedTorneo(e.target.value)}
           >
@@ -107,7 +107,7 @@ export default function StaffClassifiche() {
 
         {!isLoaded ? (
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0D3D31]"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#295dab]"></div>
           </div>
         ) : !hasConfig ? (
           <div className="bg-white p-12 rounded-[2.5rem] shadow-xl border border-gray-100 text-center space-y-3">
@@ -142,13 +142,13 @@ export default function StaffClassifiche() {
             {isUnified ? (
               // 1. Unified standings (Avulsa)
               <div className="bg-white p-6 rounded-[2.5rem] shadow-xl border border-gray-100">
-                <h3 className="text-sm font-black uppercase tracking-widest text-gray-400 mb-6 pl-1 border-l-4 border-[#0D3D31] pl-2">
+                <h3 className="text-sm font-black uppercase tracking-widest text-gray-400 mb-6 pl-1 border-l-4 border-[#295dab] pl-2">
                   Classifica Avulsa (Generale)
                 </h3>
                 <div className="overflow-x-auto rounded-2xl border border-gray-100 shadow-inner">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="bg-gray-50 text-[10px] font-black text-[#0D3D31] uppercase tracking-wider border-b border-gray-100">
+                      <tr className="bg-gray-50 text-[10px] font-black text-[#295dab] uppercase tracking-wider border-b border-gray-100">
                         <th className="py-4 px-4 text-center w-12">#</th>
                         <th className="py-4 px-4">Squadra</th>
                         <th className="py-4 px-4 text-center w-12">Gir.</th>
@@ -171,7 +171,7 @@ export default function StaffClassifiche() {
                             <td className="py-3.5 px-4 text-center font-black text-gray-400">
                               {idx + 1}
                             </td>
-                            <td className="py-3.5 px-4 font-black text-[#0D3D31] max-w-[200px] truncate">
+                            <td className="py-3.5 px-4 font-black text-[#295dab] max-w-[200px] truncate">
                               {team.nome}
                             </td>
                             <td className="py-3.5 px-4 text-center font-black text-gray-500">
@@ -185,7 +185,7 @@ export default function StaffClassifiche() {
                             <td className={`py-3.5 px-4 text-center font-black ${diff > 0 ? 'text-green-600' : diff < 0 ? 'text-red-500' : 'text-gray-400'}`}>
                               {diff > 0 ? `+${diff}` : diff}
                             </td>
-                            <td className="py-3.5 px-4 text-center font-black text-[#0D3D31]">{quotient}</td>
+                            <td className="py-3.5 px-4 text-center font-black text-[#295dab]">{quotient}</td>
                           </tr>
                         );
                       })}
@@ -233,7 +233,7 @@ export default function StaffClassifiche() {
                                   <td className="py-2.5 px-3 text-center font-black text-gray-400">
                                     {idx + 1}
                                   </td>
-                                  <td className="py-2.5 px-3 font-bold text-[#0D3D31] truncate max-w-[150px]">
+                                  <td className="py-2.5 px-3 font-bold text-[#295dab] truncate max-w-[150px]">
                                     {team.nome}
                                   </td>
                                   <td className="py-2.5 px-3 text-center text-gray-600">{team.giocate}</td>
@@ -241,7 +241,7 @@ export default function StaffClassifiche() {
                                   <td className="py-2.5 px-3 text-center font-semibold text-red-500">{team.perse}</td>
                                   <td className="py-2.5 px-3 text-center text-gray-500">{team.puntiFatti}</td>
                                   <td className="py-2.5 px-3 text-center text-gray-500">{team.puntiSubiti}</td>
-                                  <td className="py-2.5 px-3 text-center font-black text-[#0D3D31]">{quotient}</td>
+                                  <td className="py-2.5 px-3 text-center font-black text-[#295dab]">{quotient}</td>
                                 </tr>
                               );
                             })}

@@ -453,7 +453,7 @@ export default function PortaleLiveMobile() {
               </span>
             )}
             {hasScore && (scoreL > 0 || scoreR > 0) ? (
-              <div className="text-[#0D3D31] font-black text-base sm:text-lg flex items-center gap-1.5">
+              <div className="text-[#295dab] font-black text-base sm:text-lg flex items-center gap-1.5">
                 <span>{scoreL}</span>
                 <span className="opacity-40">-</span>
                 <span>{scoreR}</span>
@@ -580,7 +580,7 @@ export default function PortaleLiveMobile() {
               </span>
             )}
             {hasScore ? (
-              <div className="text-[#0D3D31] font-black text-base sm:text-lg flex items-center gap-1.5">
+              <div className="text-[#295dab] font-black text-base sm:text-lg flex items-center gap-1.5">
                 <span>{scoreL}</span>
                 <span className="opacity-40">-</span>
                 <span>{scoreR}</span>
@@ -623,7 +623,7 @@ export default function PortaleLiveMobile() {
     <main className="min-h-screen bg-[#f4f7f6] pb-24">
       {/* Header Mobile Premium */}
       <header
-        style={{ backgroundColor: "#0D3D31" }}
+        style={{ backgroundColor: "#295dab" }}
         className="text-white py-4 px-5 flex justify-between items-center shadow-md border-b-4 border-[#C3562B] sticky top-0 z-50"
       >
         <div className="flex items-center gap-2.5">
@@ -634,7 +634,7 @@ export default function PortaleLiveMobile() {
         </div>
         <a
           href="/"
-          className="text-[9px] font-black bg-[#C3562B] text-[#0D3D31] px-4 py-1.5 rounded-xl transition-transform active:scale-95 shadow-sm uppercase tracking-wider"
+          className="text-[9px] font-black bg-[#C3562B] text-[#295dab] px-4 py-1.5 rounded-xl transition-transform active:scale-95 shadow-sm uppercase tracking-wider"
         >
           Home
         </a>
@@ -652,7 +652,7 @@ export default function PortaleLiveMobile() {
               Torneo Attivo 🟢
             </span>
           )}
-          <h2 className="text-xl font-black text-[#0D3D31] uppercase tracking-tighter leading-tight">
+          <h2 className="text-xl font-black text-[#295dab] uppercase tracking-tighter leading-tight">
             {selectedTorneo || "Nessun Torneo"}
           </h2>
           <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mt-1.5">
@@ -679,7 +679,7 @@ export default function PortaleLiveMobile() {
                             key={group.id}
                             className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm"
                           >
-                            <h4 className="text-sm font-black text-[#0D3D31] uppercase tracking-tight border-b border-gray-50 pb-3 mb-3 flex items-center justify-between">
+                            <h4 className="text-sm font-black text-[#295dab] uppercase tracking-tight border-b border-gray-50 pb-3 mb-3 flex items-center justify-between">
                               <span>{group.label}</span>
                               <span className="text-[9px] font-black bg-blue-50 text-blue-600 px-2 py-0.5 rounded-lg uppercase tracking-wider">
                                 {teams.length} Squadre
@@ -719,7 +719,7 @@ export default function PortaleLiveMobile() {
                                             {idx + 1}
                                           </span>
                                         </td>
-                                        <td className="px-2 py-3.5 text-[#0D3D31] font-black tracking-tight leading-tight text-[13px] sm:text-[14px]">
+                                        <td className="px-2 py-3.5 text-[#295dab] font-black tracking-tight leading-tight text-[13px] sm:text-[14px]">
                                           {splitNames(team.nome).map(formatPlayerName).map((player, pIdx) => (
                                             <span key={pIdx} className="block truncate max-w-[140px]">
                                               {player}
@@ -735,7 +735,7 @@ export default function PortaleLiveMobile() {
                                         <td className="px-2 py-3.5 text-center text-gray-400">
                                           {team.puntiSubiti}
                                         </td>
-                                        <td className="pr-4 py-3.5 text-right font-black text-xs text-[#0D3D31]">
+                                        <td className="pr-4 py-3.5 text-right font-black text-xs text-[#295dab]">
                                           {quotient}
                                         </td>
                                       </tr>
@@ -764,7 +764,7 @@ export default function PortaleLiveMobile() {
                 ) : (
                   <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
                     <span className="text-5xl mb-4 block">⏳</span>
-                    <h3 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight mb-2">
+                    <h3 className="text-lg font-black text-[#295dab] uppercase tracking-tight mb-2">
                       Gironi non ancora pubblicati
                     </h3>
                     <p className="text-gray-400 font-medium text-xs max-w-xs mx-auto">
@@ -785,8 +785,8 @@ export default function PortaleLiveMobile() {
                         onClick={() => setViewMode("campoMare")}
                         className={`flex-1 py-2 text-center rounded-xl font-black text-[10px] uppercase tracking-wider transition-all ${
                           viewMode === "campoMare"
-                            ? "bg-[#0D3D31] text-white shadow-md"
-                            : "text-gray-400 hover:text-[#0D3D31]"
+                            ? "bg-[#295dab] text-white shadow-md"
+                            : "text-gray-400 hover:text-[#295dab]"
                         }`}
                       >
                         Campo Mare (1) 🌊
@@ -795,8 +795,8 @@ export default function PortaleLiveMobile() {
                         onClick={() => setViewMode("campoMonte")}
                         className={`flex-1 py-2 text-center rounded-xl font-black text-[10px] uppercase tracking-wider transition-all ${
                           viewMode === "campoMonte"
-                            ? "bg-[#0D3D31] text-white shadow-md"
-                            : "text-gray-400 hover:text-[#0D3D31]"
+                            ? "bg-[#295dab] text-white shadow-md"
+                            : "text-gray-400 hover:text-[#295dab]"
                         }`}
                       >
                         Campo Monte (2) ⛰️
@@ -870,7 +870,7 @@ export default function PortaleLiveMobile() {
                 ) : (
                   <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
                     <span className="text-5xl mb-4 block">⏳</span>
-                    <h3 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight mb-2">
+                    <h3 className="text-lg font-black text-[#295dab] uppercase tracking-tight mb-2">
                       Partite non ancora pubblicate
                     </h3>
                     <p className="text-gray-400 font-medium text-xs max-w-xs mx-auto">
@@ -898,8 +898,8 @@ export default function PortaleLiveMobile() {
                       onClick={() => setSelectedRoundTab(round.key)}
                       className={`px-4.5 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                         selectedRoundTab === round.key
-                          ? "bg-[#0D3D31] text-white shadow-md scale-[1.03]"
-                          : "bg-white text-gray-400 border border-gray-100 hover:text-[#0D3D31] hover:bg-gray-50"
+                          ? "bg-[#295dab] text-white shadow-md scale-[1.03]"
+                          : "bg-white text-gray-400 border border-gray-100 hover:text-[#295dab] hover:bg-gray-50"
                       }`}
                     >
                       {round.label}
@@ -937,7 +937,7 @@ export default function PortaleLiveMobile() {
             {activeTab === "finali" && !isBracketPublished && (
               <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
                 <span className="text-5xl mb-4 block">⚔️</span>
-                <h3 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight mb-2">
+                <h3 className="text-lg font-black text-[#295dab] uppercase tracking-tight mb-2">
                   Fasi Finali in Preparazione
                 </h3>
                 <p className="text-gray-400 font-medium text-xs max-w-xs mx-auto">
@@ -950,7 +950,7 @@ export default function PortaleLiveMobile() {
           /* Messaggio Gironi non Pubblicati */
           <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
             <span className="text-5xl mb-4 block">⏳</span>
-            <h3 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight mb-2">
+            <h3 className="text-lg font-black text-[#295dab] uppercase tracking-tight mb-2">
               Calendario in Elaborazione
             </h3>
             <p className="text-gray-400 font-medium text-xs max-w-xs mx-auto">
@@ -964,7 +964,7 @@ export default function PortaleLiveMobile() {
       {/* BOTTOM NAV BAR */}
       {(isPublished || isBracketPublished) && (
         <nav className="fixed bottom-0 left-0 right-0 z-50">
-          <div className="absolute inset-0 bg-[#0D3D31]/95 backdrop-blur-xl border-t border-blue-950/80 shadow-[0_-4px_30px_rgba(0,0,0,0.25)]" />
+          <div className="absolute inset-0 bg-[#295dab]/95 backdrop-blur-xl border-t border-blue-950/80 shadow-[0_-4px_30px_rgba(0,0,0,0.25)]" />
           <div className="relative flex justify-around px-1 pb-safe">
             
             {/* Pulsante Gironi */}
@@ -1014,7 +1014,7 @@ export default function PortaleLiveMobile() {
             
           </div>
           {/* iOS spacer */}
-          <div className="h-safe-area-inset-bottom bg-[#0D3D31]" />
+          <div className="h-safe-area-inset-bottom bg-[#295dab]" />
         </nav>
       )}
     </main>

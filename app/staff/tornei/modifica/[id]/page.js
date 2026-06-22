@@ -53,7 +53,7 @@ export default function ModificaTorneo() {
   if (!formData) {
     return (
       <main className="min-h-screen bg-[#f8faff] flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-[#0D3D31] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-16 h-16 border-4 border-[#295dab] border-t-transparent rounded-full animate-spin"></div>
       </main>
     );
   }
@@ -69,14 +69,14 @@ export default function ModificaTorneo() {
             <div className="flex items-center gap-6">
                 <button 
                     onClick={() => router.push("/staff/tornei")}
-                    className="w-12 h-12 flex items-center justify-center bg-white rounded-2xl shadow-xl border border-gray-100 text-[#0D3D31] hover:scale-110 active:scale-90 transition-all"
+                    className="w-12 h-12 flex items-center justify-center bg-white rounded-2xl shadow-xl border border-gray-100 text-[#295dab] hover:scale-110 active:scale-90 transition-all"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                     </svg>
                 </button>
                 <div>
-                    <h2 className="text-3xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Modifica Torneo</h2>
+                    <h2 className="text-3xl font-black text-[#295dab] uppercase tracking-tighter leading-none">Modifica Torneo</h2>
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2">ID: #{torneoId} • Aggiornamento Dati</p>
                 </div>
             </div>
@@ -102,7 +102,7 @@ export default function ModificaTorneo() {
                   required
                   value={formData.nome} 
                   onChange={handleChange}
-                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all" 
+                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] transition-all" 
                 />
               </div>
               <div className="space-y-2">
@@ -113,7 +113,7 @@ export default function ModificaTorneo() {
                   required
                   value={formData.data} 
                   onChange={handleChange}
-                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all" 
+                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] transition-all" 
                 />
               </div>
             </div>
@@ -126,7 +126,7 @@ export default function ModificaTorneo() {
                 required
                 value={formData.location} 
                 onChange={handleChange}
-                className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all" 
+                className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] transition-all" 
               />
             </div>
 
@@ -137,7 +137,7 @@ export default function ModificaTorneo() {
                   name="categoria" 
                   value={formData.categoria} 
                   onChange={handleChange}
-                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all"
+                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] transition-all"
                 >
                   <option>Misto 2x2</option>
                   <option>Maschile 2x2</option>
@@ -153,7 +153,7 @@ export default function ModificaTorneo() {
                   name="stato" 
                   value={formData.stato} 
                   onChange={handleChange}
-                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all"
+                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] transition-all"
                 >
                   <option>In Programmazione</option>
                   <option>Iscrizioni Aperte</option>
@@ -169,7 +169,7 @@ export default function ModificaTorneo() {
                   min="2"
                   value={formData.maxSquadre} 
                   onChange={handleChange}
-                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all text-center" 
+                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] transition-all text-center" 
                 />
               </div>
 
@@ -181,7 +181,7 @@ export default function ModificaTorneo() {
                   min="0"
                   value={displayQuota} 
                   onChange={handleChange}
-                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all text-center" 
+                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] transition-all text-center" 
                 />
               </div>
             </div>
@@ -200,7 +200,7 @@ export default function ModificaTorneo() {
             </button>
             <button 
               type="submit" 
-              className="px-10 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest text-white bg-[#0D3D31] shadow-xl hover:scale-105 active:scale-95 transition-all"
+              className="px-10 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest text-white bg-[#295dab] shadow-xl hover:scale-105 active:scale-95 transition-all"
             >
               Salva Modifiche 💾
             </button>

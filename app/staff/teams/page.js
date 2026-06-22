@@ -153,7 +153,7 @@ export default function StaffTeams() {
       <div className="max-w-6xl mx-auto mt-6 md:mt-10 px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 w-full">
             <div>
-                <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter">Teams 👥</h2>
+                <h2 className="text-3xl md:text-5xl font-black text-[#295dab] uppercase tracking-tighter">Teams 👥</h2>
                 <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Elenco teams e atleti iscritti ai tornei</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
@@ -163,12 +163,12 @@ export default function StaffTeams() {
                   placeholder="🔍 Cerca team o contatto..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 font-bold text-xs text-[#0D3D31] outline-none shadow-sm focus:ring-4 focus:ring-emerald-500/5 transition-all"
+                  className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 font-bold text-xs text-[#295dab] outline-none shadow-sm focus:ring-4 focus:ring-emerald-500/5 transition-all"
                 />
               </div>
               <button 
                 onClick={() => setIsAddModalOpen(true)}
-                className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3.5 rounded-2xl font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-transform whitespace-nowrap w-full sm:w-auto"
+                className="text-xs bg-[#295dab] hover:bg-blue-800 text-white px-6 py-3.5 rounded-2xl font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-transform whitespace-nowrap w-full sm:w-auto"
               >
                 ➕ Aggiungi Team
               </button>
@@ -181,7 +181,7 @@ export default function StaffTeams() {
               onClick={() => setSelectedTorneoFilter("Tutti")}
               className={`px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
                 selectedTorneoFilter === "Tutti"
-                  ? "bg-[#0D3D31] text-white shadow-md shadow-[#0D3D31]/10"
+                  ? "bg-[#295dab] text-white shadow-md shadow-[#295dab]/10"
                   : "bg-gray-50 text-gray-500 hover:bg-gray-100"
               }`}
             >
@@ -195,7 +195,7 @@ export default function StaffTeams() {
                   onClick={() => setSelectedTorneoFilter(t.nome)}
                   className={`px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
                     selectedTorneoFilter === t.nome
-                      ? "bg-[#0D3D31] text-white shadow-md shadow-[#0D3D31]/10"
+                      ? "bg-[#295dab] text-white shadow-md shadow-[#295dab]/10"
                       : "bg-gray-50 text-gray-500 hover:bg-gray-100"
                   }`}
                 >
@@ -217,10 +217,10 @@ export default function StaffTeams() {
         {/* Content rows/cards */}
         <div className="space-y-4 md:space-y-0 md:bg-white md:rounded-b-[2rem] md:shadow-xl md:border md:border-gray-100 md:divide-y">
             {filteredIscrizioni.map((req) => (
-                <div key={req.id} className="bg-white p-6 rounded-[2rem] shadow-xl md:shadow-none md:rounded-none md:grid md:grid-cols-6 md:items-center hover:bg-emerald-50/10 transition-all">
+                <div key={req.id} className="bg-white p-6 rounded-[2rem] shadow-xl md:shadow-none md:rounded-none md:grid md:grid-cols-6 md:items-center hover:bg-blue-50/10 transition-all">
                     {/* Squadra e Giocatori */}
                     <div className="mb-4 md:mb-0 md:col-span-2 md:px-4">
-                        <h4 className="text-lg font-black text-[#0D3D31] leading-tight mb-1">{req.giocatori}</h4>
+                        <h4 className="text-lg font-black text-[#295dab] leading-tight mb-1">{req.giocatori}</h4>
                         <div className="flex flex-wrap gap-1.5 items-center">
                             <span className="text-[10px] text-gray-400 font-bold">ID #{req.id}</span>
                             {req.risposte && req.risposte.length > 0 && (
@@ -236,7 +236,7 @@ export default function StaffTeams() {
 
                     {/* Torneo */}
                     <div className="mb-4 md:mb-0 md:px-4">
-                        <span className="inline-block px-2.5 py-1 bg-emerald-50 text-[#0D3D31] rounded-lg text-[10px] font-black uppercase border border-emerald-100/60">
+                        <span className="inline-block px-2.5 py-1 bg-blue-50 text-[#295dab] rounded-lg text-[10px] font-black uppercase border border-blue-100/60">
                             {req.torneo}
                         </span>
                     </div>
@@ -289,23 +289,23 @@ export default function StaffTeams() {
 
       {/* Details Modal */}
       {selectedIscrizioneDetail && (
-        <div className="fixed inset-0 bg-[#0D3D31]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+        <div className="fixed inset-0 bg-[#295dab]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 max-w-xl w-full p-6 sm:p-10 relative">
             <button 
               onClick={() => setSelectedIscrizioneDetail(null)}
-              className="absolute top-6 right-6 text-gray-400 hover:text-[#0D3D31] font-black text-xl w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 rounded-full transition-all"
+              className="absolute top-6 right-6 text-gray-400 hover:text-[#295dab] font-black text-xl w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 rounded-full transition-all"
             >
               ✕
             </button>
 
-            <h3 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tight mb-1">Dettagli Iscrizione 📋</h3>
+            <h3 className="text-2xl font-black text-[#295dab] uppercase tracking-tight mb-1">Dettagli Iscrizione 📋</h3>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">
               Risposte fornite nel modulo
             </p>
 
-            <div className="bg-emerald-50 border border-emerald-100/60 p-4 rounded-2xl mb-6">
+            <div className="bg-blue-50 border border-blue-100/60 p-4 rounded-2xl mb-6">
                <p className="text-[10px] font-black text-emerald-800 uppercase tracking-wider mb-1">Squadra / Atleti</p>
-               <h4 className="text-lg font-black text-[#0D3D31]">{selectedIscrizioneDetail.giocatori}</h4>
+               <h4 className="text-lg font-black text-[#295dab]">{selectedIscrizioneDetail.giocatori}</h4>
                <p className="text-xs text-gray-500 font-bold mt-1 uppercase">Torneo: {selectedIscrizioneDetail.torneo}</p>
             </div>
 
@@ -314,7 +314,7 @@ export default function StaffTeams() {
                 selectedIscrizioneDetail.risposte.map((r, rIdx) => (
                   <div key={rIdx} className="border-b border-gray-100 pb-3 last:border-b-0">
                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{r.label}</p>
-                    <p className="text-sm font-bold text-[#0D3D31] whitespace-pre-wrap">{r.valore || "—"}</p>
+                    <p className="text-sm font-bold text-[#295dab] whitespace-pre-wrap">{r.valore || "—"}</p>
                   </div>
                 ))
               ) : (
@@ -326,7 +326,7 @@ export default function StaffTeams() {
               {selectedIscrizioneDetail.note && (
                 <div className="border-t border-gray-200 pt-3 mt-3">
                   <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Note Aggiuntive</p>
-                  <p className="text-sm font-bold text-[#0D3D31] whitespace-pre-wrap">{selectedIscrizioneDetail.note}</p>
+                  <p className="text-sm font-bold text-[#295dab] whitespace-pre-wrap">{selectedIscrizioneDetail.note}</p>
                 </div>
               )}
             </div>
@@ -334,7 +334,7 @@ export default function StaffTeams() {
             <div className="pt-6 border-t border-gray-100 mt-6 flex justify-end">
               <button
                 onClick={() => setSelectedIscrizioneDetail(null)}
-                className="px-8 py-3 bg-[#0D3D31] hover:bg-blue-900 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg transition-all"
+                className="px-8 py-3 bg-[#295dab] hover:bg-blue-900 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg transition-all"
               >
                 Chiudi
               </button>
@@ -345,17 +345,17 @@ export default function StaffTeams() {
 
       {/* Add Team Modal */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 bg-[#0D3D31]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+        <div className="fixed inset-0 bg-[#295dab]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
           <form onSubmit={handleAddTeam} className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 max-w-md w-full p-6 sm:p-10 relative">
             <button 
               type="button"
               onClick={() => setIsAddModalOpen(false)}
-              className="absolute top-6 right-6 text-gray-400 hover:text-[#0D3D31] font-black text-xl w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 rounded-full transition-all"
+              className="absolute top-6 right-6 text-gray-400 hover:text-[#295dab] font-black text-xl w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 rounded-full transition-all"
             >
               ✕
             </button>
 
-            <h3 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tight mb-1">Aggiungi Team ➕</h3>
+            <h3 className="text-2xl font-black text-[#295dab] uppercase tracking-tight mb-1">Aggiungi Team ➕</h3>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">
               Inserisci una nuova iscrizione manualmente
             </p>
@@ -366,7 +366,7 @@ export default function StaffTeams() {
                 <select
                   value={selectedTorneoAdd}
                   onChange={(e) => setSelectedTorneoAdd(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#0D3D31] outline-none focus:ring-4 focus:ring-emerald-500/5 transition-all appearance-none"
+                  className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#295dab] outline-none focus:ring-4 focus:ring-emerald-500/5 transition-all appearance-none"
                   required
                 >
                   {tornei.map(t => <option key={t.id} value={t.nome}>{t.nome}</option>)}
@@ -381,7 +381,7 @@ export default function StaffTeams() {
                   placeholder="Es: Mario Rossi & Luigi Bianchi"
                   value={newTeamName}
                   onChange={(e) => setNewTeamName(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#0D3D31] outline-none focus:ring-4 focus:ring-emerald-500/5 transition-all"
+                  className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#295dab] outline-none focus:ring-4 focus:ring-emerald-500/5 transition-all"
                   required
                 />
               </div>
@@ -411,13 +411,13 @@ export default function StaffTeams() {
               <button
                 type="button"
                 onClick={() => setIsAddModalOpen(false)}
-                className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#0D3D31] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
+                className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#295dab] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
               >
                 Annulla
               </button>
               <button
                 type="submit"
-                className="flex-1 py-4 bg-[#0D3D31] hover:bg-emerald-800 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg transition-all"
+                className="flex-1 py-4 bg-[#295dab] hover:bg-emerald-800 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg transition-all"
               >
                 Aggiungi ✅
               </button>
@@ -428,25 +428,25 @@ export default function StaffTeams() {
 
       {/* Edit Tournament Modal */}
       {editingTeam && (
-        <div className="fixed inset-0 bg-[#0D3D31]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+        <div className="fixed inset-0 bg-[#295dab]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 max-w-md w-full p-6 sm:p-10 relative">
             <button 
               type="button"
               onClick={() => setEditingTeam(null)}
-              className="absolute top-6 right-6 text-gray-400 hover:text-[#0D3D31] font-black text-xl w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 rounded-full transition-all"
+              className="absolute top-6 right-6 text-gray-400 hover:text-[#295dab] font-black text-xl w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 rounded-full transition-all"
             >
               ✕
             </button>
 
-            <h3 className="text-2xl font-black text-[#0D3D31] uppercase tracking-tight mb-1">Cambia Torneo ✏️</h3>
+            <h3 className="text-2xl font-black text-[#295dab] uppercase tracking-tight mb-1">Cambia Torneo ✏️</h3>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">
               Sposta il team in un altro torneo
             </p>
 
             {/* Team info */}
-            <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl mb-6">
+            <div className="bg-blue-50 border border-blue-100 p-4 rounded-2xl mb-6">
               <p className="text-[10px] font-black text-emerald-700 uppercase tracking-widest mb-1">Team</p>
-              <h4 className="text-base font-black text-[#0D3D31]">{editingTeam.giocatori}</h4>
+              <h4 className="text-base font-black text-[#295dab]">{editingTeam.giocatori}</h4>
               <p className="text-[10px] text-gray-400 font-bold mt-1 uppercase">Torneo attuale: {editingTeam.torneo}</p>
             </div>
 
@@ -455,7 +455,7 @@ export default function StaffTeams() {
               <select
                 value={editTorneoValue}
                 onChange={(e) => setEditTorneoValue(e.target.value)}
-                className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#0D3D31] outline-none focus:ring-4 focus:ring-emerald-500/5 transition-all appearance-none"
+                className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 font-bold text-sm text-[#295dab] outline-none focus:ring-4 focus:ring-emerald-500/5 transition-all appearance-none"
               >
                 {tornei.map(t => <option key={t.id} value={t.nome}>{t.nome}</option>)}
                 {tornei.length === 0 && <option value="">Nessun torneo disponibile</option>}
@@ -466,7 +466,7 @@ export default function StaffTeams() {
               <button
                 type="button"
                 onClick={() => setEditingTeam(null)}
-                className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#0D3D31] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
+                className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-[#295dab] font-black text-xs uppercase tracking-widest rounded-2xl transition-all"
               >
                 Annulla
               </button>

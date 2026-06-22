@@ -354,14 +354,14 @@ export default function StaffPartite() {
       <div className="max-w-[1200px] mx-auto px-4 mt-6 md:mt-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
           <div>
-            <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Partite & Risultati 🏆</h2>
+            <h2 className="text-3xl md:text-5xl font-black text-[#295dab] uppercase tracking-tighter leading-none">Partite & Risultati 🏆</h2>
             <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">
               Inserimento punteggi e programmazione campi
             </p>
           </div>
           <div className="flex flex-wrap gap-2 w-full md:w-auto">
             <select 
-              className="flex-1 md:w-64 bg-white border-2 border-gray-100 rounded-2xl px-4 py-3 font-bold text-[#0D3D31] text-sm shadow-xl cursor-pointer"
+              className="flex-1 md:w-64 bg-white border-2 border-gray-100 rounded-2xl px-4 py-3 font-bold text-[#295dab] text-sm shadow-xl cursor-pointer"
               value={selectedTorneo}
               onChange={(e) => setSelectedTorneo(e.target.value)}
             >
@@ -381,7 +381,7 @@ export default function StaffPartite() {
             <button 
               onClick={handleSave}
               disabled={!selectedTorneo || !isLoaded}
-              className="flex-1 md:flex-none bg-[#0D3D31] text-white px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all disabled:opacity-50 cursor-pointer"
+              className="flex-1 md:flex-none bg-[#295dab] text-white px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all disabled:opacity-50 cursor-pointer"
             >
               Salva Punteggi
             </button>
@@ -390,7 +390,7 @@ export default function StaffPartite() {
 
         {!isLoaded ? (
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0D3D31]"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#295dab]"></div>
           </div>
         ) : (
           <div className="space-y-6">
@@ -400,8 +400,8 @@ export default function StaffPartite() {
                 onClick={() => setActiveCourtTab("tutte")}
                 className={`px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                   activeCourtTab === "tutte"
-                    ? "bg-[#0D3D31] text-white shadow-md scale-[1.03]"
-                    : "bg-white text-gray-400 border border-gray-100 hover:text-[#0D3D31] hover:bg-gray-50"
+                    ? "bg-[#295dab] text-white shadow-md scale-[1.03]"
+                    : "bg-white text-gray-400 border border-gray-100 hover:text-[#295dab] hover:bg-gray-50"
                 }`}
               >
                 Tutte le Partite ({matches.length})
@@ -410,8 +410,8 @@ export default function StaffPartite() {
                 onClick={() => setActiveCourtTab("mare")}
                 className={`px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                   activeCourtTab === "mare"
-                    ? "bg-[#0D3D31] text-white shadow-md scale-[1.03]"
-                    : "bg-white text-gray-400 border border-gray-100 hover:text-[#0D3D31] hover:bg-gray-50"
+                    ? "bg-[#295dab] text-white shadow-md scale-[1.03]"
+                    : "bg-white text-gray-400 border border-gray-100 hover:text-[#295dab] hover:bg-gray-50"
                 }`}
               >
                 🌊 Campo Mare (1)
@@ -420,8 +420,8 @@ export default function StaffPartite() {
                 onClick={() => setActiveCourtTab("monte")}
                 className={`px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                   activeCourtTab === "monte"
-                    ? "bg-[#0D3D31] text-white shadow-md scale-[1.03]"
-                    : "bg-white text-gray-400 border border-gray-100 hover:text-[#0D3D31] hover:bg-gray-50"
+                    ? "bg-[#295dab] text-white shadow-md scale-[1.03]"
+                    : "bg-white text-gray-400 border border-gray-100 hover:text-[#295dab] hover:bg-gray-50"
                 }`}
               >
                 ⛰️ Campo Monte (2)
@@ -477,7 +477,7 @@ export default function StaffPartite() {
                               placeholder="hh:mm" 
                               value={match.meta.time || ""} 
                               onChange={(e) => handleMetadataChange(match.gironeId, match.idx, 'time', e.target.value)} 
-                              className="w-16 bg-white border-2 border-gray-100 rounded-xl text-xs py-2 text-center font-bold text-gray-900 focus:outline-none focus:border-[#0D3D31]" 
+                              className="w-16 bg-white border-2 border-gray-100 rounded-xl text-xs py-2 text-center font-bold text-gray-900 focus:outline-none focus:border-[#295dab]" 
                             />
                           </div>
                           <div className="flex flex-col gap-0.5">
@@ -485,7 +485,7 @@ export default function StaffPartite() {
                             <select 
                               value={match.meta.court || ""} 
                               onChange={(e) => handleMetadataChange(match.gironeId, match.idx, 'court', e.target.value)} 
-                              className="w-20 bg-white border-2 border-gray-100 rounded-xl text-xs py-2 text-center font-bold text-gray-900 focus:outline-none focus:border-[#0D3D31] cursor-pointer"
+                              className="w-20 bg-white border-2 border-gray-100 rounded-xl text-xs py-2 text-center font-bold text-gray-900 focus:outline-none focus:border-[#295dab] cursor-pointer"
                             >
                               <option value="">Da Asseg.</option>
                               <option value="1">Mare (1)</option>
@@ -497,7 +497,7 @@ export default function StaffPartite() {
                         {/* Matchup & Scores */}
                         <div className="flex-1 flex items-center justify-between gap-2 md:gap-4 bg-white/70 p-3 rounded-2xl border border-gray-50">
                           {/* Left Team */}
-                          <span className="flex-1 text-xs font-black text-[#0D3D31] text-right truncate max-w-[200px]" title={leftLabel}>
+                          <span className="flex-1 text-xs font-black text-[#295dab] text-right truncate max-w-[200px]" title={leftLabel}>
                             {leftLabel}
                           </span>
 
@@ -510,14 +510,14 @@ export default function StaffPartite() {
                                 placeholder="s1"
                                 value={match.meta.s1L || ""} 
                                 onChange={(e) => handleMetadataChange(match.gironeId, match.idx, 's1L', e.target.value)} 
-                                className="w-8 h-8 bg-[#0D3D31] text-white rounded-lg text-xs text-center font-black placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-[#C3562B]" 
+                                className="w-8 h-8 bg-[#295dab] text-white rounded-lg text-xs text-center font-black placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-[#C3562B]" 
                               />
                               <input 
                                 type="text" 
                                 placeholder="s1"
                                 value={match.meta.s1R || ""} 
                                 onChange={(e) => handleMetadataChange(match.gironeId, match.idx, 's1R', e.target.value)} 
-                                className="w-8 h-8 bg-[#0D3D31] text-white rounded-lg text-xs text-center font-black placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-[#C3562B]" 
+                                className="w-8 h-8 bg-[#295dab] text-white rounded-lg text-xs text-center font-black placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-[#C3562B]" 
                               />
                             </div>
 
@@ -531,14 +531,14 @@ export default function StaffPartite() {
                                     placeholder="s2"
                                     value={match.meta.s2L || ""} 
                                     onChange={(e) => handleMetadataChange(match.gironeId, match.idx, 's2L', e.target.value)} 
-                                    className="w-8 h-8 bg-[#C3562B] text-white rounded-lg text-xs text-center font-black placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-[#0D3D31]" 
+                                    className="w-8 h-8 bg-[#C3562B] text-white rounded-lg text-xs text-center font-black placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-[#295dab]" 
                                   />
                                   <input 
                                     type="text" 
                                     placeholder="s2"
                                     value={match.meta.s2R || ""} 
                                     onChange={(e) => handleMetadataChange(match.gironeId, match.idx, 's2R', e.target.value)} 
-                                    className="w-8 h-8 bg-[#C3562B] text-white rounded-lg text-xs text-center font-black placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-[#0D3D31]" 
+                                    className="w-8 h-8 bg-[#C3562B] text-white rounded-lg text-xs text-center font-black placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-[#295dab]" 
                                   />
                                 </div>
                               </>
@@ -554,14 +554,14 @@ export default function StaffPartite() {
                                     placeholder="s3"
                                     value={match.meta.s3L || ""} 
                                     onChange={(e) => handleMetadataChange(match.gironeId, match.idx, 's3L', e.target.value)} 
-                                    className="w-8 h-8 bg-amber-500 text-white rounded-lg text-xs text-center font-black placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-[#0D3D31]" 
+                                    className="w-8 h-8 bg-amber-500 text-white rounded-lg text-xs text-center font-black placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-[#295dab]" 
                                   />
                                   <input 
                                     type="text" 
                                     placeholder="s3"
                                     value={match.meta.s3R || ""} 
                                     onChange={(e) => handleMetadataChange(match.gironeId, match.idx, 's3R', e.target.value)} 
-                                    className="w-8 h-8 bg-amber-500 text-white rounded-lg text-xs text-center font-black placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-[#0D3D31]" 
+                                    className="w-8 h-8 bg-amber-500 text-white rounded-lg text-xs text-center font-black placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-[#295dab]" 
                                   />
                                 </div>
                               </>
@@ -569,7 +569,7 @@ export default function StaffPartite() {
                           </div>
 
                           {/* Right Team */}
-                          <span className="flex-1 text-xs font-black text-[#0D3D31] text-left truncate max-w-[200px]" title={rightLabel}>
+                          <span className="flex-1 text-xs font-black text-[#295dab] text-left truncate max-w-[200px]" title={rightLabel}>
                             {rightLabel}
                           </span>
                         </div>

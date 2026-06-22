@@ -370,7 +370,7 @@ export default function StaffDashboard() {
 
       <div className="max-w-6xl mx-auto mt-6 md:mt-10 px-4">
         <div className="mb-8">
-            <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Dashboard 🏢</h2>
+            <h2 className="text-3xl md:text-5xl font-black text-[#295dab] uppercase tracking-tighter leading-none">Dashboard 🏢</h2>
             <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Controllo Centrale Torneo</p>
         </div>
         
@@ -381,10 +381,10 @@ export default function StaffDashboard() {
               <span className="text-sm font-black text-gray-400 uppercase tracking-widest">Tornei Attivi</span>
               <span className="w-10 h-10 bg-yellow-50 rounded-xl flex items-center justify-center text-xl">🏆</span>
             </div>
-            <p className="text-5xl md:text-6xl font-black text-[#0D3D31]">{stats.torneiAttivi}</p>
+            <p className="text-5xl md:text-6xl font-black text-[#295dab]">{stats.torneiAttivi}</p>
           </div>
 
-          <div className="bg-white rounded-[2rem] shadow-xl p-6 md:p-8 border-b-8 transition-transform active:scale-95" style={{borderColor: "#0D3D31"}}>
+          <div className="bg-white rounded-[2rem] shadow-xl p-6 md:p-8 border-b-8 transition-transform active:scale-95" style={{borderColor: "#295dab"}}>
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm font-black text-gray-400 uppercase tracking-widest">In Attesa</span>
               <span className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-xl">⏳</span>
@@ -404,30 +404,30 @@ export default function StaffDashboard() {
         {/* Quick Actions - Full width buttons on mobile */}
         <div className="mt-10 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full -mr-16 -mt-16"></div>
-          <h3 className="text-xl md:text-2xl font-black mb-6 uppercase tracking-tight text-[#0D3D31] relative z-10">Azioni Rapide ⚡</h3>
+          <h3 className="text-xl md:text-2xl font-black mb-6 uppercase tracking-tight text-[#295dab] relative z-10">Azioni Rapide ⚡</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 relative z-10">
-            <button onClick={() => router.push('/staff/tornei/nuovo')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+            <button onClick={() => router.push('/staff/tornei/nuovo')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#295dab] hover:text-white text-[#295dab] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
               Crea Torneo <span className="text-xl group-hover:translate-x-2 transition-transform">➕</span>
             </button>
             {role === "admin" ? (
-              <button onClick={() => router.push('/staff/iscrizioni')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+              <button onClick={() => router.push('/staff/iscrizioni')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#295dab] hover:text-white text-[#295dab] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
                 Valuta Iscrizioni <span className="text-xl group-hover:translate-x-2 transition-transform">📝</span>
               </button>
             ) : (
-              <button onClick={() => router.push('/staff/teams')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+              <button onClick={() => router.push('/staff/teams')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#295dab] hover:text-white text-[#295dab] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
                 Visualizza Teams <span className="text-xl group-hover:translate-x-2 transition-transform">👥</span>
               </button>
             )}
-            <button onClick={() => router.push('/staff/gironi')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+            <button onClick={() => router.push('/staff/gironi')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#295dab] hover:text-white text-[#295dab] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
               Gironi <span className="text-xl group-hover:translate-x-2 transition-transform">🏐</span>
             </button>
-            <button onClick={() => router.push('/staff/partite')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+            <button onClick={() => router.push('/staff/partite')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#295dab] hover:text-white text-[#295dab] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
               Partite <span className="text-xl group-hover:translate-x-2 transition-transform">⚔️</span>
             </button>
-            <button onClick={() => router.push('/staff/tabellone')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+            <button onClick={() => router.push('/staff/tabellone')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#295dab] hover:text-white text-[#295dab] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
               Tabellone <span className="text-xl group-hover:translate-x-2 transition-transform">🌳</span>
             </button>
-            <button onClick={() => router.push('/staff/pagamenti')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+            <button onClick={() => router.push('/staff/pagamenti')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#295dab] hover:text-white text-[#295dab] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
               Pagamenti <span className="text-xl group-hover:translate-x-2 transition-transform">💰</span>
             </button>
           </div>
@@ -438,7 +438,7 @@ export default function StaffDashboard() {
         {role === "admin" && (
           <div className="mt-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full -mr-16 -mt-16"></div>
-            <h3 className="text-xl md:text-2xl font-black mb-6 uppercase tracking-tight text-[#0D3D31] relative z-10">Gestione Database ⚙️</h3>
+            <h3 className="text-xl md:text-2xl font-black mb-6 uppercase tracking-tight text-[#295dab] relative z-10">Gestione Database ⚙️</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
               <button 
                 onClick={handleResetData}
@@ -465,7 +465,7 @@ export default function StaffDashboard() {
         {(role === "admin" || role === "staff") && (
           <>
             <div className="mt-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
-              <h3 className="text-xl md:text-2xl font-black mb-2 uppercase tracking-tight text-[#0D3D31]">Configurazione Countdown ⏱️</h3>
+              <h3 className="text-xl md:text-2xl font-black mb-2 uppercase tracking-tight text-[#295dab]">Configurazione Countdown ⏱️</h3>
               <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mb-6">Imposta il timer mostrato nella parte superiore della homepage</p>
               
               <form onSubmit={handleSaveCountdown} className="space-y-6 max-w-xl">
@@ -475,9 +475,9 @@ export default function StaffDashboard() {
                     id="countdown-enabled"
                     checked={countdownForm.enabled} 
                     onChange={(e) => setCountdownForm(prev => ({ ...prev, enabled: e.target.checked }))}
-                    className="w-5 h-5 rounded text-[#0D3D31] focus:ring-[#0D3D31] cursor-pointer"
+                    className="w-5 h-5 rounded text-[#295dab] focus:ring-[#295dab] cursor-pointer"
                   />
-                  <label htmlFor="countdown-enabled" className="text-sm font-bold text-[#0D3D31] select-none cursor-pointer">Abilita Countdown in Homepage</label>
+                  <label htmlFor="countdown-enabled" className="text-sm font-bold text-[#295dab] select-none cursor-pointer">Abilita Countdown in Homepage</label>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -489,7 +489,7 @@ export default function StaffDashboard() {
                       onChange={(e) => setCountdownForm(prev => ({ ...prev, label: e.target.value }))}
                       placeholder="es. INIZIO TORNEO DI FERRAGOSTO"
                       disabled={!countdownForm.enabled}
-                      className="w-full bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all" 
+                      className="w-full bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] transition-all" 
                     />
                   </div>
                   <div className="space-y-2">
@@ -499,14 +499,14 @@ export default function StaffDashboard() {
                       value={countdownForm.date}
                       onChange={(e) => setCountdownForm(prev => ({ ...prev, date: e.target.value }))}
                       disabled={!countdownForm.enabled}
-                      className="w-full bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 border-none rounded-2xl px-6 py-4 font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] transition-all" 
+                      className="w-full bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] transition-all" 
                     />
                   </div>
                 </div>
 
                 <button 
                   type="submit" 
-                  className="px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest text-white bg-[#0D3D31] hover:scale-105 active:scale-95 transition-all shadow-md"
+                  className="px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest text-white bg-[#295dab] hover:scale-105 active:scale-95 transition-all shadow-md"
                 >
                   Salva Countdown 💾
                 </button>
@@ -515,12 +515,12 @@ export default function StaffDashboard() {
 
             {/* Gestione Sponsor */}
             <div className="mt-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
-              <h3 className="text-xl md:text-2xl font-black mb-2 uppercase tracking-tight text-[#0D3D31]">Gestione Sponsor 🤝</h3>
+              <h3 className="text-xl md:text-2xl font-black mb-2 uppercase tracking-tight text-[#295dab]">Gestione Sponsor 🤝</h3>
               <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mb-6">Aggiungi o rimuovi gli sponsor che appaiono in fondo alla homepage</p>
               
               {/* Form aggiunta */}
               <form onSubmit={handleAddSponsor} className="space-y-4 max-w-xl mb-8 p-6 bg-gray-50 rounded-3xl border border-gray-100">
-                <h4 className="text-xs font-black uppercase tracking-wider text-[#0D3D31]">Aggiungi Nuovo Sponsor</h4>
+                <h4 className="text-xs font-black uppercase tracking-wider text-[#295dab]">Aggiungi Nuovo Sponsor</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="space-y-1">
                     <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider ml-1">Nome</label>
@@ -530,7 +530,7 @@ export default function StaffDashboard() {
                       value={sponsorForm.nome}
                       onChange={(e) => setSponsorForm(prev => ({ ...prev, nome: e.target.value }))}
                       required
-                      className="w-full bg-white border-none rounded-xl px-4 py-3 text-xs font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31]"
+                      className="w-full bg-white border-none rounded-xl px-4 py-3 text-xs font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab]"
                     />
                   </div>
                   <div className="space-y-1">
@@ -540,7 +540,7 @@ export default function StaffDashboard() {
                       accept="image/*"
                       onChange={handleFileChange}
                       required
-                      className="w-full bg-white border-none rounded-xl px-4 py-2.5 text-xs font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31] file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[9px] file:font-black file:uppercase file:bg-[#0D3D31]/10 file:text-[#0D3D31] hover:file:bg-[#0D3D31]/20 cursor-pointer"
+                      className="w-full bg-white border-none rounded-xl px-4 py-2.5 text-xs font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[9px] file:font-black file:uppercase file:bg-[#295dab]/10 file:text-[#295dab] hover:file:bg-[#295dab]/20 cursor-pointer"
                     />
                   </div>
                   <div className="space-y-1">
@@ -550,7 +550,7 @@ export default function StaffDashboard() {
                       placeholder="es. https://..." 
                       value={sponsorForm.linkUrl}
                       onChange={(e) => setSponsorForm(prev => ({ ...prev, linkUrl: e.target.value }))}
-                      className="w-full bg-white border-none rounded-xl px-4 py-3 text-xs font-bold text-[#0D3D31] focus:ring-2 focus:ring-[#0D3D31]"
+                      className="w-full bg-white border-none rounded-xl px-4 py-3 text-xs font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab]"
                     />
                   </div>
                 </div>
@@ -562,7 +562,7 @@ export default function StaffDashboard() {
                 )}
                 <button 
                   type="submit" 
-                  className="px-6 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest text-white bg-[#0D3D31] hover:scale-105 active:scale-95 transition-all shadow-md mt-2"
+                  className="px-6 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest text-white bg-[#295dab] hover:scale-105 active:scale-95 transition-all shadow-md mt-2"
                 >
                   Inserisci Sponsor ➕
                 </button>
@@ -578,7 +578,7 @@ export default function StaffDashboard() {
                           <img src={sp.logoUrl} alt={sp.nome} className="w-10 h-10 object-contain rounded-lg bg-white p-1 border border-gray-200" />
                         )}
                         <div className="flex flex-col overflow-hidden">
-                          <span className="text-xs font-black text-[#0D3D31] truncate">{sp.nome}</span>
+                          <span className="text-xs font-black text-[#295dab] truncate">{sp.nome}</span>
                           {sp.linkUrl && (
                             <a href={sp.linkUrl} target="_blank" rel="noopener noreferrer" className="text-[9px] font-black text-gray-400 hover:underline truncate">
                               Visita sito 🔗
