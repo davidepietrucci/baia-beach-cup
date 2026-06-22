@@ -311,22 +311,6 @@ export default function StaffIscrizioni() {
     URL.revokeObjectURL(url);
   };
 
-  if (isLoaded && role !== "admin") {
-    return (
-      <main className="min-h-screen bg-[#f8faff] flex flex-col">
-        <StaffHeader />
-        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-          <span className="text-6xl mb-4">🚫</span>
-          <h2 className="text-3xl font-black text-[#0D3D31] uppercase tracking-tight">Accesso Negato</h2>
-          <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mt-2">Non hai i permessi amministratore per accedere a questa sezione</p>
-          <a href="/staff/dashboard" className="mt-8 text-xs bg-[#0D3D31] text-white px-8 py-3.5 rounded-2xl font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all">
-            Torna alla Dashboard
-          </a>
-        </div>
-      </main>
-    );
-  }
-
   const filteredIscrizioni = selectedTorneoFilter === "Tutti" 
     ? iscrizioni 
     : iscrizioni.filter(isc => (isc.torneo || "").toLowerCase().trim() === selectedTorneoFilter.toLowerCase().trim());

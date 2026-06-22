@@ -49,10 +49,7 @@ export default function StaffHeader() {
     { name: "Pagamenti", path: "/staff/pagamenti" },
   ];
 
-  const filteredMenuItems = menuItems.filter(item => {
-    if (item.name === "Iscrizioni" && role !== "admin") return false;
-    return true;
-  });
+  const filteredMenuItems = menuItems;
 
   return (
     <header className="bg-white py-3 px-4 md:px-8 flex justify-between items-center shadow-md border-b-4 sticky top-0 z-[100]" style={{borderColor: "#0D3D31"}}>
