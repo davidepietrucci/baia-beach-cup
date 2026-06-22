@@ -218,7 +218,7 @@ export default function Home() {
                       {t.categoria || 'Categoria Libera'}
                     </span>
                     <span className="text-[10px] font-black text-gray-200 bg-white/10 px-3 py-1 rounded-lg uppercase tracking-wider">
-                      📅 {t.data}
+                      {t.data}
                     </span>
                     {t.location && (
                       <span className="text-[10px] font-black text-gray-200 bg-white/10 px-3 py-1 rounded-lg uppercase tracking-wider">
