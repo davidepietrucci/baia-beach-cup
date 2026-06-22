@@ -43,7 +43,9 @@ export default function StaffHeader() {
     { name: "Iscrizioni", path: "/staff/iscrizioni" },
     { name: "Tornei", path: "/staff/tornei" },
     { name: "Gironi", path: "/staff/gironi" },
+    { name: "Partite", path: "/staff/partite" },
     { name: "Tabellone", path: "/staff/tabellone" },
+    { name: "Classifiche", path: "/staff/classifiche" },
     { name: "Pagamenti", path: "/staff/pagamenti" },
   ];
 

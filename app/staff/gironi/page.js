@@ -264,16 +264,6 @@ export default function StaffGironi() {
     setGironeSets(prev => ({ ...prev, [gironeId]: sets }));
   };
 
-  const handleMetadataChange = (gironeId, matchIdx, field, value) => {
-    setMatchMetadata(prev => ({
-      ...prev,
-      [`${gironeId}-${matchIdx}`]: {
-        ...(prev[`${gironeId}-${matchIdx}`] || {}),
-        [field]: value
-      }
-    }));
-  };
-
   const handleSave = async () => {
     if (!selectedTorneo) return;
     
@@ -317,86 +307,7 @@ export default function StaffGironi() {
     alert("Gironi eliminati con successo! 🗑️");
   };
 
-  const handleFillTestScores = () => {
-    if (!selectedTorneo) return;
-    if (!window.confirm("Vuoi caricare punteggi di test casuali per tutte le partite di tutti i gironi?")) return;
 
-    const newMetadata = { ...matchMetadata };
-
-    allGironi.slice(0, numGironi).forEach((g) => {
-      const currentAssignments = {};
-      const count = teamCounts[g.id] || 0;
-      for (let i = 0; i < count; i++) {
-        currentAssignments[i] = gironeAssignments[g.id]?.[i] || "—";
-      }
-      const schedule = getSchedule(count, g.id, currentAssignments);
-      const isThreeSets = gironeSets[g.id] === "3 set";
-
-      schedule.forEach((match, idx) => {
-        const matchKey = `${g.id}-${idx}`;
-        if (
-          !match.left || 
-          match.left === "—" || 
-          match.left.startsWith("Slot") || 
-          match.left.startsWith("Vincente") || 
-          match.left.startsWith("Perdente") ||
-          !match.right || 
-          match.right === "—" || 
-          match.right.startsWith("Slot") || 
-          match.right.startsWith("Vincente") || 
-          match.right.startsWith("Perdente")
-        ) {
-          return;
-        }
-
-        // Assicurati che court e time siano impostati se vuoti
-        if (!newMetadata[matchKey]?.court) {
-          newMetadata[matchKey] = {
-            ...(newMetadata[matchKey] || {}),
-            court: (Math.floor(Math.random() * 4) + 1).toString(),
-            time: `1${Math.floor(Math.random() * 3)}:00`
-          };
-        }
-
-        if (isThreeSets) {
-          const s1L = Math.random() > 0.5 ? 21 : Math.floor(Math.random() * 5) + 15;
-          const s1R = s1L === 21 ? Math.floor(Math.random() * 5) + 15 : 21;
-          
-          const s2L = s1L === 21 ? Math.floor(Math.random() * 5) + 15 : 21;
-          const s2R = s2L === 21 ? Math.floor(Math.random() * 5) + 15 : 21;
-          
-          let s3L = "";
-          let s3R = "";
-          if ((s1L > s1R && s2L < s2R) || (s1L < s1R && s2L > s2R)) {
-            s3L = Math.random() > 0.5 ? 15 : Math.floor(Math.random() * 4) + 10;
-            s3R = s3L === 15 ? Math.floor(Math.random() * 4) + 10 : 15;
-          }
-
-          newMetadata[matchKey] = {
-            ...newMetadata[matchKey],
-            s1L: s1L.toString(),
-            s1R: s1R.toString(),
-            s2L: s2L.toString(),
-            s2R: s2R.toString(),
-            s3L: s3L.toString(),
-            s3R: s3R.toString()
-          };
-        } else {
-          const s1L = Math.random() > 0.5 ? 21 : Math.floor(Math.random() * 6) + 12;
-          const s1R = s1L === 21 ? Math.floor(Math.random() * 6) + 12 : 21;
-
-          newMetadata[matchKey] = {
-            ...newMetadata[matchKey],
-            s1L: s1L.toString(),
-            s1R: s1R.toString()
-          };
-        }
-      });
-    });
-
-    setMatchMetadata(newMetadata);
-    alert("Punteggi di test inseriti! Non dimenticare di salvare la configurazione.");
-  };
 
   const allGironi = [
     { id: 'A', colorClass: 'blue' },
@@ -464,13 +375,7 @@ export default function StaffGironi() {
                         <option>Nessun torneo attivo</option>
                     )}
                 </select>
-                <button 
-                    onClick={handleFillTestScores}
-                    disabled={!selectedTorneo}
-                    className="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all disabled:opacity-50"
-                >
-                    ⚡ Punteggi Test
-                </button>
+
                 <button 
                     onClick={handleSave}
                     disabled={!selectedTorneo}
@@ -621,56 +526,7 @@ export default function StaffGironi() {
                 </div>
 
 
-                {/* Partite */}
-                <div className="bg-white p-6 rounded-[2.5rem] shadow-xl border border-gray-100">
-                    <h3 className="text-sm font-black uppercase tracking-widest text-gray-400 mb-8">Programma Partite e Risultati</h3>
-                    <div className="space-y-10">
-                        {gironi.map((g) => {
-                            const c = getColors(g.colorClass);
-                            const currentAssignments = {};
-                            for(let i = 0; i < (teamCounts[g.id] || 0); i++) {
-                                currentAssignments[i] = gironeAssignments[g.id]?.[i] || "—";
-                            }
-                            const schedule = getSchedule(teamCounts[g.id] || 0, g.id, currentAssignments);
-                            return (
-                                <div key={`partite-${g.id}`} className="space-y-4">
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <div className={`w-3 h-3 rounded-full ${c.main}`}></div>
-                                        <h4 className="text-sm font-black text-[#0D3D31] uppercase tracking-widest">Girone {g.id}</h4>
-                                    </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        {schedule.map((row, idx) => {
-                                            const meta = matchMetadata[`${g.id}-${idx}`] || {};
-                                            return (
-                                                <div key={idx} className="bg-gray-50/50 rounded-2xl p-4 border border-gray-100 flex flex-col gap-3">
-                                                    <div className="flex justify-between items-center border-b border-gray-100 pb-2 mb-1">
-                                                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Gara {idx + 1}</span>
-                                                        <div className="flex gap-2">
-                                                            <input type="text" placeholder="hh:mm" value={meta.time || ""} onChange={(e) => handleMetadataChange(g.id, idx, 'time', e.target.value)} className="w-12 bg-white border border-gray-200 rounded-lg text-[10px] py-1 text-center font-bold text-gray-900" />
-                                                            <input type="text" placeholder="C." value={meta.court || ""} onChange={(e) => handleMetadataChange(g.id, idx, 'court', e.target.value)} className="w-8 bg-white border border-gray-200 rounded-lg text-[10px] py-1 text-center font-bold text-gray-900" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-center justify-between gap-4">
-                                                        <span className="flex-1 text-[11px] font-black text-[#0D3D31] text-right truncate">
-                                                            {row.left && row.left !== "—" && row.left !== "Slot Libero" ? splitNames(row.left).map(formatPlayerName).join(" - ") : (row.left || "Slot Libero")}
-                                                        </span>
-                                                        <div className="flex gap-1">
-                                                            <input type="text" value={meta.s1L || ""} onChange={(e) => handleMetadataChange(g.id, idx, 's1L', e.target.value)} className="w-8 h-8 bg-[#0D3D31] text-white rounded-lg text-xs text-center font-black" />
-                                                            <input type="text" value={meta.s1R || ""} onChange={(e) => handleMetadataChange(g.id, idx, 's1R', e.target.value)} className="w-8 h-8 bg-[#0D3D31] text-white rounded-lg text-xs text-center font-black" />
-                                                        </div>
-                                                        <span className="flex-1 text-[11px] font-black text-[#0D3D31] text-left truncate">
-                                                            {row.right && row.right !== "—" && row.right !== "Slot Libero" ? splitNames(row.right).map(formatPlayerName).join(" - ") : (row.right || "Slot Libero")}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
+
             </div>
 
             <div 
