@@ -285,3 +285,42 @@ export const calculateUnifiedRanking = (config) => {
     return b.puntiFatti - a.puntiFatti;
   });
 };
+
+export const calculateProgressionRanking = (config) => {
+  if (!config || !config.numGironi) return [];
+  const isUnified = config.rankingType === "avulsa";
+  
+  const sortFunc = (a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    const quotientA = a.puntiSubiti === 0 ? a.puntiFatti : a.puntiFatti / a.puntiSubiti;
+    const quotientB = b.puntiSubiti === 0 ? b.puntiFatti : b.puntiFatti / b.puntiSubiti;
+    if (quotientB !== quotientA) return quotientB - quotientA;
+    return b.puntiFatti - a.puntiFatti;
+  };
+
+  if (isUnified) {
+    return calculateUnifiedRanking(config);
+  } else {
+    const positions = {}; // maps position (0-indexed) to array of teams
+    for (let i = 0; i < config.numGironi; i++) {
+      const gid = String.fromCharCode(65 + i);
+      const stats = calculateSingleGroupStats(gid, config);
+      const sortedStats = stats.sort(sortFunc);
+      sortedStats.forEach((team, idx) => {
+        if (!positions[idx]) positions[idx] = [];
+        positions[idx].push(team);
+      });
+    }
+    
+    let finalRanking = [];
+    const maxPositions = Object.keys(positions).length;
+    for (let idx = 0; idx < maxPositions; idx++) {
+      if (positions[idx]) {
+        const sortedPos = positions[idx].sort(sortFunc);
+        finalRanking = [...finalRanking, ...sortedPos];
+      }
+    }
+    return finalRanking;
+  }
+};
+
