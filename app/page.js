@@ -217,10 +217,6 @@ export default function Home() {
             <div className="absolute -inset-x-20 top-0 h-40 bg-emerald-500/10 blur-3xl group-hover:bg-emerald-500/20 transition-all duration-500"></div>
 
             <div className="relative z-10 flex flex-col items-center gap-4 w-full">
-              <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-4 py-1.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                Diretta Live • In Corso 🔴
-              </span>
 
               <div className="w-full space-y-4">
                 {torneiLive.map((t, idx) => (
