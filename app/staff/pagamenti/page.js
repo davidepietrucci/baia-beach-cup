@@ -5,10 +5,28 @@ import { useRouter } from "next/navigation";
 import StaffHeader from "@/app/components/StaffHeader";
 import { getTornei, getIscrizioni, saveIscrizioni } from "@/app/utils/db";
 
+const splitNames = (name) => {
+  if (!name) return [];
+  let parts = [];
+  if (name.includes(" & ")) {
+    parts = name.split(" & ");
+  } else if (name.includes(" / ")) {
+    parts = name.split(" / ");
+  } else if (name.includes(" - ")) {
+    parts = name.split(" - ");
+  } else if (name.includes("/")) {
+    parts = name.split("/");
+  } else {
+    parts = [name];
+  }
+  return parts.map((p) => p.trim());
+};
+
 export default function StaffPagamenti() {
   const router = useRouter();
   const [iscrizioni, setIscrizioni] = useState([]);
   const [filtroTorneo, setFiltroTorneo] = useState("Tutti");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     Promise.all([getIscrizioni(), getTornei()]).then(([iscrizioniList, torneiList]) => {
@@ -19,7 +37,8 @@ export default function StaffPagamenti() {
         return {
           ...isc,
           quotaTotale: quotaTorneo, 
-          quotaPagata: isc.quotaPagata || 0
+          quotaPagata: isc.quotaPagata || 0,
+          pagatoDa: isc.pagatoDa || []
         };
       });
       setIscrizioni(data);
@@ -32,9 +51,17 @@ export default function StaffPagamenti() {
   };
 
   const segnaSaldato = (id) => {
-    const newData = iscrizioni.map(isc => 
-      isc.id === id ? { ...isc, quotaPagata: isc.quotaTotale } : isc
-    );
+    const newData = iscrizioni.map(isc => {
+      if (isc.id === id) {
+        const players = splitNames(isc.giocatori);
+        return { 
+          ...isc, 
+          quotaPagata: isc.quotaTotale,
+          pagatoDa: players
+        };
+      }
+      return isc;
+    });
     salvaModifiche(newData);
   };
 
@@ -42,7 +69,20 @@ export default function StaffPagamenti() {
     const newData = iscrizioni.map(isc => {
       if (isc.id === id) {
         const nuovoPagato = Math.min(isc.quotaPagata + importo, isc.quotaTotale);
-        return { ...isc, quotaPagata: nuovoPagato };
+        const players = splitNames(isc.giocatori);
+        let newPagatoDa = isc.pagatoDa || [];
+        
+        if (nuovoPagato === isc.quotaTotale) {
+          newPagatoDa = players;
+        } else if (nuovoPagato > 0 && newPagatoDa.length === 0 && players.length > 0) {
+          newPagatoDa = [players[0]];
+        }
+        
+        return { 
+          ...isc, 
+          quotaPagata: nuovoPagato,
+          pagatoDa: newPagatoDa
+        };
       }
       return isc;
     });
@@ -51,16 +91,56 @@ export default function StaffPagamenti() {
 
   const azzeraPagamento = (id) => {
     const newData = iscrizioni.map(isc => 
-      isc.id === id ? { ...isc, quotaPagata: 0 } : isc
+      isc.id === id ? { ...isc, quotaPagata: 0, pagatoDa: [] } : isc
     );
+    salvaModifiche(newData);
+  };
+
+  const togglePlayerPayment = (id, playerName) => {
+    const newData = iscrizioni.map(isc => {
+      if (isc.id === id) {
+        const players = splitNames(isc.giocatori);
+        let currentPagatoDa = isc.pagatoDa || [];
+        
+        if (currentPagatoDa.includes(playerName)) {
+          currentPagatoDa = currentPagatoDa.filter(name => name !== playerName);
+        } else {
+          currentPagatoDa = [...currentPagatoDa, playerName];
+        }
+        
+        let quota = 0;
+        if (players.length > 0) {
+          const quotaPerPlayer = isc.quotaTotale / players.length;
+          quota = Math.round(currentPagatoDa.length * quotaPerPlayer);
+        }
+        
+        return {
+          ...isc,
+          quotaPagata: quota,
+          pagatoDa: currentPagatoDa
+        };
+      }
+      return isc;
+    });
     salvaModifiche(newData);
   };
 
   const torneiDisponibili = ["Tutti", ...new Set(iscrizioni.map(i => i.torneo))];
 
-  const iscrizioniFiltrate = filtroTorneo === "Tutti" 
-    ? iscrizioni 
-    : iscrizioni.filter(i => (i.torneo || "").toLowerCase().trim() === filtroTorneo.toLowerCase().trim());
+  const iscrizioniFiltrate = iscrizioni
+    .filter(i => {
+      if (filtroTorneo === "Tutti") return true;
+      return (i.torneo || "").toLowerCase().trim() === filtroTorneo.toLowerCase().trim();
+    })
+    .filter(i => {
+      if (!searchQuery.trim()) return true;
+      const query = searchQuery.toLowerCase().trim();
+      return (
+        (i.giocatori || "").toLowerCase().includes(query) ||
+        (i.id || "").toLowerCase().includes(query) ||
+        (i.torneo || "").toLowerCase().includes(query)
+      );
+    });
 
   const totaleAtteso = iscrizioniFiltrate.reduce((acc, curr) => acc + curr.quotaTotale, 0);
   const totaleIncassato = iscrizioniFiltrate.reduce((acc, curr) => acc + curr.quotaPagata, 0);
@@ -72,23 +152,38 @@ export default function StaffPagamenti() {
 
       <div className="max-w-6xl mx-auto mt-6 md:mt-10 px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
-            <div>
-                <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Pagamenti 💰</h2>
-                <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Gestione Incassi e Saldi</p>
+          <div>
+            <h2 className="text-3xl md:text-5xl font-black text-[#0D3D31] uppercase tracking-tighter leading-none">Pagamenti 💰</h2>
+            <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Gestione Incassi e Saldi</p>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+            {/* Search query field */}
+            <div className="flex-1 md:w-80 bg-white px-6 py-3 rounded-2xl shadow-xl border border-gray-100 flex flex-col gap-1">
+              <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Cerca Team</span>
+              <input 
+                type="text" 
+                placeholder="Nome team o giocatore..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-transparent text-sm font-bold focus:outline-none text-[#0D3D31]"
+              />
             </div>
-            
-            <div className="w-full md:w-auto bg-white px-6 py-4 rounded-2xl shadow-xl border border-gray-100 flex flex-col gap-2">
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Filtra Torneo</span>
-                <select 
-                    value={filtroTorneo} 
-                    onChange={(e) => setFiltroTorneo(e.target.value)}
-                    className="bg-transparent text-sm font-black focus:outline-none cursor-pointer text-[#0D3D31]"
-                >
-                    {torneiDisponibili.map(t => (
-                        <option key={t} value={t}>{t}</option>
-                    ))}
-                </select>
+
+            {/* Tournament selector */}
+            <div className="bg-white px-6 py-3 rounded-2xl shadow-xl border border-gray-100 flex flex-col gap-1 min-w-[200px]">
+              <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Filtra Torneo</span>
+              <select 
+                value={filtroTorneo} 
+                onChange={(e) => setFiltroTorneo(e.target.value)}
+                className="bg-transparent text-sm font-black focus:outline-none cursor-pointer text-[#0D3D31]"
+              >
+                {torneiDisponibili.map(t => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
             </div>
+          </div>
         </div>
 
         {/* Dashboard Statistiche */}
@@ -116,7 +211,8 @@ export default function StaffPagamenti() {
             const saldoMancante = isc.quotaTotale - isc.quotaPagata;
             const isSaldato = saldoMancante === 0;
             const isAcconto = isc.quotaPagata > 0 && isc.quotaPagata < isc.quotaTotale;
-            
+            const players = splitNames(isc.giocatori);
+
             return (
               <div key={isc.id} className="bg-white rounded-[2.5rem] p-8 shadow-xl border border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all hover:shadow-2xl">
                 <div className="flex-1">
@@ -131,16 +227,39 @@ export default function StaffPagamenti() {
                     )}
                   </div>
                   
-                  <h3 className="text-2xl font-black text-[#0D3D31] leading-tight mb-2">{isc.giocatori}</h3>
+                  <h3 className="text-2xl font-black text-[#0D3D31] leading-tight mb-3">{isc.giocatori}</h3>
+                  
+                  {/* Individual player buttons displaying their payment status */}
+                  {players.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {players.map((playerName) => {
+                        const hasPaid = (isc.pagatoDa || []).includes(playerName);
+                        return (
+                          <button
+                            key={playerName}
+                            onClick={() => togglePlayerPayment(isc.id, playerName)}
+                            className={`px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border cursor-pointer ${
+                              hasPaid
+                                ? "bg-green-100 text-green-700 border-green-200 hover:bg-green-200"
+                                : "bg-gray-50 text-gray-400 border-gray-100 hover:bg-gray-100 hover:text-gray-600"
+                            }`}
+                          >
+                            👤 {playerName} {hasPaid ? " (Pagato)" : " (Da pagare)"}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{isc.torneo}</p>
                 </div>
 
                 <div className="flex flex-col md:items-end gap-1">
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Stato Contabile</span>
-                    <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-black text-[#0D3D31]">€{isc.quotaPagata}</span>
-                        <span className="text-gray-300 font-bold text-lg">/ €{isc.quotaTotale}</span>
-                    </div>
+                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Stato Contabile</span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-black text-[#0D3D31]">€{isc.quotaPagata}</span>
+                    <span className="text-gray-300 font-bold text-lg">/ €{isc.quotaTotale}</span>
+                  </div>
                 </div>
 
                 <div className="flex gap-2">
@@ -151,7 +270,7 @@ export default function StaffPagamenti() {
                           azzeraPagamento(isc.id);
                         }
                       }}
-                      className="flex-1 md:flex-none bg-red-50 text-red-600 hover:bg-red-100 px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95"
+                      className="flex-1 md:flex-none bg-red-50 text-red-600 hover:bg-red-100 px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 cursor-pointer"
                     >
                       Azzera 🔄
                     </button>
@@ -160,13 +279,13 @@ export default function StaffPagamenti() {
                     <>
                       <button 
                         onClick={() => registraAcconto(isc.id, Math.ceil(isc.quotaTotale / 2))}
-                        className="flex-1 md:flex-none bg-gray-50 text-[#0D3D31] px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-100 transition-all active:scale-95"
+                        className="flex-1 md:flex-none bg-gray-50 text-[#0D3D31] px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-100 transition-all active:scale-95 cursor-pointer"
                       >
                         +€{Math.ceil(isc.quotaTotale / 2)}
                       </button>
                       <button 
                         onClick={() => segnaSaldato(isc.id)}
-                        className="flex-1 md:flex-none bg-[#0D3D31] text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all"
+                        className="flex-1 md:flex-none bg-[#0D3D31] text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer"
                       >
                         Salda Ora
                       </button>
@@ -178,7 +297,7 @@ export default function StaffPagamenti() {
           })}
           
           {iscrizioniFiltrate.length === 0 && (
-            <div className="text-center py-20">
+            <div className="text-center py-20 bg-white rounded-[2.5rem] shadow-xl border border-gray-100">
               <span className="text-6xl block mb-6">📉</span>
               <h4 className="text-2xl font-black text-gray-300 uppercase tracking-tighter">Nessun dato trovato</h4>
             </div>
