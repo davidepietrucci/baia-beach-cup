@@ -10,7 +10,7 @@ export default function StaffLogin() {
         
         {/* Intestazione */}
         <div className="flex justify-center mb-6">
-          <Image src="/logo.png" alt="Baia Beach Cup Logo" width={80} height={80} className="object-contain" priority />
+          <Image src="/logo_v2.png" alt="Baia Beach Cup Logo" width={80} height={80} className="object-contain" priority />
         </div>
         <h2 className="text-2xl font-bold text-center mb-2" style={{color: "#295dab"}}>Area Staff</h2>
         <p className="text-center text-gray-500 mb-6 text-sm">Accesso riservato agli organizzatori Baia Beach Cup</p>

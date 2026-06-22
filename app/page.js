@@ -169,7 +169,7 @@ export default function Home() {
         <div className="relative group">
           <div className="absolute inset-0 bg-[#295dab]/20 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
           <Image
-            src="/logo.png"
+            src="/logo_v2.png"
             alt="Baia Beach Cup Logo"
             width={200}
             height={200}
@@ -245,7 +245,7 @@ export default function Home() {
       {torneiConclusi.length > 0 && (
         <section className="px-4 sm:px-8 pb-24 max-w-6xl mx-auto">
           <div className="flex items-center gap-4 mb-8 border-b-2 pb-4" style={{ borderColor: "#cbd5e1" }}>
-            <span className="text-3xl">🏁</span>
+            <span className="text-3xl"></span>
             <h3 className="text-2xl font-extrabold" style={{ color: "#295dab" }}>
               Tornei Conclusi
             </h3>

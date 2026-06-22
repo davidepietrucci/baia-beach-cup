@@ -627,7 +627,7 @@ export default function PortaleLiveMobile() {
         className="text-white py-4 px-5 flex justify-between items-center shadow-md border-b-4 border-[#C3562B] sticky top-0 z-50"
       >
         <div className="flex items-center gap-2.5">
-          <Image src="/logo.png" alt="Baia Beach Cup Logo" width={32} height={32} />
+          <Image src="/logo_v2.png" alt="Baia Beach Cup Logo" width={32} height={32} />
           <div>
             <h1 className="text-sm font-black tracking-tight uppercase leading-none">Baia Beach Cup Live</h1>
           </div>

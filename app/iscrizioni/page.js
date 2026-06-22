@@ -103,7 +103,7 @@ export default function Iscrizioni() {
       {/* Header */}
       <header style={{ backgroundColor: "#295dab" }} className="text-white py-4 px-8 flex justify-between items-center shadow-md">
         <div className="flex items-center gap-3">
-          <Image src="/logo.png" alt="Baia Beach Cup Logo" width={50} height={50} className="object-contain" />
+          <Image src="/logo_v2.png" alt="Baia Beach Cup Logo" width={50} height={50} className="object-contain" />
           <h1 className="text-2xl font-bold" style={{ color: "#C3562B" }}>Baia Beach Cup</h1>
         </div>
         <nav className="flex gap-4 items-center">

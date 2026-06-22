@@ -18,8 +18,8 @@ export const metadata = {
   description: "Gestione tornei e iscrizioni Baia Beach Cup",
   manifest: "/manifest.json",
   icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
+    icon: "/logo_v2.png",
+    shortcut: "/logo_v2.png",
     apple: "/webapp-icon.png",
   },
   appleWebApp: {

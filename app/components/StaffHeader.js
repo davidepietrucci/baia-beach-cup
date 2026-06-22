@@ -54,7 +54,7 @@ export default function StaffHeader() {
   return (
     <header className="bg-white py-3 px-4 md:px-8 flex justify-between items-center shadow-md border-b-4 sticky top-0 z-[100]" style={{borderColor: "#295dab"}}>
       <div className="flex items-center gap-3">
-        <Image src="/logo.png" alt="Baia Beach Cup Logo" width={40} height={40} className="object-contain" />
+        <Image src="/logo_v2.png" alt="Baia Beach Cup Logo" width={40} height={40} className="object-contain" />
         <div className="flex flex-col">
           <h1 className="text-xl font-black uppercase tracking-tighter leading-none" style={{color: "#295dab"}}>Baia Beach Cup Staff</h1>
           <span className={`text-[8px] font-black uppercase tracking-widest mt-1 ${dbConnected ? 'text-green-600' : 'text-amber-600'}`}>
