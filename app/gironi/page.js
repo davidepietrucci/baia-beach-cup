@@ -74,6 +74,84 @@ export default function GironiPubblici() {
   const [fasiFinaliCategory, setFasiFinaliCategory] = useState("gold"); // "gold" or "silver"
   const [viewMode, setViewMode] = useState("campoMare"); // "campoMare" or "campoMonte"
   const [loading, setLoading] = useState(true);
+  const [hoveredMatch, setHoveredMatch] = useState(null); // { roundKey, matchNum }
+
+  const getHighlightedMatches = (round, num) => {
+    if (!round || !num) return new Set();
+    const highlighted = new Set();
+    highlighted.add(`${round}-${num}`);
+    
+    // Go Forward
+    const getNextMatch = (r, n) => {
+      if (r === "r32") return { round: "r16", num: Math.floor((n - 1) / 2) + 1 };
+      if (r === "r16") return { round: "qf", num: Math.floor((n - 1) / 2) + 1 };
+      if (r === "qf") return { round: "sf", num: Math.floor((n - 1) / 2) + 1 };
+      if (r === "sf") return [
+        { round: "f", num: 1 },
+        { round: "f", num: 2 }
+      ];
+      return null;
+    };
+    
+    let queue = [{ r: round, n: num }];
+    while (queue.length > 0) {
+      const nextQueue = [];
+      for (const item of queue) {
+        const next = getNextMatch(item.r, item.n);
+        if (next) {
+          if (Array.isArray(next)) {
+            for (const n of next) {
+              highlighted.add(`${n.round}-${n.num}`);
+              nextQueue.push({ r: n.round, n: n.num });
+            }
+          } else {
+            highlighted.add(`${next.round}-${next.num}`);
+            nextQueue.push({ r: next.round, n: next.num });
+          }
+        }
+      }
+      queue = nextQueue;
+    }
+    
+    // Go Backward
+    const getPrevMatches = (r, n) => {
+      if (r === "f") return [
+        { round: "sf", num: 1 },
+        { round: "sf", num: 2 }
+      ];
+      if (r === "sf") return [
+        { round: "qf", num: 2 * n - 1 },
+        { round: "qf", num: 2 * n }
+      ];
+      if (r === "qf") return [
+        { round: "r16", num: 2 * n - 1 },
+        { round: "r16", num: 2 * n }
+      ];
+      if (r === "r16") return [
+        { round: "r32", num: 2 * n - 1 },
+        { round: "r32", num: 2 * n }
+      ];
+      return null;
+    };
+    
+    let backQueue = [{ r: round, n: num }];
+    while (backQueue.length > 0) {
+      const nextQueue = [];
+      for (const item of backQueue) {
+        const prevs = getPrevMatches(item.r, item.n);
+        if (prevs) {
+          for (const p of prevs) {
+            highlighted.add(`${p.round}-${p.num}`);
+            nextQueue.push({ r: p.round, n: p.num });
+          }
+        }
+      }
+      backQueue = nextQueue;
+    }
+    return highlighted;
+  };
+
+  const highlightedMatches = getHighlightedMatches(hoveredMatch?.roundKey, hoveredMatch?.matchNum);
 
   // 1. Carica l'elenco dei tornei e determina quello da visualizzare
   useEffect(() => {
@@ -121,7 +199,9 @@ export default function GironiPubblici() {
 
   // Auto-switch tab if only bracket is published
   useEffect(() => {
-    if (config && !config.pubblicato && bracketConfig && bracketConfig.tabellonePubblicato) {
+    const isPub = !!(config && config.pubblicato);
+    const isBracketPub = !!(bracketConfig && bracketConfig.tabellonePubblicato);
+    if (isBracketPub && !isPub) {
       setActiveTab("finali");
     }
   }, [config, bracketConfig]);
@@ -843,6 +923,171 @@ export default function GironiPubblici() {
     );
   };
 
+  // Render a bracket card in the public tree view
+  const renderBracketCardPublic = (roundKey, matchNum, label) => {
+    if (!bracketConfig) return null;
+    const assignments = bracketConfig.bracketAssignments || {};
+    const metadata = bracketConfig.bracketMetadata || {};
+
+    const matchId = `${roundKey}-${matchNum}`;
+    const teamL = assignments[`${matchId}-L`] || "";
+    const teamR = assignments[`${matchId}-R`] || "";
+    const meta = metadata[matchId] || {};
+
+    const scoreL = meta.scoreL || "";
+    const scoreR = meta.scoreR || "";
+
+    const hasScore = scoreL !== "" && scoreR !== "";
+    const isWinnerL = hasScore && parseInt(scoreL) > parseInt(scoreR);
+    const isWinnerR = hasScore && parseInt(scoreR) > parseInt(scoreL);
+
+    const time = meta.time || "";
+    const court = meta.court || "";
+
+    // Set scores list
+    const sets = [];
+    if (meta.s1L || meta.s1R) sets.push(`${meta.s1L || 0}-${meta.s1R || 0}`);
+    if (meta.s2L || meta.s2R) sets.push(`${meta.s2L || 0}-${meta.s2R || 0}`);
+    if (meta.s3L || meta.s3R) sets.push(`${meta.s3L || 0}-${meta.s3R || 0}`);
+
+    const isHighlighted = highlightedMatches.has(matchId);
+
+    const handleCardClick = () => {
+      setHoveredMatch((prev) => {
+        if (prev?.roundKey === roundKey && prev?.matchNum === matchNum) {
+          return null;
+        }
+        return { roundKey, matchNum };
+      });
+    };
+
+    return (
+      <div 
+        onClick={handleCardClick}
+        onMouseEnter={() => setHoveredMatch({ roundKey, matchNum })}
+        onMouseLeave={() => setHoveredMatch(null)}
+        className={`bg-white rounded-2xl border-2 transition-all p-3.5 min-w-[210px] relative select-none cursor-pointer ${
+          isHighlighted 
+            ? "border-[#C3562B] shadow-md ring-2 ring-[#C3562B]/10 z-20 scale-[1.02]" 
+            : "border-gray-100 shadow-sm hover:border-[#C3562B] hover:shadow-lg"
+        }`}
+      >
+        {/* Card Header info */}
+        <div className="flex justify-between items-center mb-2 border-b border-gray-50 pb-1">
+          <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{label}</span>
+          <div className="flex gap-1 text-[8px] font-black uppercase">
+            {time && <span className="bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">{time}</span>}
+            {court && <span className="bg-orange-50 text-[#C3562B] px-1.5 py-0.5 rounded">C. {court}</span>}
+          </div>
+        </div>
+
+        {/* Teams List */}
+        <div className="space-y-1.5">
+          {/* Team Left */}
+          <div className="flex items-center justify-between text-xs">
+            <span className={`truncate font-bold max-w-[145px] ${hasScore ? (isWinnerL ? "text-green-700 font-black" : "text-gray-400") : "text-gray-700"}`}>
+              {teamL || "—"}
+            </span>
+            <span className={`w-5.5 h-5.5 rounded flex items-center justify-center font-black text-[11px] ${hasScore ? (isWinnerL ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-400") : "bg-gray-50 text-gray-400"}`}>
+              {scoreL !== "" ? scoreL : "-"}
+            </span>
+          </div>
+
+          {/* Team Right */}
+          <div className="flex items-center justify-between text-xs">
+            <span className={`truncate font-bold max-w-[145px] ${hasScore ? (isWinnerR ? "text-green-700 font-black" : "text-gray-400") : "text-gray-700"}`}>
+              {teamR || "—"}
+            </span>
+            <span className={`w-5.5 h-5.5 rounded flex items-center justify-center font-black text-[11px] ${hasScore ? (isWinnerR ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-400") : "bg-gray-50 text-gray-400"}`}>
+              {scoreR !== "" ? scoreR : "-"}
+            </span>
+          </div>
+        </div>
+
+        {/* Inline Set scores */}
+        {sets.length > 0 && (
+          <div className="mt-2 pt-1.5 border-t border-gray-50 text-[9px] text-gray-400 font-bold text-center">
+            {sets.join(" , ")}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Connector lines drawing for public page
+  const renderConnectorLinePublic = (roundKey, matchIndex, totalMatches, H) => {
+    const itemHeight = H / totalMatches;
+    const center = (matchIndex - 0.5) * itemHeight;
+
+    const isEven = matchIndex % 2 === 0;
+    const halfGap = itemHeight / 2;
+
+    const verticalLineTop = isEven ? center - halfGap : center;
+    const verticalLineHeight = halfGap;
+
+    const sourceKey = `${roundKey}-${matchIndex}`;
+    let targetKey = "";
+    if (roundKey === "r32") targetKey = `r16-${Math.floor((matchIndex - 1) / 2) + 1}`;
+    else if (roundKey === "r16") targetKey = `qf-${Math.floor((matchIndex - 1) / 2) + 1}`;
+    else if (roundKey === "qf") targetKey = `sf-${Math.floor((matchIndex - 1) / 2) + 1}`;
+
+    const isLineHighlighted = highlightedMatches.has(sourceKey) && highlightedMatches.has(targetKey);
+    const lineColorClass = isLineHighlighted ? "bg-[#C3562B]" : "bg-gray-200";
+    const lineZIndexClass = isLineHighlighted ? "z-10" : "z-0";
+
+    return (
+      <div className={`absolute inset-0 pointer-events-none ${lineZIndexClass}`}>
+        {/* Horizontal segment leaving match card */}
+        <div 
+          className={`absolute ${lineColorClass}`}
+          style={{
+            top: `${center}px`,
+            right: "-16px",
+            width: "32px",
+            height: "2px",
+            transform: "translateY(-50%)"
+          }}
+        />
+
+        {/* Vertical segment connecting the pair */}
+        <div 
+          className={`absolute ${lineColorClass}`}
+          style={{
+            top: `${verticalLineTop}px`,
+            right: "-16px",
+            width: "2px",
+            height: `${verticalLineHeight}px`
+          }}
+        />
+
+        {/* Horizontal segment extending to next round */}
+        <div 
+          className={`absolute ${lineColorClass}`}
+          style={{
+            top: `${isEven ? center - halfGap : center + halfGap}px`,
+            right: "-32px",
+            width: "16px",
+            height: "2px",
+            transform: "translateY(-50%)"
+          }}
+        />
+      </div>
+    );
+  };
+
+  // Dimension helpers for dynamic scaling
+  const getDynamicTreeDimensions = () => {
+    if (!bracketConfig) return { w: 1050, h: 800 };
+    const size = bracketConfig.bracketSize || 16;
+    if (size === 32) return { w: 1300, h: 1920 };
+    if (size === 16) return { w: 1050, h: 960 };
+    if (size === 8) return { w: 800, h: 560 };
+    return { w: 550, h: 360 };
+  };
+
+  const { w: currentW, h: currentH } = getDynamicTreeDimensions();
+  const sfHalfGap = currentH / 4;
+
   return (
     <main className="min-h-screen bg-[#f4f7f6] pb-24">
       {/* Header Mobile Premium */}
@@ -1109,120 +1354,157 @@ export default function GironiPubblici() {
 
             {/* 4. SEZIONE FASI FINALI */}
             {activeTab === "finali" && isBracketPublished && (
-              <div className="space-y-5">
-                {/* Switch Gold / Silver in alto (se Gold/Silver) */}
-                {bracketConfig?.phaseType === "gold_silver" && (
-                  <div className="flex bg-gray-200/60 p-1 rounded-2xl max-w-xs mx-auto border border-gray-100/50 shadow-inner">
-                    <button
-                      onClick={() => setFasiFinaliCategory("gold")}
-                      className={`flex-1 py-2 text-center rounded-xl font-black text-xs uppercase tracking-wider transition-all ${
-                        fasiFinaliCategory === "gold"
-                          ? "bg-[#0D3D31] text-white shadow-md"
-                          : "text-gray-400 hover:text-[#0D3D31]"
-                      }`}
-                    >
-                      Gold 🏆
-                    </button>
-                    <button
-                      onClick={() => setFasiFinaliCategory("silver")}
-                      className={`flex-1 py-2 text-center rounded-xl font-black text-xs uppercase tracking-wider transition-all ${
-                        fasiFinaliCategory === "silver"
-                          ? "bg-[#0D3D31] text-white shadow-md"
-                          : "text-gray-400 hover:text-[#0D3D31]"
-                      }`}
-                    >
-                      Silver 🥈
-                    </button>
-                  </div>
-                )}
+              <div className="space-y-4 select-none animate-fade-in">
+                <div className="flex justify-between items-center pl-1 border-l-4 border-[#C3562B] pl-2">
+                  <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                    Tabellone ad Albero
+                  </h3>
+                  <span className="text-[9px] font-black text-gray-400 uppercase bg-gray-100 px-2 py-0.5 rounded">
+                    Scorri per esplorare ↔
+                  </span>
+                </div>
+                
+                {/* Horizontal scroll container for tree bracket */}
+                <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-x-auto pb-4 pt-6 px-4 no-scrollbar">
+                  <div style={{ minWidth: `${currentW}px` }}>
+                    {/* Headers Row */}
+                    <div className="flex gap-8 mb-6 border-b border-gray-100 pb-3 sticky top-0 bg-white z-20">
+                      {bracketConfig.bracketSize >= 32 && (
+                        <div className="flex-1 text-[9px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-1 bg-white">Sedicesimi</div>
+                      )}
+                      {bracketConfig.bracketSize >= 16 && (
+                        <div className="flex-1 text-[9px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-1 bg-white">Ottavi</div>
+                      )}
+                      {bracketConfig.bracketSize >= 8 && (
+                        <div className="flex-1 text-[9px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-1 bg-white">Quarti</div>
+                      )}
+                      {bracketConfig.bracketSize >= 4 && (
+                        <div className="flex-1 text-[9px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-1 bg-white">Semifinali</div>
+                      )}
+                      <div className="flex-1 text-[9px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-1 bg-white">Finali</div>
+                    </div>
 
-                {/* Partite Gironi Intermedi (se Gold/Silver a gironi) */}
-                {bracketConfig?.phaseType === "gold_silver" &&
-                  getIntermediateGroupsList()
-                    .filter((g) => g.category === fasiFinaliCategory)
-                    .map((group) => {
-                      const groupMatches = getIntermediateGroupMatches(group.id);
-                      return (
-                        <div key={group.id} className="space-y-3">
-                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-[#C3562B] pl-2">
-                            Partite {group.label}
-                          </h4>
-                          <div className="space-y-3">
-                            {groupMatches.map((m, idx) =>
-                              renderMatchRow(
-                                m.left,
-                                m.right,
-                                m.meta,
-                                idx,
-                                `match-${group.id}`,
-                                group.id
-                              )
-                            )}
-                            {groupMatches.length === 0 && (
-                              <div className="bg-white rounded-3xl p-6 text-center border border-gray-100">
-                                <p className="text-gray-400 italic text-xs">
-                                  Nessun match programmato.
-                                </p>
+                    {/* Columns Row */}
+                    <div className="flex gap-8 relative" style={{ height: `${currentH}px` }}>
+                      
+                      {/* 1. Round of 32 */}
+                      {bracketConfig.bracketSize >= 32 && (
+                        <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
+                          {Array.from({ length: 16 }, (_, idx) => {
+                            const matchNum = idx + 1;
+                            const itemHeight = currentH / 16;
+                            const center = (matchNum - 0.5) * itemHeight;
+                            return (
+                              <div key={idx}>
+                                <div className="absolute left-0 right-4 z-10" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
+                                  {renderBracketCardPublic("r32", matchNum, `Gara ${matchNum}`)}
+                                </div>
+                                {renderConnectorLinePublic("r32", matchNum, 16, currentH)}
                               </div>
-                            )}
-                          </div>
+                            );
+                          })}
                         </div>
-                      );
-                    })}
+                      )}
 
-                {/* Partite Playoff */}
-                {getPlayoffMatchesList().filter((group) => {
-                  if (bracketConfig?.phaseType === "gold_silver") {
-                    return group.title.toLowerCase().includes(fasiFinaliCategory);
-                  }
-                  return true;
-                }).length > 0 ? (
-                  getPlayoffMatchesList()
-                    .filter((group) => {
-                      if (bracketConfig?.phaseType === "gold_silver") {
-                        return group.title.toLowerCase().includes(fasiFinaliCategory);
-                      }
-                      return true;
-                    })
-                    .map((group, gIdx) => (
-                      <div key={gIdx} className="space-y-3 animate-fade-in">
-                        <h3 className="text-[9px] font-black text-gray-400 uppercase tracking-widest pl-1 border-b pb-2">
-                          {group.title}
-                        </h3>
-                        <div className="space-y-3">
-                          {group.matches.map((m, idx) =>
-                            renderMatchRow(
-                              m.left,
-                              m.right,
-                              m.meta,
-                              idx,
-                              `playoff-${group.title}`,
-                              null,
-                              m.label
-                            )
-                          )}
+                      {/* 2. Round of 16 */}
+                      {bracketConfig.bracketSize >= 16 && (
+                        <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
+                          {Array.from({ length: 8 }, (_, idx) => {
+                            const matchNum = idx + 1;
+                            const itemHeight = currentH / 8;
+                            const center = (matchNum - 0.5) * itemHeight;
+                            return (
+                              <div key={idx}>
+                                <div className="absolute left-0 right-4 z-10" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
+                                  {renderBracketCardPublic("r16", matchNum, `Ottavi ${matchNum}`)}
+                                </div>
+                                {renderConnectorLinePublic("r16", matchNum, 8, currentH)}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      {/* 3. Quarterfinals */}
+                      {bracketConfig.bracketSize >= 8 && (
+                        <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
+                          {Array.from({ length: 4 }, (_, idx) => {
+                            const matchNum = idx + 1;
+                            const itemHeight = currentH / 4;
+                            const center = (matchNum - 0.5) * itemHeight;
+                            return (
+                              <div key={idx}>
+                                <div className="absolute left-0 right-4 z-10" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
+                                  {renderBracketCardPublic("qf", matchNum, `Quarti ${matchNum}`)}
+                                </div>
+                                {renderConnectorLinePublic("qf", matchNum, 4, currentH)}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      {/* 4. Semifinals */}
+                      {bracketConfig.bracketSize >= 4 && (
+                        <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
+                          {Array.from({ length: 2 }, (_, idx) => {
+                            const matchNum = idx + 1;
+                            const itemHeight = currentH / 2;
+                            const center = (matchNum - 0.5) * itemHeight;
+                            return (
+                              <div key={idx}>
+                                <div className="absolute left-0 right-4 z-10" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
+                                  {renderBracketCardPublic("sf", matchNum, `Semifinale ${matchNum}`)}
+                                </div>
+                                {/* SF to Final lines */}
+                                {(() => {
+                                  const isSFToF1Highlighted = highlightedMatches.has(`sf-${matchNum}`) && highlightedMatches.has("f-1");
+                                  const isSFToF2Highlighted = highlightedMatches.has(`sf-${matchNum}`) && highlightedMatches.has("f-2");
+
+                                  const f1ColorClass = isSFToF1Highlighted ? "bg-[#C3562B]" : "bg-gray-200";
+                                  const f2ColorClass = isSFToF2Highlighted ? "bg-[#C3562B]" : "bg-gray-200";
+
+                                  const containerZIndex = (isSFToF1Highlighted || isSFToF2Highlighted) ? "z-10" : "z-0";
+
+                                  return (
+                                    <div className={`absolute inset-0 pointer-events-none ${containerZIndex}`}>
+                                      {/* SF to Final 1 lines */}
+                                      <div className={`absolute ${f1ColorClass}`} style={{ top: `${center}px`, right: "-16px", width: "32px", height: "2px", transform: "translateY(-50%)" }} />
+                                      <div className={`absolute ${f1ColorClass}`} style={{ top: `${idx === 0 ? center : center - sfHalfGap}px`, right: "-16px", width: "2px", height: `${sfHalfGap}px` }} />
+                                      <div className={`absolute ${f1ColorClass}`} style={{ top: `${sfHalfGap}px`, right: "-32px", width: "16px", height: "2px", transform: "translateY(-50%)" }} />
+
+                                      {/* SF to Final 3/4 lines */}
+                                      <div className={`absolute ${f2ColorClass}`} style={{ top: `${center}px`, right: "-24px", width: "40px", height: "2px", transform: "translateY(-50%)" }} />
+                                      <div className={`absolute ${f2ColorClass}`} style={{ top: `${idx === 0 ? center : center - sfHalfGap}px`, right: "-24px", width: "2px", height: `${sfHalfGap}px` }} />
+                                      <div className={`absolute ${f2ColorClass}`} style={{ top: `${sfHalfGap * 3}px`, right: "-32px", width: "8px", height: "2px", transform: "translateY(-50%)" }} />
+                                    </div>
+                                  );
+                                })()}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      {/* 5. Finals */}
+                      <div className="flex-1 h-full relative">
+                        
+                        {/* 1st Place */}
+                        <div className="absolute left-0 right-0 z-10" style={{ top: `${currentH / 4}px`, transform: "translateY(-50%)" }}>
+                          <div className="text-[9px] font-black text-yellow-600 uppercase tracking-widest text-center mb-1 pb-1">Finalissima 🥇</div>
+                          {renderBracketCardPublic("f", 1, "1°/2° Posto")}
+                        </div>
+
+                        {/* 3rd Place */}
+                        <div className="absolute left-0 right-0 z-10" style={{ top: `${(currentH / 4) * 3}px`, transform: "translateY(-50%)" }}>
+                          <div className="text-[9px] font-black text-amber-700 uppercase tracking-widest text-center mb-1 pb-1">Finale 3° Posto 🥉</div>
+                          {renderBracketCardPublic("f", 2, "3°/4° Posto")}
                         </div>
                       </div>
-                    ))
-                ) : (
-                  /* Mostra schermata vuota solo se non ci sono match dei gironi intermedi E non ci sono match di playoff */
-                  !(
-                    bracketConfig?.phaseType === "gold_silver" &&
-                    getIntermediateGroupsList().filter((g) => g.category === fasiFinaliCategory)
-                      .length > 0
-                  ) && (
-                    <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
-                      <span className="text-5xl mb-4 block">⚔️</span>
-                      <h3 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight mb-2">
-                        Fasi Finali in Preparazione
-                      </h3>
-                      <p className="text-gray-400 font-medium text-xs max-w-xs mx-auto">
-                        Il tabellone ad eliminazione diretta non è ancora stato generato dallo staff
-                        per questo torneo.
-                      </p>
+
                     </div>
-                  )
-                )}
+                  </div>
+                </div>
               </div>
             )}
           </>
@@ -1242,7 +1524,7 @@ export default function GironiPubblici() {
       </div>
 
       {/* BOTTOM NAV BAR FISSA - 4 Pulsanti */}
-      {isPublished && (
+      {(isPublished || isBracketPublished) && (
         <nav className="fixed bottom-0 left-0 right-0 z-50">
           <div className="absolute inset-0 bg-[#0D3D31]/95 backdrop-blur-xl border-t border-blue-950/80 shadow-[0_-4px_30px_rgba(0,0,0,0.25)]" />
           <div className="relative flex justify-around px-1 pb-safe">

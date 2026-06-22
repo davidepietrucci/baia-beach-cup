@@ -196,7 +196,9 @@ export default function PortaleLiveMobile() {
 
   // Auto-switch tab if only bracket is published
   useEffect(() => {
-    if (config && !config.pubblicato && bracketConfig && bracketConfig.tabellonePubblicato) {
+    const isPub = !!(config && config.pubblicato);
+    const isBracketPub = !!(bracketConfig && bracketConfig.tabellonePubblicato);
+    if (isBracketPub && !isPub) {
       setActiveTab("finali");
     }
   }, [config, bracketConfig]);
@@ -1119,7 +1121,7 @@ export default function PortaleLiveMobile() {
       </div>
 
       {/* BOTTOM NAV BAR */}
-      {isPublished && (
+      {(isPublished || isBracketPublished) && (
         <nav className="fixed bottom-0 left-0 right-0 z-50">
           <div className="absolute inset-0 bg-[#0D3D31]/95 backdrop-blur-xl border-t border-blue-950/80 shadow-[0_-4px_30px_rgba(0,0,0,0.25)]" />
           <div className="relative flex justify-around px-1 pb-safe">
