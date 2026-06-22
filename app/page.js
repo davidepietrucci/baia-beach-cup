@@ -138,13 +138,19 @@ export default function Home() {
         </div>
         <nav className="sm:absolute sm:right-8 flex items-center">
           {countdownData.enabled && !timeLeft.expired ? (
-            <div className="flex items-center gap-1.5 sm:gap-2.5 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-full border border-white/10 shadow-lg text-[10px] sm:text-xs font-black">
-              <span className="text-yellow-400 animate-pulse">⚡</span>
-              <span className="text-gray-300 uppercase tracking-widest hidden md:inline">
+            <div className="flex items-center gap-2 sm:gap-3 bg-white/15 backdrop-blur-lg px-5 py-3 rounded-full border border-white/15 shadow-xl text-sm sm:text-base font-black">
+              <span className="text-yellow-400 animate-pulse text-base sm:text-lg">⚡</span>
+              <span className="text-gray-300 uppercase tracking-widest text-[10px] hidden lg:inline">
                 {countdownData.label || "Inizio"}:
               </span>
-              <span className="font-mono text-white tracking-wide">
-                {timeLeft.days}g {timeLeft.hours}o {timeLeft.minutes}m {timeLeft.seconds}s
+              <span className="font-mono text-white tracking-wide flex items-center gap-1.5 sm:gap-2">
+                <span>{timeLeft.days}<span className="text-yellow-300 text-xs sm:text-sm ml-0.5 font-bold">g</span></span>
+                <span className="text-white/20 font-light">:</span>
+                <span>{timeLeft.hours}<span className="text-yellow-300 text-xs sm:text-sm ml-0.5 font-bold">o</span></span>
+                <span className="text-white/20 font-light">:</span>
+                <span>{timeLeft.minutes}<span className="text-yellow-300 text-xs sm:text-sm ml-0.5 font-bold">m</span></span>
+                <span className="text-white/20 font-light">:</span>
+                <span className="text-red-400">{timeLeft.seconds}<span className="text-red-400/80 text-xs sm:text-sm ml-0.5 font-bold">s</span></span>
               </span>
             </div>
           ) : (
@@ -159,15 +165,15 @@ export default function Home() {
       </header>
 
       {/* Logo Centrato (Al posto del vecchio countdown) */}
-      <div className="w-full flex justify-center mt-8 px-4 relative z-20">
+      <div className="w-full flex justify-center mt-10 px-4 relative z-20">
         <div className="relative group">
-          <div className="absolute inset-0 bg-[#0d3d31]/20 rounded-full blur-xl group-hover:scale-110 transition-transform duration-500"></div>
+          <div className="absolute inset-0 bg-[#0d3d31]/20 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
           <Image
             src="/logo.png"
             alt="Baia Beach Cup Logo"
-            width={120}
-            height={120}
-            className="relative rounded-full bg-white/10 p-2 shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 border border-white/10"
+            width={200}
+            height={200}
+            className="relative rounded-full bg-white/10 p-3 shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 border border-white/10 w-44 h-44 sm:w-56 sm:h-56"
             priority
           />
         </div>
