@@ -76,14 +76,14 @@ function shuffle(array) {
 
 export default function StaffGironi() {
   const [numGironi, setNumGironi] = useState(4);
-  const [teamCounts, setTeamCounts] = useState({ A: 4, B: 4, C: 4, D: 4, E: 4, F: 4, G: 4, H: 4 });
+  const [teamCounts, setTeamCounts] = useState({ A: 4, B: 4, C: 4, D: 4, E: 4, F: 4, G: 4, H: 4, I: 4, J: 4, K: 4, L: 4 });
   
   const [torneiAttivi, setTorneiAttivi] = useState([]);
   const [selectedTorneo, setSelectedTorneo] = useState("");
   const [tutteLeIscrizioni, setTutteLeIscrizioni] = useState([]);
   const [gironeAssignments, setGironeAssignments] = useState({});
-  const [gironeTypes, setGironeTypes] = useState({ A: "Pool", B: "Pool", C: "Pool", D: "Pool", E: "Pool", F: "Pool", G: "Pool", H: "Pool" });
-  const [gironeSets, setGironeSets] = useState({ A: "1 set", B: "1 set", C: "1 set", D: "1 set", E: "1 set", F: "1 set", G: "1 set", H: "1 set" });
+  const [gironeTypes, setGironeTypes] = useState({ A: "Pool", B: "Pool", C: "Pool", D: "Pool", E: "Pool", F: "Pool", G: "Pool", H: "Pool", I: "Pool", J: "Pool", K: "Pool", L: "Pool" });
+  const [gironeSets, setGironeSets] = useState({ A: "1 set", B: "1 set", C: "1 set", D: "1 set", E: "1 set", F: "1 set", G: "1 set", H: "1 set", I: "1 set", J: "1 set", K: "1 set", L: "1 set" });
   const [matchMetadata, setMatchMetadata] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
   const [pubblicato, setPubblicato] = useState(false);
@@ -164,18 +164,18 @@ export default function StaffGironi() {
     getGironi(slug).then(config => {
       if (config) {
         setNumGironi(config.numGironi || 4);
-        setTeamCounts(config.teamCounts || { A: 4, B: 4, C: 4, D: 4, E: 4, F: 4, G: 4, H: 4 });
-        setGironeTypes(config.gironeTypes || { A: "Pool", B: "Pool", C: "Pool", D: "Pool", E: "Pool", F: "Pool", G: "Pool", H: "Pool" });
-        setGironeSets(config.gironeSets || { A: "1 set", B: "1 set", C: "1 set", D: "1 set", E: "1 set", F: "1 set", G: "1 set", H: "1 set" });
+        setTeamCounts(config.teamCounts || { A: 4, B: 4, C: 4, D: 4, E: 4, F: 4, G: 4, H: 4, I: 4, J: 4, K: 4, L: 4 });
+        setGironeTypes(config.gironeTypes || { A: "Pool", B: "Pool", C: "Pool", D: "Pool", E: "Pool", F: "Pool", G: "Pool", H: "Pool", I: "Pool", J: "Pool", K: "Pool", L: "Pool" });
+        setGironeSets(config.gironeSets || { A: "1 set", B: "1 set", C: "1 set", D: "1 set", E: "1 set", F: "1 set", G: "1 set", H: "1 set", I: "1 set", J: "1 set", K: "1 set", L: "1 set" });
         setGironeAssignments(config.gironeAssignments || {});
         setMatchMetadata(config.matchMetadata || {});
         setPubblicato(config.pubblicato || false);
         setRankingType(config.rankingType || "avulsa");
       } else {
         setNumGironi(4);
-        setTeamCounts({ A: 4, B: 4, C: 4, D: 4, E: 4, F: 4, G: 4, H: 4 });
-        setGironeTypes({ A: "Pool", B: "Pool", C: "Pool", D: "Pool", E: "Pool", F: "Pool", G: "Pool", H: "Pool" });
-        setGironeSets({ A: "1 set", B: "1 set", C: "1 set", D: "1 set", E: "1 set", F: "1 set", G: "1 set", H: "1 set" });
+        setTeamCounts({ A: 4, B: 4, C: 4, D: 4, E: 4, F: 4, G: 4, H: 4, I: 4, J: 4, K: 4, L: 4 });
+        setGironeTypes({ A: "Pool", B: "Pool", C: "Pool", D: "Pool", E: "Pool", F: "Pool", G: "Pool", H: "Pool", I: "Pool", J: "Pool", K: "Pool", L: "Pool" });
+        setGironeSets({ A: "1 set", B: "1 set", C: "1 set", D: "1 set", E: "1 set", F: "1 set", G: "1 set", H: "1 set", I: "1 set", J: "1 set", K: "1 set", L: "1 set" });
         setGironeAssignments({});
         setMatchMetadata({});
         setPubblicato(false);
@@ -343,9 +343,9 @@ export default function StaffGironi() {
     const slug = selectedTorneo.toLowerCase().trim().replace(/\s+/g, '_');
     
     setNumGironi(4);
-    setTeamCounts({ A: 4, B: 4, C: 4, D: 4, E: 4, F: 4, G: 4, H: 4 });
-    setGironeTypes({ A: "Pool", B: "Pool", C: "Pool", D: "Pool", E: "Pool", F: "Pool", G: "Pool", H: "Pool" });
-    setGironeSets({ A: "1 set", B: "1 set", C: "1 set", D: "1 set", E: "1 set", F: "1 set", G: "1 set", H: "1 set" });
+    setTeamCounts({ A: 4, B: 4, C: 4, D: 4, E: 4, F: 4, G: 4, H: 4, I: 4, J: 4, K: 4, L: 4 });
+    setGironeTypes({ A: "Pool", B: "Pool", C: "Pool", D: "Pool", E: "Pool", F: "Pool", G: "Pool", H: "Pool", I: "Pool", J: "Pool", K: "Pool", L: "Pool" });
+    setGironeSets({ A: "1 set", B: "1 set", C: "1 set", D: "1 set", E: "1 set", F: "1 set", G: "1 set", H: "1 set", I: "1 set", J: "1 set", K: "1 set", L: "1 set" });
     setGironeAssignments({});
     setMatchMetadata({});
     setPubblicato(false);
@@ -447,6 +447,10 @@ export default function StaffGironi() {
     { id: 'F', colorClass: 'orange' },
     { id: 'G', colorClass: 'pink' },
     { id: 'H', colorClass: 'cyan' },
+    { id: 'I', colorClass: 'blue' },
+    { id: 'J', colorClass: 'red' },
+    { id: 'K', colorClass: 'yellow' },
+    { id: 'L', colorClass: 'purple' },
   ];
   
   const gironi = allGironi.slice(0, numGironi);
@@ -567,7 +571,7 @@ export default function StaffGironi() {
                                 <input 
                                     type="number" 
                                     value={numGironi} 
-                                    onChange={(e) => setNumGironi(Math.max(1, Math.min(8, parseInt(e.target.value) || 1)))}
+                                    onChange={(e) => setNumGironi(Math.max(1, Math.min(12, parseInt(e.target.value) || 1)))}
                                     className="w-16 bg-gray-50 border-none rounded-xl px-3 py-2 text-center font-black text-[#0D3D31] shadow-inner" 
                                 />
                             </div>

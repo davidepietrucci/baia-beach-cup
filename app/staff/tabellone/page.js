@@ -127,6 +127,84 @@ function TabelloneContent() {
   const [bracketMetadata, setBracketMetadata] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
   const [tabellonePubblicato, setTabellonePubblicato] = useState(false);
+  const [hoveredMatch, setHoveredMatch] = useState(null); // { roundKey, matchNum }
+
+  const getHighlightedMatches = (round, num) => {
+    if (!round || !num) return new Set();
+    const highlighted = new Set();
+    highlighted.add(`${round}-${num}`);
+    
+    // Go Forward
+    const getNextMatch = (r, n) => {
+      if (r === "r32") return { round: "r16", num: Math.floor((n - 1) / 2) + 1 };
+      if (r === "r16") return { round: "qf", num: Math.floor((n - 1) / 2) + 1 };
+      if (r === "qf") return { round: "sf", num: Math.floor((n - 1) / 2) + 1 };
+      if (r === "sf") return [
+        { round: "f", num: 1 },
+        { round: "f", num: 2 }
+      ];
+      return null;
+    };
+    
+    let queue = [{ r: round, n: num }];
+    while (queue.length > 0) {
+      const nextQueue = [];
+      for (const item of queue) {
+        const next = getNextMatch(item.r, item.n);
+        if (next) {
+          if (Array.isArray(next)) {
+            for (const n of next) {
+              highlighted.add(`${n.round}-${n.num}`);
+              nextQueue.push({ r: n.round, n: n.num });
+            }
+          } else {
+            highlighted.add(`${next.round}-${next.num}`);
+            nextQueue.push({ r: next.round, n: next.num });
+          }
+        }
+      }
+      queue = nextQueue;
+    }
+    
+    // Go Backward
+    const getPrevMatches = (r, n) => {
+      if (r === "f") return [
+        { round: "sf", num: 1 },
+        { round: "sf", num: 2 }
+      ];
+      if (r === "sf") return [
+        { round: "qf", num: 2 * n - 1 },
+        { round: "qf", num: 2 * n }
+      ];
+      if (r === "qf") return [
+        { round: "r16", num: 2 * n - 1 },
+        { round: "r16", num: 2 * n }
+      ];
+      if (r === "r16") return [
+        { round: "r32", num: 2 * n - 1 },
+        { round: "r32", num: 2 * n }
+      ];
+      return null;
+    };
+    
+    let backQueue = [{ r: round, n: num }];
+    while (backQueue.length > 0) {
+      const nextQueue = [];
+      for (const item of backQueue) {
+        const prevs = getPrevMatches(item.r, item.n);
+        if (prevs) {
+          for (const p of prevs) {
+            highlighted.add(`${p.round}-${p.num}`);
+            nextQueue.push({ r: p.round, n: p.num });
+          }
+        }
+      }
+      backQueue = nextQueue;
+    }
+    return highlighted;
+  };
+
+  const highlightedMatches = getHighlightedMatches(hoveredMatch?.roundKey, hoveredMatch?.matchNum);
 
   // Modal edit match states
   const [editingMatch, setEditingMatch] = useState(null); // { roundKey, matchNum, label }
@@ -450,10 +528,18 @@ function TabelloneContent() {
 
     const hasSetDetails = meta.s1L !== undefined && meta.s1L !== "";
 
+    const isHighlighted = highlightedMatches.has(matchId);
+
     return (
       <div 
         onClick={() => openEditModal(roundKey, matchNum, label)}
-        className="bg-white rounded-2xl border-2 border-gray-100 hover:border-[#C3562B] hover:shadow-lg transition-all p-3.5 cursor-pointer select-none relative group min-w-[210px] shadow-sm"
+        onMouseEnter={() => setHoveredMatch({ roundKey, matchNum })}
+        onMouseLeave={() => setHoveredMatch(null)}
+        className={`bg-white rounded-2xl border-2 transition-all p-3.5 cursor-pointer select-none relative group min-w-[210px] shadow-sm animate-fade-in ${
+          isHighlighted 
+            ? "border-[#C3562B] shadow-md ring-2 ring-[#C3562B]/10 z-20 scale-[1.02]" 
+            : "border-gray-100 hover:border-[#C3562B] hover:shadow-lg"
+        }`}
       >
         {/* Card Header info */}
         <div className="flex justify-between items-center mb-2 border-b border-gray-50 pb-1">
@@ -510,15 +596,25 @@ function TabelloneContent() {
     const verticalLineTop = isEven ? center - halfGap : center;
     const verticalLineHeight = halfGap;
 
+    const sourceKey = `${roundIndex}-${matchIndex}`;
+    let targetKey = "";
+    if (roundIndex === "r32") targetKey = `r16-${Math.floor((matchIndex - 1) / 2) + 1}`;
+    else if (roundIndex === "r16") targetKey = `qf-${Math.floor((matchIndex - 1) / 2) + 1}`;
+    else if (roundIndex === "qf") targetKey = `sf-${Math.floor((matchIndex - 1) / 2) + 1}`;
+
+    const isLineHighlighted = highlightedMatches.has(sourceKey) && highlightedMatches.has(targetKey);
+    const lineColorClass = isLineHighlighted ? "bg-[#C3562B]" : "bg-gray-200";
+    const lineZIndexClass = isLineHighlighted ? "z-10" : "z-0";
+
     return (
-      <div className="absolute inset-0 pointer-events-none z-0">
+      <div className={`absolute inset-0 pointer-events-none ${lineZIndexClass}`}>
         {/* Horizontal segment leaving match card */}
         <div 
-          className="absolute bg-gray-200"
+          className={`absolute ${lineColorClass}`}
           style={{
             top: `${center}px`,
             right: "-16px",
-            width: "16px",
+            width: "32px",
             height: "2px",
             transform: "translateY(-50%)"
           }}
@@ -526,7 +622,7 @@ function TabelloneContent() {
 
         {/* Vertical segment connecting the pair */}
         <div 
-          className="absolute bg-gray-200"
+          className={`absolute ${lineColorClass}`}
           style={{
             top: `${verticalLineTop}px`,
             right: "-16px",
@@ -537,7 +633,7 @@ function TabelloneContent() {
 
         {/* Horizontal segment extending to next round */}
         <div 
-          className="absolute bg-gray-200"
+          className={`absolute ${lineColorClass}`}
           style={{
             top: `${isEven ? center - halfGap : center + halfGap}px`,
             right: "-32px",
@@ -634,107 +730,143 @@ function TabelloneContent() {
         ) : (
           <div className="bg-white border border-gray-100 rounded-[2.5rem] shadow-xl overflow-hidden p-6 md:p-10 relative">
             <div className="overflow-x-auto min-w-full pb-6 scrollbar-thin">
-              <div className="flex gap-8 relative select-none" style={{ minWidth: `${currentW}px`, height: `${currentH}px` }}>
-                
-                {/* 1. Round of 32 */}
-                {bracketSize >= 32 && (
-                  <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
-                    <div className="text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 sticky top-0 bg-white z-20 mb-4 border-b">Sedicesimi</div>
-                    {Array.from({ length: 16 }, (_, idx) => {
-                      const matchNum = idx + 1;
-                      const itemHeight = currentH / 16;
-                      const center = (matchNum - 0.5) * itemHeight;
-                      return (
-                        <div key={idx} className="absolute left-0 right-4" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
-                          {renderBracketMatchCard("r32", matchNum, `Gara ${matchNum}`)}
-                          {renderConnectorLine("r32", matchNum, 16, currentH)}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* 2. Round of 16 */}
-                {bracketSize >= 16 && (
-                  <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
-                    <div className="text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 sticky top-0 bg-white z-20 mb-4 border-b">Ottavi</div>
-                    {Array.from({ length: 8 }, (_, idx) => {
-                      const matchNum = idx + 1;
-                      const itemHeight = currentH / 8;
-                      const center = (matchNum - 0.5) * itemHeight;
-                      return (
-                        <div key={idx} className="absolute left-0 right-4" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
-                          {renderBracketMatchCard("r16", matchNum, `Ottavi ${matchNum}`)}
-                          {renderConnectorLine("r16", matchNum, 8, currentH)}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* 3. Quarterfinals */}
-                {bracketSize >= 8 && (
-                  <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
-                    <div className="text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 sticky top-0 bg-white z-20 mb-4 border-b">Quarti</div>
-                    {Array.from({ length: 4 }, (_, idx) => {
-                      const matchNum = idx + 1;
-                      const itemHeight = currentH / 4;
-                      const center = (matchNum - 0.5) * itemHeight;
-                      return (
-                        <div key={idx} className="absolute left-0 right-4" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
-                          {renderBracketMatchCard("qf", matchNum, `Quarti ${matchNum}`)}
-                          {renderConnectorLine("qf", matchNum, 4, currentH)}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* 4. Semifinals */}
-                {bracketSize >= 4 && (
-                  <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
-                    <div className="text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 sticky top-0 bg-white z-20 mb-4 border-b">Semifinali</div>
-                    {Array.from({ length: 2 }, (_, idx) => {
-                      const matchNum = idx + 1;
-                      const itemHeight = currentH / 2;
-                      const center = (matchNum - 0.5) * itemHeight;
-                      return (
-                        <div key={idx} className="absolute left-0 right-4" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
-                          {renderBracketMatchCard("sf", matchNum, `Semifinale ${matchNum}`)}
-                          <div className="absolute inset-0 pointer-events-none z-0">
-                            {/* SF to Final 1 lines */}
-                            <div className="absolute bg-gray-200" style={{ top: `${center}px`, right: "-16px", width: "16px", height: "2px", transform: "translateY(-50%)" }} />
-                            <div className="absolute bg-gray-200" style={{ top: `${idx === 0 ? center : center - sfHalfGap}px`, right: "-16px", width: "2px", height: `${sfHalfGap}px` }} />
-                            <div className="absolute bg-gray-200" style={{ top: `${sfHalfGap}px`, right: "-32px", width: "16px", height: "2px", transform: "translateY(-50%)" }} />
-
-                            {/* SF to Final 3/4 lines */}
-                            <div className="absolute bg-gray-200" style={{ top: `${center}px`, right: "-24px", width: "8px", height: "2px", transform: "translateY(-50%)" }} />
-                            <div className="absolute bg-gray-200" style={{ top: `${idx === 0 ? center : center - sfHalfGap}px`, right: "-24px", width: "2px", height: `${sfHalfGap}px` }} />
-                            <div className="absolute bg-gray-200" style={{ top: `${sfHalfGap * 3}px`, right: "-32px", width: "8px", height: "2px", transform: "translateY(-50%)" }} />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* 5. Finals & Bronze */}
-                <div className="flex-1 h-full relative">
-                  <div className="text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 sticky top-0 bg-white z-20 mb-4 border-b">Finali</div>
-                  
-                  {/* Final 1st Place */}
-                  <div className="absolute left-0 right-0" style={{ top: `${currentH / 4}px`, transform: "translateY(-50%)" }}>
-                    <div className="text-[10px] font-black text-yellow-600 uppercase tracking-widest text-center mb-2 border-b border-yellow-600/10 pb-1">Finalissima 🥇</div>
-                    {renderBracketMatchCard("f", 1, "1°/2° Posto")}
-                  </div>
-
-                  {/* Final 3rd Place */}
-                  <div className="absolute left-0 right-0" style={{ top: `${(currentH / 4) * 3}px`, transform: "translateY(-50%)" }}>
-                    <div className="text-[10px] font-black text-amber-700 uppercase tracking-widest text-center mb-2 border-b border-amber-700/10 pb-1">Finale 3° Posto 🥉</div>
-                    {renderBracketMatchCard("f", 2, "3°/4° Posto")}
-                  </div>
+              <div style={{ minWidth: `${currentW}px` }}>
+                {/* Headers Row */}
+                <div className="flex gap-8 mb-6 border-b border-gray-100 pb-3 sticky top-0 bg-white z-20">
+                  {bracketSize >= 32 && (
+                    <div className="flex-1 text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 bg-white">Sedicesimi</div>
+                  )}
+                  {bracketSize >= 16 && (
+                    <div className="flex-1 text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 bg-white">Ottavi</div>
+                  )}
+                  {bracketSize >= 8 && (
+                    <div className="flex-1 text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 bg-white">Quarti</div>
+                  )}
+                  {bracketSize >= 4 && (
+                    <div className="flex-1 text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 bg-white">Semifinali</div>
+                  )}
+                  <div className="flex-1 text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 bg-white">Finali</div>
                 </div>
 
+                {/* Columns Row */}
+                <div className="flex gap-8 relative select-none" style={{ height: `${currentH}px` }}>
+                  
+                  {/* 1. Round of 32 */}
+                  {bracketSize >= 32 && (
+                    <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
+                      {Array.from({ length: 16 }, (_, idx) => {
+                        const matchNum = idx + 1;
+                        const itemHeight = currentH / 16;
+                        const center = (matchNum - 0.5) * itemHeight;
+                        return (
+                          <div key={idx}>
+                            <div className="absolute left-0 right-4 z-10" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
+                              {renderBracketMatchCard("r32", matchNum, `Gara ${matchNum}`)}
+                            </div>
+                            {renderConnectorLine("r32", matchNum, 16, currentH)}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* 2. Round of 16 */}
+                  {bracketSize >= 16 && (
+                    <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
+                      {Array.from({ length: 8 }, (_, idx) => {
+                        const matchNum = idx + 1;
+                        const itemHeight = currentH / 8;
+                        const center = (matchNum - 0.5) * itemHeight;
+                        return (
+                          <div key={idx}>
+                            <div className="absolute left-0 right-4 z-10" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
+                              {renderBracketMatchCard("r16", matchNum, `Ottavi ${matchNum}`)}
+                            </div>
+                            {renderConnectorLine("r16", matchNum, 8, currentH)}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* 3. Quarterfinals */}
+                  {bracketSize >= 8 && (
+                    <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
+                      {Array.from({ length: 4 }, (_, idx) => {
+                        const matchNum = idx + 1;
+                        const itemHeight = currentH / 4;
+                        const center = (matchNum - 0.5) * itemHeight;
+                        return (
+                          <div key={idx}>
+                            <div className="absolute left-0 right-4 z-10" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
+                              {renderBracketMatchCard("qf", matchNum, `Quarti ${matchNum}`)}
+                            </div>
+                            {renderConnectorLine("qf", matchNum, 4, currentH)}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* 4. Semifinals */}
+                  {bracketSize >= 4 && (
+                    <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
+                      {Array.from({ length: 2 }, (_, idx) => {
+                        const matchNum = idx + 1;
+                        const itemHeight = currentH / 2;
+                        const center = (matchNum - 0.5) * itemHeight;
+                        return (
+                          <div key={idx}>
+                            <div className="absolute left-0 right-4 z-10" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
+                              {renderBracketMatchCard("sf", matchNum, `Semifinale ${matchNum}`)}
+                            </div>
+                            {/* SF to Final lines */}
+                            {(() => {
+                              const isSFToF1Highlighted = highlightedMatches.has(`sf-${matchNum}`) && highlightedMatches.has("f-1");
+                              const isSFToF2Highlighted = highlightedMatches.has(`sf-${matchNum}`) && highlightedMatches.has("f-2");
+
+                              const f1ColorClass = isSFToF1Highlighted ? "bg-[#C3562B]" : "bg-gray-200";
+                              const f2ColorClass = isSFToF2Highlighted ? "bg-[#C3562B]" : "bg-gray-200";
+
+                              const containerZIndex = (isSFToF1Highlighted || isSFToF2Highlighted) ? "z-10" : "z-0";
+
+                              return (
+                                <div className={`absolute inset-0 pointer-events-none ${containerZIndex}`}>
+                                  {/* SF to Final 1 lines */}
+                                  <div className={`absolute ${f1ColorClass}`} style={{ top: `${center}px`, right: "-16px", width: "32px", height: "2px", transform: "translateY(-50%)" }} />
+                                  <div className={`absolute ${f1ColorClass}`} style={{ top: `${idx === 0 ? center : center - sfHalfGap}px`, right: "-16px", width: "2px", height: `${sfHalfGap}px` }} />
+                                  <div className={`absolute ${f1ColorClass}`} style={{ top: `${sfHalfGap}px`, right: "-32px", width: "16px", height: "2px", transform: "translateY(-50%)" }} />
+
+                                  {/* SF to Final 3/4 lines */}
+                                  <div className={`absolute ${f2ColorClass}`} style={{ top: `${center}px`, right: "-24px", width: "40px", height: "2px", transform: "translateY(-50%)" }} />
+                                  <div className={`absolute ${f2ColorClass}`} style={{ top: `${idx === 0 ? center : center - sfHalfGap}px`, right: "-24px", width: "2px", height: `${sfHalfGap}px` }} />
+                                  <div className={`absolute ${f2ColorClass}`} style={{ top: `${sfHalfGap * 3}px`, right: "-32px", width: "8px", height: "2px", transform: "translateY(-50%)" }} />
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* 5. Finals & Bronze */}
+                  <div className="flex-1 h-full relative">
+                    
+                    {/* Final 1st Place */}
+                    <div className="absolute left-0 right-0 z-10" style={{ top: `${currentH / 4}px`, transform: "translateY(-50%)" }}>
+                      <div className="text-[10px] font-black text-yellow-600 uppercase tracking-widest text-center mb-2 border-b border-yellow-600/10 pb-1">Finalissima 🥇</div>
+                      {renderBracketMatchCard("f", 1, "1°/2° Posto")}
+                    </div>
+
+                    {/* Final 3rd Place */}
+                    <div className="absolute left-0 right-0 z-10" style={{ top: `${(currentH / 4) * 3}px`, transform: "translateY(-50%)" }}>
+                      <div className="text-[10px] font-black text-amber-700 uppercase tracking-widest text-center mb-2 border-b border-amber-700/10 pb-1">Finale 3° Posto 🥉</div>
+                      {renderBracketMatchCard("f", 2, "3°/4° Posto")}
+                    </div>
+                  </div>
+
+                </div>
               </div>
             </div>
           </div>
