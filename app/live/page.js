@@ -74,6 +74,33 @@ export default function PortaleLiveMobile() {
   const [loading, setLoading] = useState(true);
   const [selectedRoundTab, setSelectedRoundTab] = useState("");
 
+  const isMatchCompleted = (roundKey, matchNum) => {
+    if (!bracketConfig) return false;
+    const assignments = bracketConfig.bracketAssignments || {};
+    const metadata = bracketConfig.bracketMetadata || {};
+    const matchId = `${roundKey}-${matchNum}`;
+
+    const teamL = assignments[`${matchId}-L`];
+    const teamR = assignments[`${matchId}-R`];
+
+    if (teamL === "—" || teamR === "—") return true;
+    if (!teamL || !teamR) return false;
+
+    const meta = metadata[matchId] || {};
+    const scoreL = meta.scoreL || "";
+    const scoreR = meta.scoreR || "";
+    return scoreL !== "" && scoreR !== "";
+  };
+
+  const isRoundCompleted = (roundKey, matchCount) => {
+    for (let m = 1; m <= matchCount; m++) {
+      if (!isMatchCompleted(roundKey, m)) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   const getAvailableRounds = (size) => {
     const rounds = [];
     if (size >= 32) rounds.push({ key: "r32", label: "Sedicesimi", matches: 16 });
@@ -81,7 +108,21 @@ export default function PortaleLiveMobile() {
     if (size >= 8)  rounds.push({ key: "qf", label: "Quarti", matches: 4 });
     if (size >= 4)  rounds.push({ key: "sf", label: "Semifinali", matches: 2 });
     rounds.push({ key: "f", label: "Finali", matches: 2 });
-    return rounds;
+
+    const unlockedRounds = [];
+    for (let i = 0; i < rounds.length; i++) {
+      if (i === 0) {
+        unlockedRounds.push(rounds[i]);
+      } else {
+        const prevRound = rounds[i - 1];
+        if (isRoundCompleted(prevRound.key, prevRound.matches)) {
+          unlockedRounds.push(rounds[i]);
+        } else {
+          break;
+        }
+      }
+    }
+    return unlockedRounds;
   };
 
   // 1. Carica l'elenco dei tornei e determina quello da visualizzare
@@ -141,7 +182,7 @@ export default function PortaleLiveMobile() {
     if (bracketConfig && bracketConfig.bracketSize) {
       const avRounds = getAvailableRounds(bracketConfig.bracketSize);
       if (avRounds.length > 0 && !avRounds.some(r => r.key === selectedRoundTab)) {
-        setSelectedRoundTab(avRounds[0].key);
+        setSelectedRoundTab(avRounds[avRounds.length - 1].key);
       }
     }
   }, [bracketConfig]);
