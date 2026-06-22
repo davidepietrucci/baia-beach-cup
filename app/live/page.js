@@ -69,8 +69,8 @@ export default function PortaleLiveMobile() {
   const [selectedTorneo, setSelectedTorneo] = useState("");
   const [config, setConfig] = useState(null);
   const [bracketConfig, setBracketConfig] = useState(null);
-  const [activeTab, setActiveTab] = useState("gironi"); // "gironi", "partite", "classifica", "finali"
-  const [viewMode, setViewMode] = useState("cronologico"); // "cronologico" or "girone"
+  const [activeTab, setActiveTab] = useState("gironi"); // "gironi", "partite", "finali"
+  const [viewMode, setViewMode] = useState("campoMare"); // "campoMare" or "campoMonte"
   const [loading, setLoading] = useState(true);
   const [hoveredMatch, setHoveredMatch] = useState(null); // { roundKey, matchNum }
 
@@ -193,6 +193,13 @@ export default function PortaleLiveMobile() {
     const interval = setInterval(fetchLive, 10000);
     return () => clearInterval(interval);
   }, [selectedTorneo]);
+
+  // Auto-switch tab if only bracket is published
+  useEffect(() => {
+    if (config && !config.pubblicato && bracketConfig && bracketConfig.tabellonePubblicato) {
+      setActiveTab("finali");
+    }
+  }, [config, bracketConfig]);
 
   const selectedTorneoObj = tornei.find((t) => t.nome === selectedTorneo);
   const isConcluso = selectedTorneoObj?.stato === "Concluso";
@@ -707,288 +714,15 @@ export default function PortaleLiveMobile() {
         </div>
 
         {/* Controllo Pubblicazione */}
-        {isPublished ? (
+        {isPublished || isBracketPublished ? (
           <>
             {/* 1. SEZIONE GIRONI */}
             {activeTab === "gironi" && (
               <div className="space-y-5">
-                <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">
-                  Composizione Gironi
-                </h3>
-                <div className="space-y-4">
-                  {getInitialGroupsList().map((group) => {
-                    const teams = getGroupTeams(group.id, group.type);
-                    return (
-                      <div
-                        key={group.id}
-                        className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm"
-                      >
-                        <h4 className="text-sm font-black text-[#0D3D31] uppercase tracking-tight border-b border-gray-50 pb-3 mb-3 flex items-center justify-between">
-                          <span>{group.label}</span>
-                          <span className="text-[9px] font-black bg-blue-50 text-blue-600 px-2 py-0.5 rounded-lg uppercase tracking-wider">
-                            {teams.length} Squadre
-                          </span>
-                        </h4>
-                        <div className="overflow-x-auto">
-                          <table className="w-full text-left">
-                            <thead className="bg-gray-50/50 border-b border-gray-100 text-[8px] font-black text-gray-400 uppercase tracking-widest">
-                              <tr>
-                                <th className="pl-4 py-3 w-10 text-center">Pos</th>
-                                <th className="px-2 py-3">Squadra</th>
-                                <th className="px-2 py-3 text-center w-8">V</th>
-                                <th className="px-2 py-3 text-center w-10">PF</th>
-                                <th className="px-2 py-3 text-center w-10">PS</th>
-                                <th className="pr-4 py-3 text-right w-12">Quoz.</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-50 text-xs font-bold">
-                              {calculateRanking(group.id).map((team, idx) => {
-                                const isQualified = idx < 2;
-                                const quotient = team.puntiSubiti === 0 ? team.puntiFatti : (team.puntiFatti / team.puntiSubiti).toFixed(3);
-                                return (
-                                  <tr
-                                    key={team.nome}
-                                    className={`hover:bg-blue-50/10 transition-colors ${
-                                      isQualified ? "bg-yellow-50/10" : ""
-                                    }`}
-                                  >
-                                    <td className="pl-4 py-3.5 text-center">
-                                      <span
-                                        className={`w-5.5 h-5.5 rounded-full flex items-center justify-center text-[10px] font-black mx-auto ${
-                                          isQualified
-                                            ? "bg-yellow-400 text-white shadow-sm"
-                                            : "bg-gray-100 text-gray-400"
-                                        }`}
-                                      >
-                                        {idx + 1}
-                                      </span>
-                                    </td>
-                                    <td className="px-2 py-3.5 text-[#0D3D31] font-black tracking-tight leading-tight text-[13px] sm:text-[14px]">
-                                      {splitNames(team.nome).map(formatPlayerName).map((player, pIdx) => (
-                                        <span key={pIdx} className="block truncate max-w-[140px]">
-                                          {player}
-                                        </span>
-                                      ))}
-                                    </td>
-                                    <td className="px-2 py-3.5 text-center text-green-600 font-bold">
-                                      {team.vinte}
-                                    </td>
-                                    <td className="px-2 py-3.5 text-center text-gray-600">
-                                      {team.puntiFatti}
-                                    </td>
-                                    <td className="px-2 py-3.5 text-center text-gray-400">
-                                      {team.puntiSubiti}
-                                    </td>
-                                    <td className="pr-4 py-3.5 text-right font-black text-xs text-[#0D3D31]">
-                                      {quotient}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                              {calculateRanking(group.id).length === 0 && (
-                                <tr>
-                                  <td colSpan="6" className="py-8 text-center text-gray-400 italic">
-                                    Nessuna squadra in questo girone.
-                                  </td>
-                                </tr>
-                              )}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {getInitialGroupsList().length === 0 && (
-                    <div className="bg-white rounded-3xl p-6 text-center border border-gray-100">
-                      <p className="text-gray-400 italic text-xs">Nessun girone configurato.</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* 2. SEZIONE PARTITE */}
-            {activeTab === "partite" && (
-              <div className="space-y-6">
-                <div className="flex bg-gray-200/60 p-1 rounded-2xl max-w-xs mx-auto border border-gray-100/50 shadow-inner mb-6">
-                  <button
-                    onClick={() => setViewMode("cronologico")}
-                    className={`flex-1 py-2 text-center rounded-xl font-black text-[10px] uppercase tracking-wider transition-all ${
-                      viewMode === "cronologico"
-                        ? "bg-[#0D3D31] text-white shadow-md"
-                        : "text-gray-400 hover:text-[#0D3D31]"
-                    }`}
-                  >
-                    Cronologico 📅
-                  </button>
-                  <button
-                    onClick={() => setViewMode("girone")}
-                    className={`flex-1 py-2 text-center rounded-xl font-black text-[10px] uppercase tracking-wider transition-all ${
-                      viewMode === "girone"
-                        ? "bg-[#0D3D31] text-white shadow-md"
-                        : "text-gray-400 hover:text-[#0D3D31]"
-                    }`}
-                  >
-                    Per Girone 📋
-                  </button>
-                </div>
-
-                {viewMode === "cronologico" ? (
-                  <div className="space-y-4">
-                    <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-[#C3562B] pl-2 mb-2">
-                      Calendario Incontri (Ordine Cronologico)
-                    </h3>
-                    <div className="space-y-3">
-                      {sortMatchesChronologically(getAllInitialMatches()).map((m, sortedIdx) =>
-                        renderMatchRow(
-                          m.left,
-                          m.right,
-                          m.meta,
-                          sortedIdx,
-                          `match-${m.gironeId}`,
-                          m.gironeId
-                        )
-                      )}
-                      {getAllInitialMatches().length === 0 && (
-                        <div className="bg-white rounded-3xl p-6 text-center border border-gray-100">
-                          <p className="text-gray-400 italic text-xs">Nessun match programmato.</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-6">
-                    {getInitialGroupsList().map((group) => {
-                      const groupMatches = getScheduleFixed(
-                        config?.teamCounts?.[group.id] || 0,
-                        group.id,
-                        config?.gironeAssignments?.[group.id] || {}
-                      ).map((m, idx) => ({
-                        left: m.left,
-                        right: m.right,
-                        meta: config?.matchMetadata?.[`${group.id}-${idx}`] || {},
-                      }));
-
-                      return (
-                        <div key={group.id} className="space-y-3">
-                          <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-[#C3562B] pl-2">
-                            Partite {group.label}
-                          </h3>
-                          <div className="space-y-3">
-                            {groupMatches.map((m, idx) =>
-                              renderMatchRow(
-                                m.left,
-                                m.right,
-                                m.meta,
-                                idx,
-                                `match-${group.id}`,
-                                group.id
-                              )
-                            )}
-                            {groupMatches.length === 0 && (
-                              <div className="bg-white rounded-3xl p-6 text-center border border-gray-100">
-                                <p className="text-gray-400 italic text-xs">Nessun match programmato.</p>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* 3. SEZIONE CLASSIFICHE */}
-            {activeTab === "classifica" && (
-              <div className="space-y-6">
-                {rankingType === "avulsa" ? (
+                {isPublished ? (
                   <>
-                    <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-yellow-400 pl-2">
-                      Classifica Generale Complessiva Torneo
-                    </h3>
-                    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-left min-w-[320px]">
-                          <thead className="bg-gray-50/50 border-b border-gray-100 text-[8px] font-black text-gray-400 uppercase tracking-widest">
-                            <tr>
-                              <th className="pl-4 py-3 w-10 text-center">Pos</th>
-                              <th className="px-2 py-3">Squadra</th>
-                              <th className="px-2 py-3 text-center w-12">Girone</th>
-                              <th className="px-2 py-3 text-center w-8">V</th>
-                              <th className="px-2 py-3 text-center w-10">PF</th>
-                              <th className="px-2 py-3 text-center w-10">PS</th>
-                              <th className="pr-4 py-3 text-right w-16">Quoz.</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-gray-50 text-xs font-bold">
-                            {calculateUnifiedRanking(config).map((team, idx) => {
-                              const quotient = team.puntiSubiti === 0 ? team.puntiFatti : (team.puntiFatti / team.puntiSubiti).toFixed(3);
-                              const isGold = idx < 12;
-                              const isGoldDirect = idx < 4;
-                              return (
-                                <tr
-                                  key={team.nome}
-                                  className={`hover:bg-blue-50/10 transition-colors ${
-                                    isGold ? "bg-yellow-50/10" : "bg-slate-50/20"
-                                  }`}
-                                >
-                                  <td className="pl-4 py-3.5 text-center">
-                                    <span
-                                      className={`w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black mx-auto ${
-                                        isGoldDirect
-                                          ? "bg-yellow-400 text-white shadow-sm"
-                                          : isGold
-                                          ? "bg-yellow-100 text-yellow-700"
-                                          : "bg-gray-100 text-gray-400"
-                                      }`}
-                                    >
-                                      {idx + 1}
-                                    </span>
-                                  </td>
-                                  <td className="px-2 py-3.5 text-[#0D3D31] font-black tracking-tight leading-tight text-[13px] sm:text-[14px]">
-                                    {splitNames(team.nome).map(formatPlayerName).map((player, pIdx) => (
-                                      <span key={pIdx} className="block truncate max-w-[140px]">
-                                        {player}
-                                      </span>
-                                    ))}
-                                  </td>
-                                  <td className="px-2 py-3.5 text-center">
-                                    <span className="px-2 py-0.5 text-[9px] font-black uppercase tracking-wider rounded-lg bg-blue-50 text-blue-600 border border-blue-100/50">
-                                      {team.girone}
-                                    </span>
-                                  </td>
-                                  <td className="px-2 py-3.5 text-center text-green-600 font-bold">
-                                    {team.vinte}
-                                  </td>
-                                  <td className="px-2 py-3.5 text-center text-gray-500">
-                                    {team.puntiFatti}
-                                  </td>
-                                  <td className="px-2 py-3.5 text-center text-gray-400">
-                                    {team.puntiSubiti}
-                                  </td>
-                                  <td className="pr-4 py-3.5 text-right text-[#0D3D31] font-mono text-[10px]">
-                                    {quotient}
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                            {(!config || calculateUnifiedRanking(config).length === 0) && (
-                              <tr>
-                                <td colSpan="7" className="py-20 text-center text-gray-400 italic">
-                                  Nessuna squadra configurata o nessun risultato disponibile.
-                                </td>
-                              </tr>
-                            )}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-blue-600 pl-2">
-                      Classifiche dei Gironi
+                    <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">
+                      Composizione Gironi
                     </h3>
                     <div className="space-y-4">
                       {getInitialGroupsList().map((group) => {
@@ -1073,8 +807,129 @@ export default function PortaleLiveMobile() {
                           </div>
                         );
                       })}
+                      {getInitialGroupsList().length === 0 && (
+                        <div className="bg-white rounded-3xl p-6 text-center border border-gray-100">
+                          <p className="text-gray-400 italic text-xs">Nessun girone configurato.</p>
+                        </div>
+                      )}
                     </div>
                   </>
+                ) : (
+                  <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
+                    <span className="text-5xl mb-4 block">⏳</span>
+                    <h3 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight mb-2">
+                      Gironi non ancora pubblicati
+                    </h3>
+                    <p className="text-gray-400 font-medium text-xs max-w-xs mx-auto">
+                      La composizione e i risultati dei gironi saranno visibili non appena lo staff li pubblicherà.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 2. SEZIONE PARTITE */}
+            {activeTab === "partite" && (
+              <div className="space-y-6">
+                {isPublished ? (
+                  <>
+                    <div className="flex bg-gray-200/60 p-1 rounded-2xl max-w-xs mx-auto border border-gray-100/50 shadow-inner mb-6">
+                      <button
+                        onClick={() => setViewMode("campoMare")}
+                        className={`flex-1 py-2 text-center rounded-xl font-black text-[10px] uppercase tracking-wider transition-all ${
+                          viewMode === "campoMare"
+                            ? "bg-[#0D3D31] text-white shadow-md"
+                            : "text-gray-400 hover:text-[#0D3D31]"
+                        }`}
+                      >
+                        Campo Mare (1) 🌊
+                      </button>
+                      <button
+                        onClick={() => setViewMode("campoMonte")}
+                        className={`flex-1 py-2 text-center rounded-xl font-black text-[10px] uppercase tracking-wider transition-all ${
+                          viewMode === "campoMonte"
+                            ? "bg-[#0D3D31] text-white shadow-md"
+                            : "text-gray-400 hover:text-[#0D3D31]"
+                        }`}
+                      >
+                        Campo Monte (2) ⛰️
+                      </button>
+                    </div>
+
+                    {viewMode === "campoMare" ? (
+                      <div className="space-y-4">
+                        <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-[#C3562B] pl-2 mb-2">
+                          Incontri - Campo Mare (1)
+                        </h3>
+                        <div className="space-y-3">
+                          {sortMatchesChronologically(getAllInitialMatches())
+                            .filter(m => {
+                              const c = m.meta?.court ? m.meta.court.toString().trim() : "";
+                              return c === "1" || c.toLowerCase().includes("mare") || c === "";
+                            })
+                            .map((m, idx) =>
+                              renderMatchRow(
+                                m.left,
+                                m.right,
+                                m.meta,
+                                idx,
+                                `match-${m.gironeId}`,
+                                m.gironeId
+                              )
+                            )}
+                          {getAllInitialMatches().filter(m => {
+                            const c = m.meta?.court ? m.meta.court.toString().trim() : "";
+                            return c === "1" || c.toLowerCase().includes("mare") || c === "";
+                          }).length === 0 && (
+                            <div className="bg-white rounded-3xl p-6 text-center border border-gray-100">
+                              <p className="text-gray-400 italic text-xs">Nessun match in programma su questo campo.</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-[#C3562B] pl-2 mb-2">
+                          Incontri - Campo Monte (2)
+                        </h3>
+                        <div className="space-y-3">
+                          {sortMatchesChronologically(getAllInitialMatches())
+                            .filter(m => {
+                              const c = m.meta?.court ? m.meta.court.toString().trim() : "";
+                              return c === "2" || c.toLowerCase().includes("monte");
+                            })
+                            .map((m, idx) =>
+                              renderMatchRow(
+                                m.left,
+                                m.right,
+                                m.meta,
+                                idx,
+                                `match-${m.gironeId}`,
+                                m.gironeId
+                              )
+                            )}
+                          {getAllInitialMatches().filter(m => {
+                            const c = m.meta?.court ? m.meta.court.toString().trim() : "";
+                            return c === "2" || c.toLowerCase().includes("monte");
+                          }).length === 0 && (
+                            <div className="bg-white rounded-3xl p-6 text-center border border-gray-100">
+                              <p className="text-gray-400 italic text-xs">Nessun match in programma su questo campo.</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
+                    <span className="text-5xl mb-4 block">⏳</span>
+                    <h3 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight mb-2">
+                      Partite non ancora pubblicate
+                    </h3>
+                    <p className="text-gray-400 font-medium text-xs max-w-xs mx-auto">
+                      Il calendario delle partite sarà visibile non appena lo staff lo pubblicherà.
+                    </p>
+                  </div>
                 )}
               </div>
             )}
@@ -1297,19 +1152,6 @@ export default function PortaleLiveMobile() {
               {activeTab === "partite" && <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />}
             </button>
 
-            {/* Pulsante Classifiche */}
-            <button
-              onClick={() => setActiveTab("classifica")}
-              className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform cursor-pointer ${
-                activeTab === "classifica" ? "text-[#C3562B]" : "text-slate-400"
-              }`}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={activeTab === "classifica" ? "currentColor" : "none"} stroke="currentColor" strokeWidth={activeTab === "classifica" ? 0 : 2} className="w-7 h-7">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-6.75a1.125 1.125 0 0 0-1.125 1.125v3.375m9 0h-9M9 10.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Z" />
-              </svg>
-              <span className="text-xs font-black uppercase tracking-widest">{rankingType === "avulsa" ? "Generale" : "Classifiche"}</span>
-              {activeTab === "classifica" && <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />}
-            </button>
 
             {/* Pulsante Fasi Finali */}
             {isBracketPublished && (
