@@ -128,7 +128,7 @@ export default function Home() {
 
       {/* Header */}
       <header
-        style={{ backgroundImage: "linear-gradient(to right, #295dab, #581c87)" }}
+        style={{ backgroundImage: "linear-gradient(to right, #295dab, #1e3a8a)" }}
         className="relative text-white py-5 px-8 flex flex-col sm:flex-row justify-center items-center shadow-lg gap-4"
       >
         <div className="flex items-center gap-3.5">
@@ -202,11 +202,11 @@ export default function Home() {
           {torneiLive.map((t, idx) => (
             <div
               key={idx}
-              style={{ backgroundImage: "linear-gradient(135deg, #295dab 0%, #1e1b4b 100%)" }}
+              style={{ backgroundImage: "linear-gradient(135deg, #295dab 0%, #172554 100%)" }}
               className="w-full max-w-xl rounded-[2.5rem] p-6 sm:p-8 text-center flex flex-col items-center justify-center gap-6 border border-white/10 shadow-2xl ring-8 ring-white/5 relative overflow-hidden group"
             >
               {/* Glow effect */}
-              <div className="absolute -inset-x-20 top-0 h-40 bg-emerald-500/10 blur-3xl group-hover:bg-emerald-500/20 transition-all duration-500"></div>
+              <div className="absolute -inset-x-20 top-0 h-40 bg-blue-500/10 blur-3xl group-hover:bg-blue-500/20 transition-all duration-500"></div>
 
               <div className="relative z-10 flex flex-col items-center gap-4 w-full">
                 <div className="w-full">
@@ -233,7 +233,7 @@ export default function Home() {
                     href={`/gironi?tour=${encodeURIComponent(t.nome)}`}
                     className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-black text-xs text-[#295dab] bg-white hover:bg-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] uppercase tracking-widest w-full sm:w-auto"
                   >
-                    📊 Guarda Gironi e Tabellone
+                    Guarda Gironi e Tabellone
                   </a>
                 </div>
               </div>
