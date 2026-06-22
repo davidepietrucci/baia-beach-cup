@@ -77,7 +77,7 @@ export default function StaffPartite() {
   const [gironeSets, setGironeSets] = useState({});
   const [matchMetadata, setMatchMetadata] = useState({});
   const [pubblicato, setPubblicato] = useState(false);
-  const [rankingType, setRankingType] = useState("avulsa");
+  const [rankingType, setRankingType] = useState("gironi");
 
   const [activeCourtTab, setActiveCourtTab] = useState("tutte"); // "tutte", "mare", "monte"
 
@@ -131,7 +131,7 @@ export default function StaffPartite() {
         setGironeAssignments(config.gironeAssignments || {});
         setMatchMetadata(config.matchMetadata || {});
         setPubblicato(config.pubblicato || false);
-        setRankingType(config.rankingType || "avulsa");
+        setRankingType(config.rankingType || "gironi");
       } else {
         setNumGironi(4);
         setTeamCounts({});
@@ -140,7 +140,7 @@ export default function StaffPartite() {
         setGironeAssignments({});
         setMatchMetadata({});
         setPubblicato(false);
-        setRankingType("avulsa");
+        setRankingType("gironi");
       }
       setIsLoaded(true);
     });

@@ -191,7 +191,7 @@ export default function PortaleLiveMobile() {
   const isConcluso = selectedTorneoObj?.stato === "Concluso";
   const isPublished = config && config.pubblicato;
   const isBracketPublished = bracketConfig && bracketConfig.tabellonePubblicato;
-  const rankingType = config?.rankingType || "avulsa";
+  const rankingType = config?.rankingType || "gironi";
 
   // 3. Calcola la lista dei gironi iniziali
   const getInitialGroupsList = (currentConfig = config) => {

@@ -79,7 +79,7 @@ export default function StaffGironi() {
   const [matchMetadata, setMatchMetadata] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
   const [pubblicato, setPubblicato] = useState(false);
-  const [rankingType, setRankingType] = useState("avulsa"); // "avulsa" o "gironi"
+  const [rankingType, setRankingType] = useState("gironi"); // "avulsa" o "gironi"
   
   const [isDragging, setIsDragging] = useState(false);
   const [dragOverSlot, setDragOverSlot] = useState(null);
@@ -162,7 +162,7 @@ export default function StaffGironi() {
         setGironeAssignments(config.gironeAssignments || {});
         setMatchMetadata(config.matchMetadata || {});
         setPubblicato(config.pubblicato || false);
-        setRankingType(config.rankingType || "avulsa");
+        setRankingType(config.rankingType || "gironi");
       } else {
         setNumGironi(4);
         setTeamCounts({ A: 4, B: 4, C: 4, D: 4, E: 4, F: 4, G: 4, H: 4, I: 4, J: 4, K: 4, L: 4 });
@@ -171,7 +171,7 @@ export default function StaffGironi() {
         setGironeAssignments({});
         setMatchMetadata({});
         setPubblicato(false);
-        setRankingType("avulsa");
+        setRankingType("gironi");
       }
       setIsLoaded(true);
     });
