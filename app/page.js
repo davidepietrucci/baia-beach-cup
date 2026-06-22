@@ -132,62 +132,46 @@ export default function Home() {
         className="relative text-white py-5 px-8 flex flex-col sm:flex-row justify-center items-center shadow-lg gap-4"
       >
         <div className="flex items-center gap-3.5">
-          <Image
-            src="/logo.png"
-            alt="Baia Beach Cup Logo"
-            width={55}
-            height={55}
-            className="rounded-full bg-white/10 p-1.5 shadow-inner"
-          />
           <h1 className="text-2xl sm:text-3xl font-black tracking-wider text-white uppercase">
             Baia Beach Cup
           </h1>
         </div>
         <nav className="sm:absolute sm:right-8 flex items-center">
-          <a
-            href="/staff"
-            className="text-xs font-black uppercase tracking-widest text-gray-200 hover:text-white transition-all bg-white/10 hover:bg-white/20 px-4 py-2.5 rounded-full border border-white/10 hover:border-white/30 hover:scale-[1.03] active:scale-[0.97]"
-          >
-            Area Staff
-          </a>
+          {countdownData.enabled && !timeLeft.expired ? (
+            <div className="flex items-center gap-1.5 sm:gap-2.5 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-full border border-white/10 shadow-lg text-[10px] sm:text-xs font-black">
+              <span className="text-yellow-400 animate-pulse">⚡</span>
+              <span className="text-gray-300 uppercase tracking-widest hidden md:inline">
+                {countdownData.label || "Inizio"}:
+              </span>
+              <span className="font-mono text-white tracking-wide">
+                {timeLeft.days}g {timeLeft.hours}o {timeLeft.minutes}m {timeLeft.seconds}s
+              </span>
+            </div>
+          ) : (
+            <a
+              href="/staff"
+              className="text-xs font-black uppercase tracking-widest text-gray-200 hover:text-white transition-all bg-white/10 hover:bg-white/20 px-4 py-2.5 rounded-full border border-white/10 hover:border-white/30 hover:scale-[1.03] active:scale-[0.97]"
+            >
+              Area Staff
+            </a>
+          )}
         </nav>
       </header>
 
-      {/* Countdown Box (Centrato Sotto all'Header) */}
-      {countdownData.enabled && !timeLeft.expired && (
-        <div className="w-full max-w-xl mx-auto mt-8 px-4 relative z-20">
-          <div
-            style={{ backgroundImage: "linear-gradient(135deg, #1e1b4b 0%, #3b0764 100%)" }}
-            className="rounded-[2.5rem] p-6 sm:p-8 text-center flex flex-col items-center justify-center gap-5 border border-white/10 shadow-2xl ring-8 ring-white/5"
-          >
-            <span className="uppercase tracking-widest text-xs sm:text-base text-[#fbbf24] font-black flex items-center gap-2">
-              ⚡ {countdownData.label || "Inizio Prossimo Torneo"}
-            </span>
-            <div className="flex items-center justify-center gap-1.5 sm:gap-3">
-              {/* Days */}
-              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-2.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl border border-white/10 min-w-[65px] sm:min-w-[80px] shadow-lg">
-                <span className="text-xl sm:text-3xl font-black text-white font-mono leading-none">{timeLeft.days}</span>
-                <span className="text-[9px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Giorni</span>
-              </div>
-              {/* Hours */}
-              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-2.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl border border-white/10 min-w-[65px] sm:min-w-[80px] shadow-lg">
-                <span className="text-xl sm:text-3xl font-black text-white font-mono leading-none">{timeLeft.hours}</span>
-                <span className="text-[9px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Ore</span>
-              </div>
-              {/* Minutes */}
-              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-2.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl border border-white/10 min-w-[65px] sm:min-w-[80px] shadow-lg">
-                <span className="text-xl sm:text-3xl font-black text-white font-mono leading-none">{timeLeft.minutes}</span>
-                <span className="text-[9px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Minuti</span>
-              </div>
-              {/* Seconds */}
-              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-2.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl border border-white/10 min-w-[65px] sm:min-w-[80px] shadow-lg">
-                <span className="text-xl sm:text-3xl font-black text-red-400 font-mono leading-none animate-pulse">{timeLeft.seconds}</span>
-                <span className="text-[9px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Secondi</span>
-              </div>
-            </div>
-          </div>
+      {/* Logo Centrato (Al posto del vecchio countdown) */}
+      <div className="w-full flex justify-center mt-8 px-4 relative z-20">
+        <div className="relative group">
+          <div className="absolute inset-0 bg-[#0d3d31]/20 rounded-full blur-xl group-hover:scale-110 transition-transform duration-500"></div>
+          <Image
+            src="/logo.png"
+            alt="Baia Beach Cup Logo"
+            width={120}
+            height={120}
+            className="relative rounded-full bg-white/10 p-2 shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 border border-white/10"
+            priority
+          />
         </div>
-      )}
+      </div>
 
       {/* Bottone Instagram (Subito sotto il countdown o l'header) */}
       <div className="w-full flex justify-center mt-6 relative z-20">
@@ -331,6 +315,11 @@ export default function Home() {
                 ))}
               </div>
             </div>
+          </div>
+          <div className="mt-4 pb-1 text-center">
+            <a href="/staff" className="text-[9px] font-black uppercase tracking-widest text-gray-300 hover:text-gray-500 transition-colors">
+              Area Staff 🔒
+            </a>
           </div>
         </section>
       )}
