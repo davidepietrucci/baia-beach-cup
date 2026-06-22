@@ -21,7 +21,7 @@ export default function Home() {
   const [sponsors, setSponsors] = useState([]);
 
   const displaySponsors = sponsors && sponsors.length > 0 ? sponsors : defaultTestSponsors;
-  
+
   // Assicuriamoci che ci siano abbastanza elementi prima di duplicare per il marquee loop
   let baseSponsors = [...displaySponsors];
   while (baseSponsors.length < 10) {
@@ -116,9 +116,9 @@ export default function Home() {
   return (
     <main className="min-h-[140vh] flex flex-col relative">
       {/* Sfondo fisso con effetto parallasse mappato sullo scorrimento della pagina */}
-      <div 
-        className="fixed inset-0 -z-10" 
-        style={{ 
+      <div
+        className="fixed inset-0 -z-10"
+        style={{
           backgroundImage: "linear-gradient(rgba(244, 247, 246, 0.90), rgba(244, 247, 246, 0.90)), url('/bg_main.jpg')",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
@@ -127,25 +127,25 @@ export default function Home() {
       />
 
       {/* Header */}
-      <header 
-        style={{ backgroundImage: "linear-gradient(to right, #0D3D31, #581c87)" }} 
+      <header
+        style={{ backgroundImage: "linear-gradient(to right, #0D3D31, #581c87)" }}
         className="relative text-white py-5 px-8 flex flex-col sm:flex-row justify-center items-center shadow-lg gap-4"
       >
         <div className="flex items-center gap-3.5">
-          <Image 
-            src="/logo.png" 
-            alt="Baia Beach Cup Logo" 
-            width={55} 
-            height={55} 
-            className="rounded-full bg-white/10 p-1.5 shadow-inner" 
+          <Image
+            src="/logo.png"
+            alt="Baia Beach Cup Logo"
+            width={55}
+            height={55}
+            className="rounded-full bg-white/10 p-1.5 shadow-inner"
           />
           <h1 className="text-2xl sm:text-3xl font-black tracking-wider text-white uppercase">
             Baia Beach Cup
           </h1>
         </div>
         <nav className="sm:absolute sm:right-8 flex items-center">
-          <a 
-            href="/staff" 
+          <a
+            href="/staff"
             className="text-xs font-black uppercase tracking-widest text-gray-200 hover:text-white transition-all bg-white/10 hover:bg-white/20 px-4 py-2.5 rounded-full border border-white/10 hover:border-white/30 hover:scale-[1.03] active:scale-[0.97]"
           >
             Area Staff
@@ -156,8 +156,8 @@ export default function Home() {
       {/* Countdown Box (Centrato Sotto all'Header) */}
       {countdownData.enabled && !timeLeft.expired && (
         <div className="w-full max-w-xl mx-auto mt-8 px-4 relative z-20">
-          <div 
-            style={{ backgroundImage: "linear-gradient(135deg, #1e1b4b 0%, #3b0764 100%)" }} 
+          <div
+            style={{ backgroundImage: "linear-gradient(135deg, #1e1b4b 0%, #3b0764 100%)" }}
             className="rounded-[2.5rem] p-6 sm:p-8 text-center flex flex-col items-center justify-center gap-5 border border-white/10 shadow-2xl ring-8 ring-white/5"
           >
             <span className="uppercase tracking-widest text-xs sm:text-base text-[#fbbf24] font-black flex items-center gap-2">
@@ -208,49 +208,47 @@ export default function Home() {
 
       {/* Hero Section / Live Event Center */}
       {torneiLive.length > 0 && (
-        <section className="pt-10 pb-6 px-4 sm:px-8 flex justify-center text-center relative z-20">
-          <div 
-            style={{ backgroundImage: "linear-gradient(135deg, #0d3d31 0%, #1e1b4b 100%)" }}
-            className="w-full max-w-xl rounded-[2.5rem] p-6 sm:p-8 text-center flex flex-col items-center justify-center gap-6 border border-white/10 shadow-2xl ring-8 ring-white/5 relative overflow-hidden group"
-          >
-            {/* Glow effect */}
-            <div className="absolute -inset-x-20 top-0 h-40 bg-emerald-500/10 blur-3xl group-hover:bg-emerald-500/20 transition-all duration-500"></div>
+        <section className="pt-10 pb-6 px-4 sm:px-8 flex flex-col items-center justify-center text-center relative z-20 gap-6">
+          {torneiLive.map((t, idx) => (
+            <div
+              key={idx}
+              style={{ backgroundImage: "linear-gradient(135deg, #0d3d31 0%, #1e1b4b 100%)" }}
+              className="w-full max-w-xl rounded-[2.5rem] p-6 sm:p-8 text-center flex flex-col items-center justify-center gap-6 border border-white/10 shadow-2xl ring-8 ring-white/5 relative overflow-hidden group"
+            >
+              {/* Glow effect */}
+              <div className="absolute -inset-x-20 top-0 h-40 bg-emerald-500/10 blur-3xl group-hover:bg-emerald-500/20 transition-all duration-500"></div>
 
-            <div className="relative z-10 flex flex-col items-center gap-4 w-full">
-
-              <div className="w-full space-y-4">
-                {torneiLive.map((t, idx) => (
-                  <div key={idx} className={idx > 0 ? "border-t border-white/10 pt-4 mt-4" : ""}>
-                    <h3 className="text-2xl sm:text-3xl font-black text-white leading-tight uppercase tracking-tight">
-                      {t.nome}
-                    </h3>
-                    <div className="flex flex-wrap justify-center gap-2 mt-3">
+              <div className="relative z-10 flex flex-col items-center gap-4 w-full">
+                <div className="w-full">
+                  <h3 className="text-2xl sm:text-3xl font-black text-white leading-tight uppercase tracking-tight">
+                    {t.nome}
+                  </h3>
+                  <div className="flex flex-wrap justify-center gap-2 mt-3">
+                    <span className="text-[10px] font-black text-gray-200 bg-white/10 px-3 py-1 rounded-lg uppercase tracking-wider">
+                      {t.categoria || 'Categoria Libera'}
+                    </span>
+                    <span className="text-[10px] font-black text-gray-200 bg-white/10 px-3 py-1 rounded-lg uppercase tracking-wider">
+                      📅 {t.data}
+                    </span>
+                    {t.location && (
                       <span className="text-[10px] font-black text-gray-200 bg-white/10 px-3 py-1 rounded-lg uppercase tracking-wider">
-                        {t.categoria || 'Categoria Libera'}
+                        📍 {t.location}
                       </span>
-                      <span className="text-[10px] font-black text-gray-200 bg-white/10 px-3 py-1 rounded-lg uppercase tracking-wider">
-                        📅 {t.data}
-                      </span>
-                      {t.location && (
-                        <span className="text-[10px] font-black text-gray-200 bg-white/10 px-3 py-1 rounded-lg uppercase tracking-wider">
-                          📍 {t.location}
-                        </span>
-                      )}
-                    </div>
+                    )}
                   </div>
-                ))}
-              </div>
+                </div>
 
-              <div className="w-full mt-4">
-                <a
-                  href={`/gironi?tour=${encodeURIComponent(torneiLive[0].nome)}`}
-                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-black text-xs text-[#0D3D31] bg-white hover:bg-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] uppercase tracking-widest w-full sm:w-auto"
-                >
-                  📊 Guarda Gironi e Tabellone
-                </a>
+                <div className="w-full mt-4">
+                  <a
+                    href={`/gironi?tour=${encodeURIComponent(t.nome)}`}
+                    className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-black text-xs text-[#0D3D31] bg-white hover:bg-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] uppercase tracking-widest w-full sm:w-auto"
+                  >
+                    📊 Guarda Gironi e Tabellone
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
+          ))}
         </section>
       )}
 
@@ -298,35 +296,35 @@ export default function Home() {
       {displaySponsors.length > 0 && (
         <section className="w-full bg-white/70 backdrop-blur-md border-t border-gray-200/40 py-4 mt-auto relative overflow-hidden">
           <div className="w-full text-center">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Ringraziamo i nostri partner 🤝</h3>
-            
-            <div 
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Powered by</h3>
+
+            <div
               className="relative overflow-hidden w-full select-none animate-marquee-paused"
-              style={{ 
-                maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", 
-                WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" 
+              style={{
+                maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
+                WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)"
               }}
             >
               <div className="animate-marquee flex items-center gap-16">
                 {doubleSponsors.map((sp, idx) => (
-                  <div 
-                    key={idx} 
+                  <div
+                    key={idx}
                     className="inline-flex items-center justify-center transition-all hover:scale-105 active:scale-95 duration-300 mx-4 shrink-0"
                   >
                     {sp.linkUrl ? (
                       <a href={sp.linkUrl} target="_blank" rel="noopener noreferrer" title={sp.nome} className="block cursor-pointer">
-                        <img 
-                          src={sp.logoUrl} 
-                          alt={sp.nome} 
-                          className="h-8 sm:h-10 w-auto object-contain opacity-95 hover:opacity-100 transition-all duration-300" 
+                        <img
+                          src={sp.logoUrl}
+                          alt={sp.nome}
+                          className="h-8 sm:h-10 w-auto object-contain opacity-95 hover:opacity-100 transition-all duration-300"
                         />
                       </a>
                     ) : (
-                      <img 
-                        src={sp.logoUrl} 
-                        alt={sp.nome} 
+                      <img
+                        src={sp.logoUrl}
+                        alt={sp.nome}
                         title={sp.nome}
-                        className="h-8 sm:h-10 w-auto object-contain opacity-95 hover:opacity-100 transition-all duration-300" 
+                        className="h-8 sm:h-10 w-auto object-contain opacity-95 hover:opacity-100 transition-all duration-300"
                       />
                     )}
                   </div>
