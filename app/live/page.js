@@ -544,14 +544,18 @@ export default function PortaleLiveMobile() {
     );
   };
 
-  // Get dynamic tree container height H
-  const getDynamicTreeHeight = () => {
-    if (!bracketConfig) return 800;
+  // Dimension helpers for dynamic scaling
+  const getDynamicTreeDimensions = () => {
+    if (!bracketConfig) return { w: 1050, h: 800 };
     const size = bracketConfig.bracketSize || 16;
-    return size === 32 ? 1440 : (size === 16 ? 800 : (size === 8 ? 440 : 260));
+    if (size === 32) return { w: 1300, h: 1920 };
+    if (size === 16) return { w: 1050, h: 960 };
+    if (size === 8) return { w: 800, h: 560 };
+    return { w: 550, h: 360 };
   };
 
-  const currentH = getDynamicTreeHeight();
+  const { w: currentW, h: currentH } = getDynamicTreeDimensions();
+  const sfHalfGap = currentH / 4;
 
   return (
     <main className="min-h-screen bg-[#f4f7f6] pb-24">
@@ -981,7 +985,7 @@ export default function PortaleLiveMobile() {
                 
                 {/* Horizontal scroll container for tree bracket */}
                 <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-x-auto pb-4 pt-6 px-4 no-scrollbar">
-                  <div className="flex gap-8 relative" style={{ minWidth: "900px", height: `${currentH}px` }}>
+                  <div className="flex gap-8 relative" style={{ minWidth: `${currentW}px`, height: `${currentH}px` }}>
                     
                     {/* 1. Round of 32 */}
                     {bracketConfig.bracketSize >= 32 && (
@@ -1045,7 +1049,6 @@ export default function PortaleLiveMobile() {
                           const matchNum = idx + 1;
                           const itemHeight = currentH / 2;
                           const center = (matchNum - 0.5) * itemHeight;
-                          const sfHalfGap = currentH / 4;
                           return (
                             <div key={idx} className="absolute left-0 right-4" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
                               {renderBracketCardPublic("sf", matchNum, `Semifinale ${matchNum}`)}

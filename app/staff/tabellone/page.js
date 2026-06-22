@@ -500,9 +500,7 @@ function TabelloneContent() {
   };
 
   // Helper for computing connecting lines in tree
-  const renderConnectorLine = (roundIndex, matchIndex, totalMatches) => {
-    // Height constant (1440px) matching grid container height
-    const containerHeight = 1440;
+  const renderConnectorLine = (roundIndex, matchIndex, totalMatches, containerHeight) => {
     const itemHeight = containerHeight / totalMatches;
     const center = (matchIndex - 0.5) * itemHeight;
 
@@ -551,6 +549,18 @@ function TabelloneContent() {
       </div>
     );
   };
+
+  // Dimension helpers for dynamic scaling
+  const getDynamicTreeDimensions = () => {
+    const size = bracketSize || 16;
+    if (size === 32) return { w: 1300, h: 1920 };
+    if (size === 16) return { w: 1050, h: 960 };
+    if (size === 8) return { w: 800, h: 560 };
+    return { w: 550, h: 360 };
+  };
+
+  const { w: currentW, h: currentH } = getDynamicTreeDimensions();
+  const sfHalfGap = currentH / 4;
 
   return (
     <main className="min-h-screen pb-20 bg-[#f8faff]">
@@ -624,7 +634,7 @@ function TabelloneContent() {
         ) : (
           <div className="bg-white border border-gray-100 rounded-[2.5rem] shadow-xl overflow-hidden p-6 md:p-10 relative">
             <div className="overflow-x-auto min-w-full pb-6 scrollbar-thin">
-              <div className="flex gap-8 relative select-none min-w-[900px] h-[1440px]">
+              <div className="flex gap-8 relative select-none" style={{ minWidth: `${currentW}px`, height: `${currentH}px` }}>
                 
                 {/* 1. Round of 32 */}
                 {bracketSize >= 32 && (
@@ -632,12 +642,12 @@ function TabelloneContent() {
                     <div className="text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 sticky top-0 bg-white z-20 mb-4 border-b">Sedicesimi</div>
                     {Array.from({ length: 16 }, (_, idx) => {
                       const matchNum = idx + 1;
-                      const itemHeight = 1440 / 16;
+                      const itemHeight = currentH / 16;
                       const center = (matchNum - 0.5) * itemHeight;
                       return (
                         <div key={idx} className="absolute left-0 right-4" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
                           {renderBracketMatchCard("r32", matchNum, `Gara ${matchNum}`)}
-                          {renderConnectorLine("r32", matchNum, 16)}
+                          {renderConnectorLine("r32", matchNum, 16, currentH)}
                         </div>
                       );
                     })}
@@ -650,12 +660,12 @@ function TabelloneContent() {
                     <div className="text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 sticky top-0 bg-white z-20 mb-4 border-b">Ottavi</div>
                     {Array.from({ length: 8 }, (_, idx) => {
                       const matchNum = idx + 1;
-                      const itemHeight = 1440 / 8;
+                      const itemHeight = currentH / 8;
                       const center = (matchNum - 0.5) * itemHeight;
                       return (
                         <div key={idx} className="absolute left-0 right-4" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
                           {renderBracketMatchCard("r16", matchNum, `Ottavi ${matchNum}`)}
-                          {renderConnectorLine("r16", matchNum, 8)}
+                          {renderConnectorLine("r16", matchNum, 8, currentH)}
                         </div>
                       );
                     })}
@@ -668,12 +678,12 @@ function TabelloneContent() {
                     <div className="text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 sticky top-0 bg-white z-20 mb-4 border-b">Quarti</div>
                     {Array.from({ length: 4 }, (_, idx) => {
                       const matchNum = idx + 1;
-                      const itemHeight = 1440 / 4;
+                      const itemHeight = currentH / 4;
                       const center = (matchNum - 0.5) * itemHeight;
                       return (
                         <div key={idx} className="absolute left-0 right-4" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
                           {renderBracketMatchCard("qf", matchNum, `Quarti ${matchNum}`)}
-                          {renderConnectorLine("qf", matchNum, 4)}
+                          {renderConnectorLine("qf", matchNum, 4, currentH)}
                         </div>
                       );
                     })}
@@ -686,25 +696,21 @@ function TabelloneContent() {
                     <div className="text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 sticky top-0 bg-white z-20 mb-4 border-b">Semifinali</div>
                     {Array.from({ length: 2 }, (_, idx) => {
                       const matchNum = idx + 1;
-                      const itemHeight = 1440 / 2;
+                      const itemHeight = currentH / 2;
                       const center = (matchNum - 0.5) * itemHeight;
                       return (
                         <div key={idx} className="absolute left-0 right-4" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
                           {renderBracketMatchCard("sf", matchNum, `Semifinale ${matchNum}`)}
                           <div className="absolute inset-0 pointer-events-none z-0">
-                            {/* SF to Final 1 horizontal segment */}
+                            {/* SF to Final 1 lines */}
                             <div className="absolute bg-gray-200" style={{ top: `${center}px`, right: "-16px", width: "16px", height: "2px", transform: "translateY(-50%)" }} />
-                            {/* SF to Final 1 vertical segment */}
-                            <div className="absolute bg-gray-200" style={{ top: `${idx === 0 ? center : center - 360}px`, right: "-16px", width: "2px", height: "360px" }} />
-                            {/* SF to Final 1 horizontal extension */}
-                            <div className="absolute bg-gray-200" style={{ top: `${360}px`, right: "-32px", width: "16px", height: "2px", transform: "translateY(-50%)" }} />
+                            <div className="absolute bg-gray-200" style={{ top: `${idx === 0 ? center : center - sfHalfGap}px`, right: "-16px", width: "2px", height: `${sfHalfGap}px` }} />
+                            <div className="absolute bg-gray-200" style={{ top: `${sfHalfGap}px`, right: "-32px", width: "16px", height: "2px", transform: "translateY(-50%)" }} />
 
-                            {/* SF to Final 3/4 horizontal segment */}
-                            <div className="absolute bg-gray-200" style={{ top: `${idx === 0 ? center : center}px`, right: "-24px", width: "8px", height: "2px", transform: "translateY(-50%)" }} />
-                            {/* SF to Final 3/4 vertical segment */}
-                            <div className="absolute bg-gray-200" style={{ top: `${idx === 0 ? center : center - 360}px`, right: "-24px", width: "2px", height: "360px" }} />
-                            {/* SF to Final 3/4 horizontal extension */}
-                            <div className="absolute bg-gray-200" style={{ top: `${1080}px`, right: "-32px", width: "8px", height: "2px", transform: "translateY(-50%)" }} />
+                            {/* SF to Final 3/4 lines */}
+                            <div className="absolute bg-gray-200" style={{ top: `${center}px`, right: "-24px", width: "8px", height: "2px", transform: "translateY(-50%)" }} />
+                            <div className="absolute bg-gray-200" style={{ top: `${idx === 0 ? center : center - sfHalfGap}px`, right: "-24px", width: "2px", height: `${sfHalfGap}px` }} />
+                            <div className="absolute bg-gray-200" style={{ top: `${sfHalfGap * 3}px`, right: "-32px", width: "8px", height: "2px", transform: "translateY(-50%)" }} />
                           </div>
                         </div>
                       );
@@ -717,13 +723,13 @@ function TabelloneContent() {
                   <div className="text-[10px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-2 sticky top-0 bg-white z-20 mb-4 border-b">Finali</div>
                   
                   {/* Final 1st Place */}
-                  <div className="absolute left-0 right-0" style={{ top: "360px", transform: "translateY(-50%)" }}>
+                  <div className="absolute left-0 right-0" style={{ top: `${currentH / 4}px`, transform: "translateY(-50%)" }}>
                     <div className="text-[10px] font-black text-yellow-600 uppercase tracking-widest text-center mb-2 border-b border-yellow-600/10 pb-1">Finalissima 🥇</div>
                     {renderBracketMatchCard("f", 1, "1°/2° Posto")}
                   </div>
 
                   {/* Final 3rd Place */}
-                  <div className="absolute left-0 right-0" style={{ top: "1080px", transform: "translateY(-50%)" }}>
+                  <div className="absolute left-0 right-0" style={{ top: `${(currentH / 4) * 3}px`, transform: "translateY(-50%)" }}>
                     <div className="text-[10px] font-black text-amber-700 uppercase tracking-widest text-center mb-2 border-b border-amber-700/10 pb-1">Finale 3° Posto 🥉</div>
                     {renderBracketMatchCard("f", 2, "3°/4° Posto")}
                   </div>
