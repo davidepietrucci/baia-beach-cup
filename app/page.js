@@ -160,32 +160,29 @@ export default function Home() {
             style={{ backgroundImage: "linear-gradient(135deg, #1e1b4b 0%, #3b0764 100%)" }} 
             className="rounded-[2.5rem] p-6 sm:p-8 text-center flex flex-col items-center justify-center gap-5 border border-white/10 shadow-2xl ring-8 ring-white/5"
           >
-            <span className="uppercase tracking-widest text-sm sm:text-base text-[#fbbf24] font-black flex items-center gap-2">
+            <span className="uppercase tracking-widest text-xs sm:text-base text-[#fbbf24] font-black flex items-center gap-2">
               ⚡ {countdownData.label || "Inizio Prossimo Torneo"}
             </span>
-            <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+            <div className="flex items-center justify-center gap-1.5 sm:gap-3">
               {/* Days */}
-              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/10 min-w-[70px] sm:min-w-[80px] shadow-lg">
-                <span className="text-2xl sm:text-3xl font-black text-white font-mono leading-none">{timeLeft.days}</span>
-                <span className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Giorni</span>
+              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-2.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl border border-white/10 min-w-[65px] sm:min-w-[80px] shadow-lg">
+                <span className="text-xl sm:text-3xl font-black text-white font-mono leading-none">{timeLeft.days}</span>
+                <span className="text-[9px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Giorni</span>
               </div>
-              <span className="text-lg sm:text-2xl font-black text-white/30 self-center -mt-4">:</span>
               {/* Hours */}
-              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/10 min-w-[70px] sm:min-w-[80px] shadow-lg">
-                <span className="text-2xl sm:text-3xl font-black text-white font-mono leading-none">{timeLeft.hours}</span>
-                <span className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Ore</span>
+              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-2.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl border border-white/10 min-w-[65px] sm:min-w-[80px] shadow-lg">
+                <span className="text-xl sm:text-3xl font-black text-white font-mono leading-none">{timeLeft.hours}</span>
+                <span className="text-[9px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Ore</span>
               </div>
-              <span className="text-lg sm:text-2xl font-black text-white/30 self-center -mt-4">:</span>
               {/* Minutes */}
-              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/10 min-w-[70px] sm:min-w-[80px] shadow-lg">
-                <span className="text-2xl sm:text-3xl font-black text-white font-mono leading-none">{timeLeft.minutes}</span>
-                <span className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Minuti</span>
+              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-2.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl border border-white/10 min-w-[65px] sm:min-w-[80px] shadow-lg">
+                <span className="text-xl sm:text-3xl font-black text-white font-mono leading-none">{timeLeft.minutes}</span>
+                <span className="text-[9px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Minuti</span>
               </div>
-              <span className="text-lg sm:text-2xl font-black text-white/30 self-center -mt-4">:</span>
               {/* Seconds */}
-              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/10 min-w-[70px] sm:min-w-[80px] shadow-lg">
-                <span className="text-2xl sm:text-3xl font-black text-red-400 font-mono leading-none animate-pulse">{timeLeft.seconds}</span>
-                <span className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Secondi</span>
+              <div className="flex flex-col items-center bg-white/10 backdrop-blur-md px-2.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl border border-white/10 min-w-[65px] sm:min-w-[80px] shadow-lg">
+                <span className="text-xl sm:text-3xl font-black text-red-400 font-mono leading-none animate-pulse">{timeLeft.seconds}</span>
+                <span className="text-[9px] sm:text-xs uppercase tracking-widest text-gray-300 font-bold mt-1.5">Secondi</span>
               </div>
             </div>
           </div>
@@ -209,50 +206,57 @@ export default function Home() {
         </a>
       </div>
 
-      {/* Hero Section */}
-      <section className="py-20 px-4 sm:px-8 flex justify-center text-center">
-        <div className="max-w-3xl flex flex-col items-center">
+      {/* Hero Section / Live Event Center */}
+      {torneiLive.length > 0 && (
+        <section className="pt-10 pb-6 px-4 sm:px-8 flex justify-center text-center relative z-20">
+          <div 
+            style={{ backgroundImage: "linear-gradient(135deg, #0d3d31 0%, #1e1b4b 100%)" }}
+            className="w-full max-w-xl rounded-[2.5rem] p-6 sm:p-8 text-center flex flex-col items-center justify-center gap-6 border border-white/10 shadow-2xl ring-8 ring-white/5 relative overflow-hidden group"
+          >
+            {/* Glow effect */}
+            <div className="absolute -inset-x-20 top-0 h-40 bg-emerald-500/10 blur-3xl group-hover:bg-emerald-500/20 transition-all duration-500"></div>
 
+            <div className="relative z-10 flex flex-col items-center gap-4 w-full">
+              <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-4 py-1.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Diretta Live • In Corso 🔴
+              </span>
 
-          {torneiLive.length > 0 && (
-            <div className="w-full max-w-xl bg-white rounded-3xl p-6 border-2 border-red-500/30 shadow-xl flex flex-col items-center gap-6 mt-2 ring-8 ring-red-500/5">
-              <div className="flex items-center gap-2 px-3.5 py-1 bg-red-100 text-red-800 text-xs font-black rounded-full uppercase tracking-wider">
-                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                Torneo in Corso 🔴
-              </div>
-              
-              <div className="w-full flex flex-col gap-6 divide-y divide-gray-100">
+              <div className="w-full space-y-4">
                 {torneiLive.map((t, idx) => (
-                  <div key={idx} className={`w-full text-center flex flex-col items-center ${idx > 0 ? "pt-6" : ""}`}>
-                    <h3 className="text-2xl sm:text-3xl font-black text-[#0D3D31] leading-tight mb-2">
+                  <div key={idx} className={idx > 0 ? "border-t border-white/10 pt-4 mt-4" : ""}>
+                    <h3 className="text-2xl sm:text-3xl font-black text-white leading-tight uppercase tracking-tight">
                       {t.nome}
                     </h3>
-                    <div className="flex flex-wrap justify-center gap-2 mb-6">
-                      <span className="text-xs font-bold text-gray-500 bg-gray-50 inline-block px-3 py-1 rounded-lg">
+                    <div className="flex flex-wrap justify-center gap-2 mt-3">
+                      <span className="text-[10px] font-black text-gray-200 bg-white/10 px-3 py-1 rounded-lg uppercase tracking-wider">
                         {t.categoria || 'Categoria Libera'}
                       </span>
-                      <span className="text-xs font-bold text-gray-500 bg-gray-50 inline-block px-3 py-1 rounded-lg">
+                      <span className="text-[10px] font-black text-gray-200 bg-white/10 px-3 py-1 rounded-lg uppercase tracking-wider">
                         📅 {t.data}
                       </span>
                       {t.location && (
-                        <span className="text-xs font-semibold text-gray-400 bg-gray-50 inline-block px-3 py-1 rounded-lg">
+                        <span className="text-[10px] font-black text-gray-200 bg-white/10 px-3 py-1 rounded-lg uppercase tracking-wider">
                           📍 {t.location}
                         </span>
                       )}
                     </div>
-                    <a
-                      href={`/gironi?tour=${encodeURIComponent(t.nome)}`}
-                      className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-black text-sm text-white bg-red-600 hover:bg-red-700 transition-all shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] text-center flex items-center justify-center gap-2"
-                    >
-                      🏆 SEGUI IN DIRETTA
-                    </a>
                   </div>
                 ))}
               </div>
+
+              <div className="w-full mt-4">
+                <a
+                  href={`/gironi?tour=${encodeURIComponent(torneiLive[0].nome)}`}
+                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-black text-xs text-[#0D3D31] bg-white hover:bg-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] uppercase tracking-widest w-full sm:w-auto"
+                >
+                  📊 Guarda Gironi e Tabellone
+                </a>
+              </div>
             </div>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* Sezione Tornei Conclusi */}
       {torneiConclusi.length > 0 && (
