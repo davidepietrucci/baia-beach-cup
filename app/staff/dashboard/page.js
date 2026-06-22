@@ -426,32 +426,34 @@ export default function StaffDashboard() {
 
         {/* Gestione Dati */}
         {role === "admin" && (
-          <>
-            <div className="mt-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full -mr-16 -mt-16"></div>
-              <h3 className="text-xl md:text-2xl font-black mb-6 uppercase tracking-tight text-[#0D3D31] relative z-10">Gestione Database ⚙️</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
-                <button 
-                  onClick={handleResetData}
-                  className="flex items-center justify-between p-5 bg-red-50 hover:bg-red-600 hover:text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm border border-red-100 text-red-700"
-                >
-                  Resetta Database (Vuoto) <span className="text-xl group-hover:scale-110 transition-transform">🗑️</span>
-                </button>
-                <button 
-                  onClick={handleLoadDemoData}
-                  className="flex items-center justify-between p-5 bg-blue-50 hover:bg-blue-600 hover:text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm border border-blue-100 text-blue-700"
-                >
-                  Carica Dati Demo <span className="text-xl group-hover:scale-110 transition-transform">💾</span>
-                </button>
-                <button 
-                  onClick={handleLoad24TeamsDemo}
-                  className="flex items-center justify-between p-5 bg-green-50 hover:bg-green-600 hover:text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm border border-green-100 text-green-700"
-                >
-                  Carica Torneo 24 Squadre <span className="text-xl group-hover:scale-110 transition-transform">🏆</span>
-                </button>
-              </div>
+          <div className="mt-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full -mr-16 -mt-16"></div>
+            <h3 className="text-xl md:text-2xl font-black mb-6 uppercase tracking-tight text-[#0D3D31] relative z-10">Gestione Database ⚙️</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
+              <button 
+                onClick={handleResetData}
+                className="flex items-center justify-between p-5 bg-red-50 hover:bg-red-600 hover:text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm border border-red-100 text-red-700"
+              >
+                Resetta Database (Vuoto) <span className="text-xl group-hover:scale-110 transition-transform">🗑️</span>
+              </button>
+              <button 
+                onClick={handleLoadDemoData}
+                className="flex items-center justify-between p-5 bg-blue-50 hover:bg-blue-600 hover:text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm border border-blue-100 text-blue-700"
+              >
+                Carica Dati Demo <span className="text-xl group-hover:scale-110 transition-transform">💾</span>
+              </button>
+              <button 
+                onClick={handleLoad24TeamsDemo}
+                className="flex items-center justify-between p-5 bg-green-50 hover:bg-green-600 hover:text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm border border-green-100 text-green-700"
+              >
+                Carica Torneo 24 Squadre <span className="text-xl group-hover:scale-110 transition-transform">🏆</span>
+              </button>
             </div>
+          </div>
+        )}
 
+        {(role === "admin" || role === "staff") && (
+          <>
             <div className="mt-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
               <h3 className="text-xl md:text-2xl font-black mb-2 uppercase tracking-tight text-[#0D3D31]">Configurazione Countdown ⏱️</h3>
               <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mb-6">Imposta il timer mostrato nella parte superiore della homepage</p>
