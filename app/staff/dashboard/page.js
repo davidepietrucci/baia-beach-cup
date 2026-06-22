@@ -418,10 +418,20 @@ export default function StaffDashboard() {
                 Visualizza Teams <span className="text-xl group-hover:translate-x-2 transition-transform">👥</span>
               </button>
             )}
+            <button onClick={() => router.push('/staff/gironi')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+              Gironi <span className="text-xl group-hover:translate-x-2 transition-transform">🏐</span>
+            </button>
+            <button onClick={() => router.push('/staff/partite')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+              Partite <span className="text-xl group-hover:translate-x-2 transition-transform">⚔️</span>
+            </button>
+            <button onClick={() => router.push('/staff/tabellone')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+              Tabellone <span className="text-xl group-hover:translate-x-2 transition-transform">🌳</span>
+            </button>
             <button onClick={() => router.push('/staff/pagamenti')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#0D3D31] hover:text-white text-[#0D3D31] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
               Pagamenti <span className="text-xl group-hover:translate-x-2 transition-transform">💰</span>
             </button>
           </div>
+
         </div>
 
         {/* Gestione Dati */}
