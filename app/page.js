@@ -119,7 +119,7 @@ export default function Home() {
       <div
         className="fixed inset-0 -z-10"
         style={{
-          backgroundImage: "linear-gradient(rgba(244, 247, 246, 0.90), rgba(244, 247, 246, 0.90)), url('/bg_main.jpg')",
+          backgroundImage: "url('/bg_main.jpg')",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundPosition: `center ${scrollProgress * 100}%`
@@ -202,26 +202,25 @@ export default function Home() {
           {torneiLive.map((t, idx) => (
             <div
               key={idx}
-              style={{ backgroundImage: "linear-gradient(135deg, #295dab 0%, #172554 100%)" }}
-              className="w-full max-w-xl rounded-[2.5rem] p-6 sm:p-8 text-center flex flex-col items-center justify-center gap-6 border border-white/10 shadow-2xl ring-8 ring-white/5 relative overflow-hidden group"
+              className="w-full max-w-xl rounded-[2.5rem] p-6 sm:p-8 text-center flex flex-col items-center justify-center gap-6 bg-white/95 backdrop-blur-md border border-gray-200/50 shadow-2xl relative overflow-hidden group"
             >
               {/* Glow effect */}
-              <div className="absolute -inset-x-20 top-0 h-40 bg-blue-500/10 blur-3xl group-hover:bg-blue-500/20 transition-all duration-500"></div>
+              <div className="absolute -inset-x-20 top-0 h-40 bg-blue-500/5 blur-3xl group-hover:bg-blue-500/10 transition-all duration-500"></div>
 
               <div className="relative z-10 flex flex-col items-center gap-4 w-full">
                 <div className="w-full">
-                  <h3 className="text-2xl sm:text-3xl font-black text-white leading-tight uppercase tracking-tight">
+                  <h3 className="text-2xl sm:text-3xl font-black text-[#295dab] leading-tight uppercase tracking-tight">
                     {t.nome}
                   </h3>
                   <div className="flex flex-wrap justify-center gap-2 mt-3">
-                    <span className="text-[10px] font-black text-gray-200 bg-white/10 px-3 py-1 rounded-lg uppercase tracking-wider">
+                    <span className="text-[10px] font-black text-[#295dab] bg-blue-50/70 border border-blue-100/80 px-3 py-1 rounded-lg uppercase tracking-wider">
                       {t.categoria || 'Categoria Libera'}
                     </span>
-                    <span className="text-[10px] font-black text-gray-200 bg-white/10 px-3 py-1 rounded-lg uppercase tracking-wider">
+                    <span className="text-[10px] font-black text-[#295dab] bg-blue-50/70 border border-blue-100/80 px-3 py-1 rounded-lg uppercase tracking-wider">
                       {t.data}
                     </span>
                     {t.location && (
-                      <span className="text-[10px] font-black text-gray-200 bg-white/10 px-3 py-1 rounded-lg uppercase tracking-wider">
+                      <span className="text-[10px] font-black text-[#295dab] bg-blue-50/70 border border-blue-100/80 px-3 py-1 rounded-lg uppercase tracking-wider">
                         📍 {t.location}
                       </span>
                     )}
@@ -231,7 +230,7 @@ export default function Home() {
                 <div className="w-full mt-4">
                   <a
                     href={`/gironi?tour=${encodeURIComponent(t.nome)}`}
-                    className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-black text-xs text-[#295dab] bg-white hover:bg-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] uppercase tracking-widest w-full sm:w-auto"
+                    className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-black text-xs text-white bg-[#295dab] hover:bg-blue-800 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] uppercase tracking-widest w-full sm:w-auto"
                   >
                     Guarda Gironi e Tabellone
                   </a>
