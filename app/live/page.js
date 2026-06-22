@@ -46,7 +46,6 @@ const formatPlayerName = (fullName) => {
     return cleanName;
   }
 
-  // Se contiene già un punto o l'ultima parte è una singola lettera, è già formattato
   const parts = cleanName.split(/\s+/);
   const lastPart = parts[parts.length - 1];
   if (cleanName.includes(".") || lastPart.length === 1 || (lastPart.length === 2 && lastPart.endsWith("."))) {
@@ -71,7 +70,6 @@ export default function PortaleLiveMobile() {
   const [config, setConfig] = useState(null);
   const [bracketConfig, setBracketConfig] = useState(null);
   const [activeTab, setActiveTab] = useState("gironi"); // "gironi", "partite", "classifica", "finali"
-  const [fasiFinaliCategory, setFasiFinaliCategory] = useState("gold"); // "gold" or "silver"
   const [viewMode, setViewMode] = useState("cronologico"); // "cronologico" or "girone"
   const [loading, setLoading] = useState(true);
 
@@ -86,7 +84,6 @@ export default function PortaleLiveMobile() {
       if (urlTour && parsed.some((t) => t.nome === urlTour)) {
         setSelectedTorneo(urlTour);
       } else {
-        // Cerca tornei attivi per primi
         const attivi = parsed.filter(
           (t) => t.stato === "Iscrizioni Aperte" || t.stato === "In Programmazione"
         );
@@ -138,7 +135,7 @@ export default function PortaleLiveMobile() {
   };
 
   const parseTimeToMinutes = (timeStr) => {
-    if (!timeStr) return Infinity; // Put untimed matches at the end
+    if (!timeStr) return Infinity;
     const parts = timeStr.trim().split(":");
     if (parts.length < 2) return Infinity;
     const hours = parseInt(parts[0], 10);
@@ -180,75 +177,22 @@ export default function PortaleLiveMobile() {
     return all;
   };
 
-  // 4. Calcola la lista dei gironi intermedi (Gold/Silver) se presenti
-  const getIntermediateGroupsList = () => {
-    const list = [];
-    if (
-      bracketConfig &&
-      bracketConfig.phaseType === "gold_silver" &&
-      bracketConfig.subPhaseType === "groups"
-    ) {
-      let goldSlots = 0;
-      let silverSlots = 0;
-      if (config && config.numGironi) {
-        for (let i = 0; i < config.numGironi; i++) {
-          const gid = String.fromCharCode(65 + i);
-          const count = config.teamCounts?.[gid] || 0;
-          goldSlots += Math.min(2, count);
-          silverSlots += Math.min(2, Math.max(0, count - 2));
-        }
-      }
-      const autoNumGoldGironi = goldSlots > 4 ? 2 : 1;
-      const autoNumSilverGironi = silverSlots > 4 ? 2 : 1;
-
-      const numGoldGironi = bracketConfig.numGoldGironi !== undefined ? bracketConfig.numGoldGironi : autoNumGoldGironi;
-      const numSilverGironi = bracketConfig.numSilverGironi !== undefined ? bracketConfig.numSilverGironi : autoNumSilverGironi;
-
-      for (let i = 0; i < numGoldGironi; i++) {
-        const letter = String.fromCharCode(65 + i);
-        list.push({ id: `gold-${letter}`, label: `Gold ${letter} 🏆`, type: "intermedio", category: "gold" });
-      }
-      for (let i = 0; i < numSilverGironi; i++) {
-        const letter = String.fromCharCode(65 + i);
-        list.push({ id: `silver-${letter}`, label: `Silver ${letter} 🥈`, type: "intermedio", category: "silver" });
-      }
-    }
-    return list;
-  };
-
-  // Logica per il calendario incontri dei gironi
-  const getSchedule = (numTeams, gironeId, assignments = {}) => {
-    return getScheduleShared(numTeams, gironeId, assignments, config?.gironeTypes, config?.gironeSets, config?.matchMetadata);
-  };
-
-  // Fix fontName typo
   const getScheduleFixed = (numTeams, gironeId, assignments = {}) => {
     return getScheduleShared(numTeams, gironeId, assignments, config?.gironeTypes, config?.gironeSets, config?.matchMetadata);
   };
 
   const getGroupTeams = (groupId, type) => {
-    if (type === "intermedio") {
-      if (!bracketConfig || !bracketConfig.bracketAssignments) return [];
-      const assignments = bracketConfig.bracketAssignments;
-      return [
-        assignments[`${groupId}-0`],
-        assignments[`${groupId}-1`],
-        assignments[`${groupId}-2`],
-        assignments[`${groupId}-3`],
-      ].filter((t) => t && t !== "—" && t !== "Slot Libero");
-    } else {
-      if (!config || !config.gironeAssignments || !config.gironeAssignments[groupId]) return [];
-      const assignments = config.gironeAssignments[groupId];
-      const teamCount = config.teamCounts[groupId] || 0;
-      const list = [];
-      for (let i = 0; i < teamCount; i++) {
-        const name = assignments[i];
-        if (name && name !== "—" && name !== "Slot Libero") {
-          list.push(name);
-        }
+    if (!config || !config.gironeAssignments || !config.gironeAssignments[groupId]) return [];
+    const assignments = config.gironeAssignments[groupId];
+    const teamCount = config.teamCounts[groupId] || 0;
+    const list = [];
+    for (let i = 0; i < teamCount; i++) {
+      const name = assignments[i];
+      if (name && name !== "—" && name !== "Slot Libero") {
+        list.push(name);
       }
-      return list;
     }
+    return list;
   };
 
   const calculateRanking = (groupId) => {
@@ -333,351 +277,7 @@ export default function PortaleLiveMobile() {
     });
   };
 
-  const getIntermediateGroupMatches = (groupKey) => {
-    if (!bracketConfig || !bracketConfig.bracketAssignments) return [];
-    const assignments = bracketConfig.bracketAssignments;
-    const metadata = bracketConfig.bracketMetadata || {};
-
-    const isGold = groupKey.startsWith("gold");
-    const numTeams = isGold 
-      ? (bracketConfig.teamsPerGoldGirone || 4) 
-      : (bracketConfig.teamsPerSilverGirone || 4);
-
-    const teams = [];
-    for (let i = 0; i < numTeams; i++) {
-      teams.push(assignments[`${groupKey}-${i}`]);
-    }
-
-    const getRoundRobinPairs = (n) => {
-      const pairs = [];
-      let count = 1;
-      for (let i = 0; i < n; i++) {
-        for (let j = i + 1; j < n; j++) {
-          pairs.push({ l: i, r: j, label: `Gara ${count++}` });
-        }
-      }
-      return pairs;
-    };
-
-    const matchPairs = getRoundRobinPairs(numTeams);
-
-    return matchPairs
-      .map((pair, idx) => {
-        const teamL = teams[pair.l];
-        const teamR = teams[pair.r];
-        const mKey = `${groupKey}-m${idx}`;
-        return {
-          label: pair.label,
-          left: teamL,
-          right: teamR,
-          meta: metadata[mKey] || {},
-        };
-      })
-      .filter(
-        (m) =>
-          m.left &&
-          m.left !== "—" &&
-          m.left !== "Slot Libero" &&
-          m.right &&
-          m.right !== "—" &&
-          m.right !== "Slot Libero"
-      );
-  };
-
-  // Restituisce la lista di partite playoff lineare
-  const getPlayoffMatchesList = () => {
-    if (!bracketConfig || !bracketConfig.bracketAssignments) return [];
-    const assignments = bracketConfig.bracketAssignments;
-    const metadata = bracketConfig.bracketMetadata || {};
-    const list = [];
-
-    const getMatchData = (id, label) => {
-      const left = assignments[`${id}-L`] || "TBD";
-      const right = assignments[`${id}-R`] || "TBD";
-      const meta = metadata[id] || {};
-      return { id, label, left, right, meta };
-    };
-
-    const isMatchCompleted = (matchId) => {
-      const left = assignments[`${matchId}-L`];
-      const right = assignments[`${matchId}-R`];
-      if (!left && !right) return false;
-      if (left === "—" || right === "—") return true;
-      if (!left || !right || left.startsWith("TBD") || right.startsWith("TBD")) return false;
-      if (left === "Slot Libero" || right === "Slot Libero") return false;
-      const meta = metadata[matchId] || {};
-      return meta.scoreL !== undefined && meta.scoreL !== "" && meta.scoreR !== undefined && meta.scoreR !== "";
-    };
-
-    const isRoundCompleted = (matchIds) => {
-      return matchIds.every(id => isMatchCompleted(id));
-    };
-
-    const getRoundRobinPairs = (numTeams) => {
-      if (!numTeams || numTeams < 2) return [];
-      const pairs = [];
-      let count = 1;
-      for (let i = 0; i < numTeams; i++) {
-        for (let j = i + 1; j < numTeams; j++) {
-          pairs.push({ l: i, r: j, label: `Gara ${count++}` });
-        }
-      }
-      return pairs;
-    };
-
-    const areIntermediateGroupsCompleted = (prefix, numGroups, teamsPerGroup) => {
-      for (let g = 0; g < numGroups; g++) {
-        const letter = String.fromCharCode(65 + g);
-        const groupKey = `${prefix}-${letter}`;
-        const numTeams = teamsPerGroup || 4;
-        const pairs = getRoundRobinPairs(numTeams);
-        for (let m = 0; m < pairs.length; m++) {
-          const pair = pairs[m];
-          const teamL = assignments[`${groupKey}-${pair.l}`];
-          const teamR = assignments[`${groupKey}-${pair.r}`];
-          if (!teamL || teamL === "—" || teamL === "Slot Libero" || !teamR || teamR === "—" || teamR === "Slot Libero") {
-            continue;
-          }
-          const matchId = `${groupKey}-m${m}`;
-          const meta = metadata[matchId] || {};
-          const hasScore = meta.scoreL !== undefined && meta.scoreL !== "" && meta.scoreR !== undefined && meta.scoreR !== "";
-          if (!hasScore) return false;
-        }
-      }
-      return true;
-    };
-
-    if (bracketConfig.phaseType === "gold_silver") {
-      const isGroups = bracketConfig.subPhaseType === "groups";
-      if (isGroups) {
-        // --- GROUPS FLOW ---
-        let goldSlots = 0;
-        let silverSlots = 0;
-        if (config && config.numGironi) {
-          for (let i = 0; i < config.numGironi; i++) {
-            const gid = String.fromCharCode(65 + i);
-            const count = config.teamCounts?.[gid] || 0;
-            goldSlots += Math.min(2, count);
-            silverSlots += Math.min(2, Math.max(0, count - 2));
-          }
-        }
-        const autoNumGoldGironi = goldSlots > 4 ? 2 : 1;
-        const autoNumSilverGironi = silverSlots > 4 ? 2 : 1;
-
-        const numGoldGironi = bracketConfig.numGoldGironi !== undefined && bracketConfig.numGoldGironi !== 0 ? bracketConfig.numGoldGironi : autoNumGoldGironi;
-        const numSilverGironi = bracketConfig.numSilverGironi !== undefined && bracketConfig.numSilverGironi !== 0 ? bracketConfig.numSilverGironi : autoNumSilverGironi;
-        const teamsPerGoldGirone = bracketConfig.teamsPerGoldGirone || 4;
-        const teamsPerSilverGirone = bracketConfig.teamsPerSilverGirone || 4;
-
-        const goldGroupsDone = areIntermediateGroupsCompleted("gold", numGoldGironi, teamsPerGoldGirone);
-        const goldSemifinalsDone = isRoundCompleted(["gold-s1", "gold-s2"]);
-
-        const silverGroupsDone = areIntermediateGroupsCompleted("silver", numSilverGironi, teamsPerSilverGirone);
-        const silverSemifinalsDone = isRoundCompleted(["silver-s1", "silver-s2"]);
-
-        if (goldGroupsDone) {
-          list.push({
-            title: "Semifinali Gold 🏆",
-            matches: [getMatchData("gold-s1", "Semifinale 1"), getMatchData("gold-s2", "Semifinale 2")],
-          });
-        }
-        if (goldGroupsDone && goldSemifinalsDone) {
-          list.push({
-            title: "Finali Gold 🏆",
-            matches: [getMatchData("gold-f3", "Finale 3°/4° Posto"), getMatchData("gold-f1", "Finale 1°/2° Posto")],
-          });
-        }
-
-        if (silverGroupsDone) {
-          list.push({
-            title: "Semifinali Silver 🥈",
-            matches: [getMatchData("silver-s1", "Semifinale 1"), getMatchData("silver-s2", "Semifinale 2")],
-          });
-        }
-        if (silverGroupsDone && silverSemifinalsDone) {
-          list.push({
-            title: "Finali Silver 🥈",
-            matches: [getMatchData("silver-f3", "Finale 3°/4° Posto"), getMatchData("silver-f1", "Finale 1°/2° Posto")],
-          });
-        }
-      } else {
-        // --- DIRECT FLOW ---
-        const tToGold = bracketConfig.teamsToGold || 8;
-        const tToSilver = bracketConfig.teamsToSilver || 8;
-
-        // Gold round matches definition
-        const goldOttaviMatches = tToGold === 16 
-          ? ["gold-o1", "gold-o2", "gold-o3", "gold-o4", "gold-o5", "gold-o6", "gold-o7", "gold-o8"]
-          : tToGold === 12 
-          ? ["gold-o1", "gold-o2", "gold-o3", "gold-o4"]
-          : [];
-        const goldQuartiMatches = ["gold-q1", "gold-q2", "gold-q3", "gold-q4"];
-        const goldSemifinaliMatches = ["gold-s1", "gold-s2"];
-
-        // Silver round matches definition
-        const silverOttaviMatches = tToSilver === 16 
-          ? ["silver-o1", "silver-o2", "silver-o3", "silver-o4", "silver-o5", "silver-o6", "silver-o7", "silver-o8"]
-          : tToSilver === 12 
-          ? ["silver-o1", "silver-o2", "silver-o3", "silver-o4"]
-          : [];
-        const silverQuartiMatches = ["silver-q1", "silver-q2", "silver-q3", "silver-q4"];
-        const silverSemifinaliMatches = ["silver-s1", "silver-s2"];
-
-        // Completion status
-        const goldOttaviDone = goldOttaviMatches.length === 0 || isRoundCompleted(goldOttaviMatches);
-        const goldQuartiDone = isRoundCompleted(goldQuartiMatches);
-        const goldSemifinaliDone = isRoundCompleted(goldSemifinaliMatches);
-
-        const silverOttaviDone = silverOttaviMatches.length === 0 || isRoundCompleted(silverOttaviMatches);
-        const silverQuartiDone = isRoundCompleted(silverQuartiMatches);
-        const silverSemifinaliDone = isRoundCompleted(silverSemifinaliMatches);
-
-        // Gold additions
-        if (tToGold === 12 || tToGold === 16) {
-          list.push({
-            title: "Ottavi Gold 🏆",
-            matches: tToGold === 16 
-              ? [
-                  getMatchData("gold-o1", "Ottavo 1"), getMatchData("gold-o2", "Ottavo 2"),
-                  getMatchData("gold-o3", "Ottavo 3"), getMatchData("gold-o4", "Ottavo 4"),
-                  getMatchData("gold-o5", "Ottavo 5"), getMatchData("gold-o6", "Ottavo 6"),
-                  getMatchData("gold-o7", "Ottavo 7"), getMatchData("gold-o8", "Ottavo 8")
-                ]
-              : [
-                  getMatchData("gold-o1", "Ottavo 1"), getMatchData("gold-o2", "Ottavo 2"),
-                  getMatchData("gold-o3", "Ottavo 3"), getMatchData("gold-o4", "Ottavo 4")
-                ]
-          });
-        }
-
-        if (tToGold >= 8 && goldOttaviDone) {
-          list.push({
-            title: "Quarti Gold 🏆",
-            matches: [
-              getMatchData("gold-q1", "Quarto 1"), getMatchData("gold-q2", "Quarto 2"),
-              getMatchData("gold-q3", "Quarto 3"), getMatchData("gold-q4", "Quarto 4")
-            ]
-          });
-        }
-
-        const canShowGoldSemifinali = tToGold === 4 || (tToGold >= 8 && goldOttaviDone && goldQuartiDone);
-        if (canShowGoldSemifinali) {
-          list.push({
-            title: "Semifinali Gold 🏆",
-            matches: [getMatchData("gold-s1", "Semifinale 1"), getMatchData("gold-s2", "Semifinale 2")],
-          });
-        }
-
-        if (canShowGoldSemifinali && goldSemifinaliDone) {
-          list.push({
-            title: "Finali Gold 🏆",
-            matches: [getMatchData("gold-f3", "Finale 3°/4° Posto"), getMatchData("gold-f1", "Finale 1°/2° Posto")],
-          });
-        }
-
-        // Silver additions
-        if (tToSilver === 12 || tToSilver === 16) {
-          list.push({
-            title: "Ottavi Silver 🥈",
-            matches: tToSilver === 16 
-              ? [
-                  getMatchData("silver-o1", "Ottavo 1"), getMatchData("silver-o2", "Ottavo 2"),
-                  getMatchData("silver-o3", "Ottavo 3"), getMatchData("silver-o4", "Ottavo 4"),
-                  getMatchData("silver-o5", "Ottavo 5"), getMatchData("silver-o6", "Ottavo 6"),
-                  getMatchData("silver-o7", "Ottavo 7"), getMatchData("silver-o8", "Ottavo 8")
-                ]
-              : [
-                  getMatchData("silver-o1", "Ottavo 1"), getMatchData("silver-o2", "Ottavo 2"),
-                  getMatchData("silver-o3", "Ottavo 3"), getMatchData("silver-o4", "Ottavo 4")
-                ]
-          });
-        }
-
-        if (tToSilver >= 8 && silverOttaviDone) {
-          list.push({
-            title: "Quarti Silver 🥈",
-            matches: [
-              getMatchData("silver-q1", "Quarto 1"), getMatchData("silver-q2", "Quarto 2"),
-              getMatchData("silver-q3", "Quarto 3"), getMatchData("silver-q4", "Quarto 4")
-            ]
-          });
-        }
-
-        const canShowSilverSemifinali = tToSilver === 4 || (tToSilver >= 8 && silverOttaviDone && silverQuartiDone);
-        if (canShowSilverSemifinali) {
-          list.push({
-            title: "Semifinali Silver 🥈",
-            matches: [getMatchData("silver-s1", "Semifinale 1"), getMatchData("silver-s2", "Semifinale 2")],
-          });
-        }
-
-        if (canShowSilverSemifinali && silverSemifinaliDone) {
-          list.push({
-            title: "Finali Silver 🥈",
-            matches: [getMatchData("silver-f3", "Finale 3°/4° Posto"), getMatchData("silver-f1", "Finale 1°/2° Posto")],
-          });
-        }
-      }
-    } else {
-      // Doppia Eliminazione
-      const wbQuarti = ["wb-q1", "wb-q2", "wb-q3", "wb-q4"];
-      const wbSemifinali = ["wb-s1", "wb-s2"];
-      const wbFinale = ["wb-f"];
-      const lbSemifinali = ["lb-s1", "lb-s2"];
-      const lbFinale = ["lb-f"];
-
-      const wbQuartiDone = bracketConfig.bracketSize !== 8 || isRoundCompleted(wbQuarti);
-      const wbSemifinaliDone = isRoundCompleted(wbSemifinali);
-      const wbFinaleDone = isRoundCompleted(wbFinale);
-      const lbSemifinaliDone = isRoundCompleted(lbSemifinali);
-      const lbFinaleDone = isRoundCompleted(lbFinale);
-
-      if (bracketConfig.bracketSize === 8) {
-        list.push({
-          title: "Quarti Vincenti (Winners QF) 🏆",
-          matches: [
-            getMatchData("wb-q1", "Winners Quarto 1"),
-            getMatchData("wb-q2", "Winners Quarto 2"),
-            getMatchData("wb-q3", "Winners Quarto 3"),
-            getMatchData("wb-q4", "Winners Quarto 4"),
-          ],
-        });
-      }
-      if (wbQuartiDone) {
-        list.push({
-          title: "Semifinali Vincenti (Winners SF) 🏆",
-          matches: [getMatchData("wb-s1", "Winners Semifinale 1"), getMatchData("wb-s2", "Winners Semifinale 2")],
-        });
-      }
-      if (wbQuartiDone && wbSemifinaliDone) {
-        list.push({
-          title: "Finale Vincenti (Winners Final) 🏆",
-          matches: [getMatchData("wb-f", "Finale Vincenti")],
-        });
-        list.push({
-          title: "Semifinali Perdenti (Losers SF) 🔄",
-          matches: [getMatchData("lb-s1", "Losers Semifinale 1"), getMatchData("lb-s2", "Losers Semifinale 2")],
-        });
-      }
-      if (wbQuartiDone && wbSemifinaliDone && lbSemifinaliDone) {
-        list.push({
-          title: "Finale Perdenti (Losers Final) 🔄",
-          matches: [getMatchData("lb-f", "Finale Perdenti")],
-        });
-      }
-      if (wbQuartiDone && wbSemifinaliDone && lbSemifinaliDone && wbFinaleDone && lbFinaleDone) {
-        list.push({ title: "Grand Final 👑", matches: [getMatchData("grand-final", "Finalissima")] });
-      }
-    }
-
-    return list.filter((group) => group.matches.some((m) => m.left !== "TBD" || m.right !== "TBD"));
-  };
-
-
-
-
-
-  // Rendering del singolo blocco partita SofaScore
+  // SofaScore style renderer for initial groups matches
   const renderMatchRow = (teamL, teamR, meta, idx, matchKeyPrefix, gironeId = null, matchLabel = null) => {
     const isPlayoffMatch = !gironeId;
     const scoreL = isPlayoffMatch 
@@ -690,17 +290,11 @@ export default function PortaleLiveMobile() {
       ? (meta?.scoreL !== undefined && meta?.scoreL !== "")
       : ((meta?.s1L !== undefined && meta?.s1L !== "") || (meta?.scoreL !== undefined && meta?.scoreL !== ""));
 
-    // Altri set per partite a 3 set
     const s2L = parseInt(meta?.s2L || 0);
     const s2R = parseInt(meta?.s2R || 0);
     const s3L = parseInt(meta?.s3L || 0);
     const s3R = parseInt(meta?.s3R || 0);
     const isThreeSets = gironeId ? config?.gironeSets?.[gironeId] === "3 set" : false;
-
-    const isMultiSetPlayoff = isPlayoffMatch && bracketConfig?.phaseType === "gold_silver" && (
-      (matchLabel && (matchLabel.startsWith("Quarto") || matchLabel.startsWith("Semifinale") || matchLabel.startsWith("Finale"))) ||
-      (matchKeyPrefix && (matchKeyPrefix.includes("Semifinali") || matchKeyPrefix.includes("Finali") || matchKeyPrefix.includes("Quarti")))
-    );
 
     let isWinnerL = false;
     let isWinnerR = false;
@@ -747,7 +341,7 @@ export default function PortaleLiveMobile() {
         className="bg-white rounded-[1.6rem] p-5 border border-gray-100 shadow-sm flex flex-col gap-3 transition-all"
       >
         <div className="flex justify-between items-center text-[10px] sm:text-[11px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50 pb-2">
-          <span>{matchLabel || (gironeId ? `Girone ${gironeId.replace("gold-", "Gold ").replace("silver-", "Silver ")}` : `Gara ${idx + 1}`)}</span>
+          <span>{matchLabel || (gironeId ? `Girone ${gironeId}` : `Gara ${idx + 1}`)}</span>
           <div className="flex gap-1.5">
             {meta?.time && (
               <span className="bg-gray-50 text-gray-500 px-3 py-1 rounded-lg text-[10px] font-bold">{meta.time}</span>
@@ -803,11 +397,6 @@ export default function PortaleLiveMobile() {
                 ({s2L}-{s2R}, {s3L}-{s3R})
               </span>
             )}
-            {isMultiSetPlayoff && hasScore && (scoreL > 0 || scoreR > 0) && (
-              <span className="text-[10px] font-bold text-gray-400 mt-1">
-                ({meta?.s1L || 0}-{meta?.s1R || 0}, {meta?.s2L || 0}-{meta?.s2R || 0}{meta?.s3L || meta?.s3R ? `, ${meta.s3L || 0}-${meta.s3R || 0}` : ''})
-              </span>
-            )}
           </div>
 
           {/* Team Right */}
@@ -832,6 +421,137 @@ export default function PortaleLiveMobile() {
       </div>
     );
   };
+
+  // Render a bracket card in the public tree view
+  const renderBracketCardPublic = (roundKey, matchNum, label) => {
+    if (!bracketConfig) return null;
+    const assignments = bracketConfig.bracketAssignments || {};
+    const metadata = bracketConfig.bracketMetadata || {};
+
+    const matchId = `${roundKey}-${matchNum}`;
+    const teamL = assignments[`${matchId}-L`] || "";
+    const teamR = assignments[`${matchId}-R`] || "";
+    const meta = metadata[matchId] || {};
+
+    const scoreL = meta.scoreL || "";
+    const scoreR = meta.scoreR || "";
+
+    const hasScore = scoreL !== "" && scoreR !== "";
+    const isWinnerL = hasScore && parseInt(scoreL) > parseInt(scoreR);
+    const isWinnerR = hasScore && parseInt(scoreR) > parseInt(scoreL);
+
+    const time = meta.time || "";
+    const court = meta.court || "";
+
+    // Set scores list
+    const sets = [];
+    if (meta.s1L || meta.s1R) sets.push(`${meta.s1L || 0}-${meta.s1R || 0}`);
+    if (meta.s2L || meta.s2R) sets.push(`${meta.s2L || 0}-${meta.s2R || 0}`);
+    if (meta.s3L || meta.s3R) sets.push(`${meta.s3L || 0}-${meta.s3R || 0}`);
+
+    return (
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-3.5 min-w-[210px] relative select-none">
+        {/* Card Header info */}
+        <div className="flex justify-between items-center mb-2 border-b border-gray-50 pb-1">
+          <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{label}</span>
+          <div className="flex gap-1 text-[8px] font-black uppercase">
+            {time && <span className="bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">{time}</span>}
+            {court && <span className="bg-orange-50 text-[#C3562B] px-1.5 py-0.5 rounded">C. {court}</span>}
+          </div>
+        </div>
+
+        {/* Teams List */}
+        <div className="space-y-1.5">
+          {/* Team Left */}
+          <div className="flex items-center justify-between text-xs">
+            <span className={`truncate font-bold max-w-[145px] ${hasScore ? (isWinnerL ? "text-green-700 font-black" : "text-gray-400") : "text-gray-700"}`}>
+              {teamL || "—"}
+            </span>
+            <span className={`w-5.5 h-5.5 rounded flex items-center justify-center font-black text-[11px] ${hasScore ? (isWinnerL ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-400") : "bg-gray-50 text-gray-400"}`}>
+              {scoreL !== "" ? scoreL : "-"}
+            </span>
+          </div>
+
+          {/* Team Right */}
+          <div className="flex items-center justify-between text-xs">
+            <span className={`truncate font-bold max-w-[145px] ${hasScore ? (isWinnerR ? "text-green-700 font-black" : "text-gray-400") : "text-gray-700"}`}>
+              {teamR || "—"}
+            </span>
+            <span className={`w-5.5 h-5.5 rounded flex items-center justify-center font-black text-[11px] ${hasScore ? (isWinnerR ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-400") : "bg-gray-50 text-gray-400"}`}>
+              {scoreR !== "" ? scoreR : "-"}
+            </span>
+          </div>
+        </div>
+
+        {/* Inline Set scores */}
+        {sets.length > 0 && (
+          <div className="mt-2 pt-1.5 border-t border-gray-50 text-[9px] text-gray-400 font-bold text-center">
+            {sets.join(" , ")}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Connector lines drawing for public page
+  const renderConnectorLinePublic = (matchIndex, totalMatches, H) => {
+    const itemHeight = H / totalMatches;
+    const center = (matchIndex - 0.5) * itemHeight;
+
+    const isEven = matchIndex % 2 === 0;
+    const halfGap = itemHeight / 2;
+
+    const verticalLineTop = isEven ? center - halfGap : center;
+    const verticalLineHeight = halfGap;
+
+    return (
+      <div className="absolute inset-0 pointer-events-none z-0">
+        {/* Horizontal segment leaving match card */}
+        <div 
+          className="absolute bg-gray-200"
+          style={{
+            top: `${center}px`,
+            right: "-16px",
+            width: "16px",
+            height: "2px",
+            transform: "translateY(-50%)"
+          }}
+        />
+
+        {/* Vertical segment connecting the pair */}
+        <div 
+          className="absolute bg-gray-200"
+          style={{
+            top: `${verticalLineTop}px`,
+            right: "-16px",
+            width: "2px",
+            height: `${verticalLineHeight}px`
+          }}
+        />
+
+        {/* Horizontal segment extending to next round */}
+        <div 
+          className="absolute bg-gray-200"
+          style={{
+            top: `${isEven ? center - halfGap : center + halfGap}px`,
+            right: "-32px",
+            width: "16px",
+            height: "2px",
+            transform: "translateY(-50%)"
+          }}
+        />
+      </div>
+    );
+  };
+
+  // Get dynamic tree container height H
+  const getDynamicTreeHeight = () => {
+    if (!bracketConfig) return 800;
+    const size = bracketConfig.bracketSize || 16;
+    return size === 32 ? 1440 : (size === 16 ? 800 : (size === 8 ? 440 : 260));
+  };
+
+  const currentH = getDynamicTreeHeight();
 
   return (
     <main className="min-h-screen bg-[#f4f7f6] pb-24">
@@ -877,7 +597,7 @@ export default function PortaleLiveMobile() {
         {/* Controllo Pubblicazione */}
         {isPublished ? (
           <>
-            {/* 1. SEZIONE GIRONI (COMPOSIZIONE SQUADRE INIZIALI) */}
+            {/* 1. SEZIONE GIRONI */}
             {activeTab === "gironi" && (
               <div className="space-y-5">
                 <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">
@@ -975,10 +695,9 @@ export default function PortaleLiveMobile() {
               </div>
             )}
 
-            {/* 2. SEZIONE PARTITE (CALENDARIO CRONOLOGICO / PER GIRONE INIZIALE) */}
+            {/* 2. SEZIONE PARTITE */}
             {activeTab === "partite" && (
               <div className="space-y-6">
-                {/* Toggle Selettore Vista */}
                 <div className="flex bg-gray-200/60 p-1 rounded-2xl max-w-xs mx-auto border border-gray-100/50 shadow-inner mb-6">
                   <button
                     onClick={() => setViewMode("cronologico")}
@@ -1068,7 +787,7 @@ export default function PortaleLiveMobile() {
               </div>
             )}
 
-            {/* 3. SEZIONE CLASSIFICHE (TABELLE VERTICALI INIZIALI) */}
+            {/* 3. SEZIONE CLASSIFICHE */}
             {activeTab === "classifica" && (
               <div className="space-y-6">
                 {rankingType === "avulsa" ? (
@@ -1093,8 +812,8 @@ export default function PortaleLiveMobile() {
                           <tbody className="divide-y divide-gray-50 text-xs font-bold">
                             {calculateUnifiedRanking(config).map((team, idx) => {
                               const quotient = team.puntiSubiti === 0 ? team.puntiFatti : (team.puntiFatti / team.puntiSubiti).toFixed(3);
-                              const isGold = idx < 12; // first 12 qualify to Gold
-                              const isGoldDirect = idx < 4; // top 4 get bye
+                              const isGold = idx < 12;
+                              const isGoldDirect = idx < 4;
                               return (
                                 <tr
                                   key={team.nome}
@@ -1250,120 +969,135 @@ export default function PortaleLiveMobile() {
 
             {/* 4. SEZIONE FASI FINALI */}
             {activeTab === "finali" && isBracketPublished && (
-              <div className="space-y-5">
-                {/* Switch Gold / Silver in alto (se Gold/Silver) */}
-                {bracketConfig?.phaseType === "gold_silver" && (
-                  <div className="flex bg-gray-200/60 p-1 rounded-2xl max-w-xs mx-auto border border-gray-100/50 shadow-inner">
-                    <button
-                      onClick={() => setFasiFinaliCategory("gold")}
-                      className={`flex-1 py-2 text-center rounded-xl font-black text-xs uppercase tracking-wider transition-all ${
-                        fasiFinaliCategory === "gold"
-                          ? "bg-[#0D3D31] text-white shadow-md"
-                          : "text-gray-400 hover:text-[#0D3D31]"
-                      }`}
-                    >
-                      Gold 🏆
-                    </button>
-                    <button
-                      onClick={() => setFasiFinaliCategory("silver")}
-                      className={`flex-1 py-2 text-center rounded-xl font-black text-xs uppercase tracking-wider transition-all ${
-                        fasiFinaliCategory === "silver"
-                          ? "bg-[#0D3D31] text-white shadow-md"
-                          : "text-gray-400 hover:text-[#0D3D31]"
-                      }`}
-                    >
-                      Silver 🥈
-                    </button>
-                  </div>
-                )}
-
-                {/* Partite Gironi Intermedi (se Gold/Silver a gironi) */}
-                {bracketConfig?.phaseType === "gold_silver" &&
-                  getIntermediateGroupsList()
-                    .filter((g) => g.category === fasiFinaliCategory)
-                    .map((group) => {
-                      const groupMatches = getIntermediateGroupMatches(group.id);
-                      return (
-                        <div key={group.id} className="space-y-3">
-                          <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1 border-l-4 border-[#C3562B] pl-2">
-                            Partite {group.label}
-                          </h4>
-                          <div className="space-y-3">
-                            {groupMatches.map((m, idx) =>
-                              renderMatchRow(
-                                m.left,
-                                m.right,
-                                m.meta,
-                                idx,
-                                `match-${group.id}`,
-                                group.id
-                              )
-                            )}
-                            {groupMatches.length === 0 && (
-                              <div className="bg-white rounded-3xl p-6 text-center border border-gray-100">
-                                <p className="text-gray-400 italic text-xs">
-                                  Nessun match programmato.
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-
-                {/* Partite Playoff */}
-                {getPlayoffMatchesList().filter((group) => {
-                  if (bracketConfig?.phaseType === "gold_silver") {
-                    return group.title.toLowerCase().includes(fasiFinaliCategory);
-                  }
-                  return true;
-                }).length > 0 ? (
-                  getPlayoffMatchesList()
-                    .filter((group) => {
-                      if (bracketConfig?.phaseType === "gold_silver") {
-                        return group.title.toLowerCase().includes(fasiFinaliCategory);
-                      }
-                      return true;
-                    })
-                    .map((group, gIdx) => (
-                      <div key={gIdx} className="space-y-3 animate-fade-in">
-                        <h3 className="text-[9px] font-black text-gray-400 uppercase tracking-widest pl-1 border-b pb-2">
-                          {group.title}
-                        </h3>
-                        <div className="space-y-3">
-                          {group.matches.map((m, idx) =>
-                            renderMatchRow(
-                              m.left,
-                              m.right,
-                              m.meta,
-                              idx,
-                              `playoff-${group.title}`,
-                              null,
-                              m.label
-                            )
-                          )}
-                        </div>
+              <div className="space-y-4 select-none">
+                <div className="flex justify-between items-center pl-1 border-l-4 border-[#C3562B] pl-2">
+                  <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                    Tabellone ad Albero
+                  </h3>
+                  <span className="text-[9px] font-black text-gray-400 uppercase bg-gray-100 px-2 py-0.5 rounded">
+                    Scorri per esplorare ↔
+                  </span>
+                </div>
+                
+                {/* Horizontal scroll container for tree bracket */}
+                <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-x-auto pb-4 pt-6 px-4 no-scrollbar">
+                  <div className="flex gap-8 relative" style={{ minWidth: "900px", height: `${currentH}px` }}>
+                    
+                    {/* 1. Round of 32 */}
+                    {bracketConfig.bracketSize >= 32 && (
+                      <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
+                        <div className="text-[9px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-1 sticky top-0 bg-white z-20 mb-3 border-b">Sedicesimi</div>
+                        {Array.from({ length: 16 }, (_, idx) => {
+                          const matchNum = idx + 1;
+                          const itemHeight = currentH / 16;
+                          const center = (matchNum - 0.5) * itemHeight;
+                          return (
+                            <div key={idx} className="absolute left-0 right-4" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
+                              {renderBracketCardPublic("r32", matchNum, `Gara ${matchNum}`)}
+                              {renderConnectorLinePublic(matchNum, 16, currentH)}
+                            </div>
+                          );
+                        })}
                       </div>
-                    ))
-                ) : (
-                  /* Mostra schermata vuota solo se non ci sono match dei gironi intermedi E non ci sono match di playoff */
-                  !(
-                    bracketConfig?.phaseType === "gold_silver" &&
-                    getIntermediateGroupsList().filter((g) => g.category === fasiFinaliCategory)
-                      .length > 0
-                  ) && (
-                    <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
-                      <span className="text-5xl mb-4 block">⚔️</span>
-                      <h3 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight mb-2">
-                        Fasi Finali in Preparazione
-                      </h3>
-                      <p className="text-gray-400 font-medium text-xs max-w-xs mx-auto">
-                        Il tabellone ad eliminazione diretta non è ancora stato generato dallo staff
-                        per questo torneo.
-                      </p>
+                    )}
+
+                    {/* 2. Round of 16 */}
+                    {bracketConfig.bracketSize >= 16 && (
+                      <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
+                        <div className="text-[9px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-1 sticky top-0 bg-white z-20 mb-3 border-b">Ottavi</div>
+                        {Array.from({ length: 8 }, (_, idx) => {
+                          const matchNum = idx + 1;
+                          const itemHeight = currentH / 8;
+                          const center = (matchNum - 0.5) * itemHeight;
+                          return (
+                            <div key={idx} className="absolute left-0 right-4" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
+                              {renderBracketCardPublic("r16", matchNum, `Ottavi ${matchNum}`)}
+                              {renderConnectorLinePublic(matchNum, 8, currentH)}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* 3. Quarterfinals */}
+                    {bracketConfig.bracketSize >= 8 && (
+                      <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
+                        <div className="text-[9px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-1 sticky top-0 bg-white z-20 mb-3 border-b">Quarti</div>
+                        {Array.from({ length: 4 }, (_, idx) => {
+                          const matchNum = idx + 1;
+                          const itemHeight = currentH / 4;
+                          const center = (matchNum - 0.5) * itemHeight;
+                          return (
+                            <div key={idx} className="absolute left-0 right-4" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
+                              {renderBracketCardPublic("qf", matchNum, `Quarti ${matchNum}`)}
+                              {renderConnectorLinePublic(matchNum, 4, currentH)}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* 4. Semifinals */}
+                    {bracketConfig.bracketSize >= 4 && (
+                      <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
+                        <div className="text-[9px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-1 sticky top-0 bg-white z-20 mb-3 border-b">Semifinali</div>
+                        {Array.from({ length: 2 }, (_, idx) => {
+                          const matchNum = idx + 1;
+                          const itemHeight = currentH / 2;
+                          const center = (matchNum - 0.5) * itemHeight;
+                          const sfHalfGap = currentH / 4;
+                          return (
+                            <div key={idx} className="absolute left-0 right-4" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
+                              {renderBracketCardPublic("sf", matchNum, `Semifinale ${matchNum}`)}
+                              <div className="absolute inset-0 pointer-events-none z-0">
+                                {/* SF to Final 1 lines */}
+                                <div className="absolute bg-gray-200" style={{ top: `${center}px`, right: "-16px", width: "16px", height: "2px", transform: "translateY(-50%)" }} />
+                                <div className="absolute bg-gray-200" style={{ top: `${idx === 0 ? center : center - sfHalfGap}px`, right: "-16px", width: "2px", height: `${sfHalfGap}px` }} />
+                                <div className="absolute bg-gray-200" style={{ top: `${sfHalfGap}px`, right: "-32px", width: "16px", height: "2px", transform: "translateY(-50%)" }} />
+
+                                {/* SF to Final 3/4 lines */}
+                                <div className="absolute bg-gray-200" style={{ top: `${center}px`, right: "-24px", width: "8px", height: "2px", transform: "translateY(-50%)" }} />
+                                <div className="absolute bg-gray-200" style={{ top: `${idx === 0 ? center : center - sfHalfGap}px`, right: "-24px", width: "2px", height: `${sfHalfGap}px` }} />
+                                <div className="absolute bg-gray-200" style={{ top: `${sfHalfGap * 3}px`, right: "-32px", width: "8px", height: "2px", transform: "translateY(-50%)" }} />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* 5. Finals */}
+                    <div className="flex-1 h-full relative">
+                      <div className="text-[9px] font-black text-[#0D3D31] uppercase tracking-widest text-center py-1 sticky top-0 bg-white z-20 mb-3 border-b">Finali</div>
+                      
+                      {/* 1st Place */}
+                      <div className="absolute left-0 right-0" style={{ top: `${currentH / 4}px`, transform: "translateY(-50%)" }}>
+                        <div className="text-[9px] font-black text-yellow-600 uppercase tracking-widest text-center mb-1 pb-1">Finalissima 🥇</div>
+                        {renderBracketCardPublic("f", 1, "1°/2° Posto")}
+                      </div>
+
+                      {/* 3rd Place */}
+                      <div className="absolute left-0 right-0" style={{ top: `${(currentH / 4) * 3}px`, transform: "translateY(-50%)" }}>
+                        <div className="text-[9px] font-black text-amber-700 uppercase tracking-widest text-center mb-1 pb-1">Finale 3° Posto 🥉</div>
+                        {renderBracketCardPublic("f", 2, "3°/4° Posto")}
+                      </div>
                     </div>
-                  )
-                )}
+
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Messaggio tabellone non pubblicato */}
+            {activeTab === "finali" && !isBracketPublished && (
+              <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
+                <span className="text-5xl mb-4 block">⚔️</span>
+                <h3 className="text-lg font-black text-[#0D3D31] uppercase tracking-tight mb-2">
+                  Fasi Finali in Preparazione
+                </h3>
+                <p className="text-gray-400 font-medium text-xs max-w-xs mx-auto">
+                  Il tabellone ad eliminazione diretta non è ancora stato pubblicato dallo staff per questo torneo.
+                </p>
               </div>
             )}
           </>
@@ -1382,128 +1116,70 @@ export default function PortaleLiveMobile() {
         )}
       </div>
 
-      {/* BOTTOM NAV BAR FISSA - 4 Pulsanti */}
+      {/* BOTTOM NAV BAR */}
       {isPublished && (
         <nav className="fixed bottom-0 left-0 right-0 z-50">
           <div className="absolute inset-0 bg-[#0D3D31]/95 backdrop-blur-xl border-t border-blue-950/80 shadow-[0_-4px_30px_rgba(0,0,0,0.25)]" />
           <div className="relative flex justify-around px-1 pb-safe">
-            {/* Pulsante Gironi (Composizione) */}
+            
+            {/* Pulsante Gironi */}
             <button
               onClick={() => setActiveTab("gironi")}
-              className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform ${
+              className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform cursor-pointer ${
                 activeTab === "gironi" ? "text-[#C3562B]" : "text-slate-400"
               }`}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill={activeTab === "gironi" ? "currentColor" : "none"}
-                stroke="currentColor"
-                strokeWidth={activeTab === "gironi" ? 0 : 2}
-                className="w-7 h-7 transition-colors"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={activeTab === "gironi" ? "currentColor" : "none"} stroke="currentColor" strokeWidth={activeTab === "gironi" ? 0 : 2} className="w-7 h-7">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
               </svg>
-              <span className="text-xs font-black uppercase tracking-widest transition-colors">
-                Gironi
-              </span>
-              {activeTab === "gironi" && (
-                <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />
-              )}
+              <span className="text-xs font-black uppercase tracking-widest">Gironi</span>
+              {activeTab === "gironi" && <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />}
             </button>
 
             {/* Pulsante Partite */}
             <button
               onClick={() => setActiveTab("partite")}
-              className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform ${
+              className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform cursor-pointer ${
                 activeTab === "partite" ? "text-[#C3562B]" : "text-slate-400"
               }`}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill={activeTab === "partite" ? "currentColor" : "none"}
-                stroke="currentColor"
-                strokeWidth={activeTab === "partite" ? 0 : 2}
-                className="w-7 h-7 transition-colors"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={activeTab === "partite" ? "currentColor" : "none"} stroke="currentColor" strokeWidth={activeTab === "partite" ? 0 : 2} className="w-7 h-7">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
               </svg>
-              <span className="text-xs font-black uppercase tracking-widest transition-colors">
-                Partite
-              </span>
-              {activeTab === "partite" && (
-                <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />
-              )}
+              <span className="text-xs font-black uppercase tracking-widest">Partite</span>
+              {activeTab === "partite" && <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />}
             </button>
 
             {/* Pulsante Classifiche */}
             <button
               onClick={() => setActiveTab("classifica")}
-              className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform ${
+              className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform cursor-pointer ${
                 activeTab === "classifica" ? "text-[#C3562B]" : "text-slate-400"
               }`}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill={activeTab === "classifica" ? "currentColor" : "none"}
-                stroke="currentColor"
-                strokeWidth={activeTab === "classifica" ? 0 : 2}
-                className="w-7 h-7 transition-colors"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-6.75a1.125 1.125 0 0 0-1.125 1.125v3.375m9 0h-9M9 10.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Z"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={activeTab === "classifica" ? "currentColor" : "none"} stroke="currentColor" strokeWidth={activeTab === "classifica" ? 0 : 2} className="w-7 h-7">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-6.75a1.125 1.125 0 0 0-1.125 1.125v3.375m9 0h-9M9 10.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Z" />
               </svg>
-              <span className="text-xs font-black uppercase tracking-widest transition-colors">
-                {rankingType === "avulsa" ? "Classifica Avulsa" : "Classifiche"}
-              </span>
-              {activeTab === "classifica" && (
-                <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />
-              )}
+              <span className="text-xs font-black uppercase tracking-widest">{rankingType === "avulsa" ? "Generale" : "Classifiche"}</span>
+              {activeTab === "classifica" && <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />}
             </button>
 
-            {/* Pulsante Fasi Finali - visibile solo se tabellone pubblicato */}
+            {/* Pulsante Fasi Finali */}
             {isBracketPublished && (
-            <button
-              onClick={() => setActiveTab("finali")}
-              className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform ${
-                activeTab === "finali" ? "text-[#C3562B]" : "text-slate-400"
-              }`}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill={activeTab === "finali" ? "currentColor" : "none"}
-                stroke="currentColor"
-                strokeWidth={activeTab === "finali" ? 0 : 2}
-                className="w-7 h-7 transition-colors"
+              <button
+                onClick={() => setActiveTab("finali")}
+                className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform cursor-pointer ${
+                  activeTab === "finali" ? "text-[#C3562B]" : "text-slate-400"
+                }`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z"
-                />
-              </svg>
-              <span className="text-xs font-black uppercase tracking-widest transition-colors">
-                Fasi Finali
-              </span>
-              {activeTab === "finali" && (
-                <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />
-              )}
-            </button>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={activeTab === "finali" ? "currentColor" : "none"} stroke="currentColor" strokeWidth={activeTab === "finali" ? 0 : 2} className="w-7 h-7">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" />
+                </svg>
+                <span className="text-xs font-black uppercase tracking-widest">Fasi Finali</span>
+                {activeTab === "finali" && <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />}
+              </button>
             )}
+            
           </div>
           {/* iOS spacer */}
           <div className="h-safe-area-inset-bottom bg-[#0D3D31]" />
