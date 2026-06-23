@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { getTornei } from "@/app/utils/db";
+import { getTornei, getMvp } from "@/app/utils/db";
+import MvpVotingModal from "@/app/components/MvpVotingModal";
 
 const defaultTestSponsors = [
   { id: "s1", nome: "Mikasa", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Mikasa_Sports_logo.svg", linkUrl: "https://mikasasports.co.jp/en/" },
@@ -19,6 +20,9 @@ export default function Home() {
   const [countdownData, setCountdownData] = useState({ enabled: false, date: "", label: "" });
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, expired: true });
   const [sponsors, setSponsors] = useState([]);
+  const [mvpData, setMvpData] = useState({ attivo: false, candidati: [], titolo: "Vota l'MVP del Torneo" });
+  const [isMvpModalOpen, setIsMvpModalOpen] = useState(false);
+  const [userHasVoted, setUserHasVoted] = useState(false);
 
   const displaySponsors = sponsors && sponsors.length > 0 ? sponsors : defaultTestSponsors;
 
@@ -60,6 +64,14 @@ export default function Home() {
         }
       })
       .catch(err => console.error("Error fetching sponsors:", err));
+
+    getMvp().then(data => {
+      if (data) setMvpData(data);
+    });
+
+    if (typeof window !== "undefined") {
+      setUserHasVoted(localStorage.getItem("baia_beach_cup_mvp_voted") === "true");
+    }
   }, []);
 
   useEffect(() => {
@@ -177,6 +189,32 @@ export default function Home() {
           />
         </div>
       </div>
+
+      {/* Banner MVP */}
+      {mvpData.attivo && (
+        <div className="w-full max-w-xl mx-auto mt-8 px-4 relative z-20 animate-fade-in">
+          <div className="relative overflow-hidden bg-gradient-to-r from-[#295dab] to-[#1e3a8a] text-white p-6 rounded-[2rem] shadow-2xl border border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4 group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#C3562B]/10 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700"></div>
+            
+            <div className="text-center sm:text-left relative z-10">
+              <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-[#C3562B] bg-orange-50 border border-orange-100 px-2.5 py-1 rounded-lg mb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" /> LIVE VOTING
+              </span>
+              <h3 className="text-xl font-black uppercase tracking-tight leading-none">{mvpData.titolo || "Vota l'MVP del Torneo"}</h3>
+              <p className="text-[10px] text-gray-300 font-bold uppercase tracking-widest mt-1">
+                {userHasVoted ? "Grazie per aver espresso la tua preferenza!" : "Vota il tuo giocatore preferito del torneo"}
+              </p>
+            </div>
+
+            <button 
+              onClick={() => setIsMvpModalOpen(true)}
+              className="relative z-10 px-6 py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all shadow-md hover:scale-[1.05] active:scale-[0.95] cursor-pointer bg-[#C3562B] hover:bg-orange-600 text-white w-full sm:w-auto text-center font-bold"
+            >
+              {userHasVoted ? "Classifica Voti 📊" : "Vota Ora 🗳️"}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Bottone Instagram (Subito sotto il countdown o l'header) */}
       <div className="w-full flex justify-center mt-6 relative z-20">
@@ -326,6 +364,17 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* Modal di Votazione MVP */}
+      <MvpVotingModal 
+        isOpen={isMvpModalOpen}
+        onClose={() => setIsMvpModalOpen(false)}
+        mvpData={mvpData}
+        onVoteSuccess={(updatedData) => {
+          setMvpData(updatedData);
+          setUserHasVoted(true);
+        }}
+      />
 
     </main>
   );

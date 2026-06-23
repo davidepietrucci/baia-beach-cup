@@ -565,3 +565,50 @@ export async function saveSponsors(list) {
     localStorage.setItem("bvi_sponsors", JSON.stringify(list));
   }
 }
+
+// 11. MVP (Most Valuable Player)
+export async function getMvp() {
+  const fallback = { attivo: false, candidati: [], titolo: "Vota l'MVP del Torneo" };
+  if (typeof window === "undefined") {
+    if (db) {
+      try {
+        const docRef = doc(db, "config", "mvp");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          return docSnap.data().mvpData || fallback;
+        }
+      } catch (e) {
+        console.error("Firestore read mvp error:", e);
+      }
+      return fallback;
+    }
+    return await getLocalFileDb("mvp", null, fallback);
+  }
+
+  const serverData = await fetchFromServerDb("mvp");
+  if (serverData !== null) return serverData;
+  const saved = localStorage.getItem("bvi_mvp");
+  return safeJsonParse(saved, fallback);
+}
+
+export async function saveMvp(mvpData) {
+  if (typeof window === "undefined") {
+    if (db) {
+      try {
+        const docRef = doc(db, "config", "mvp");
+        await setDoc(docRef, { mvpData });
+      } catch (e) {
+        console.error("Firestore write mvp error:", e);
+      }
+      return;
+    }
+    await saveLocalFileDb("mvp", mvpData);
+    return;
+  }
+
+  const success = await saveToServerDb("mvp", mvpData);
+  if (!success) {
+    localStorage.setItem("bvi_mvp", JSON.stringify(mvpData));
+  }
+}
+

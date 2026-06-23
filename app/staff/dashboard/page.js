@@ -430,6 +430,9 @@ export default function StaffDashboard() {
             <button onClick={() => router.push('/staff/pagamenti')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#295dab] hover:text-white text-[#295dab] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
               Pagamenti <span className="text-xl group-hover:translate-x-2 transition-transform">💰</span>
             </button>
+            <button onClick={() => router.push('/staff/mvp')} className="flex items-center justify-between p-5 bg-gray-50 hover:bg-[#295dab] hover:text-white text-[#295dab] rounded-2xl font-black text-sm uppercase tracking-widest transition-all group shadow-sm">
+              Gestione MVP <span className="text-xl group-hover:translate-x-2 transition-transform">🗳️</span>
+            </button>
           </div>
 
         </div>

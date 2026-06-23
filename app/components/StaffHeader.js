@@ -47,6 +47,7 @@ export default function StaffHeader() {
     { name: "Tabellone", path: "/staff/tabellone" },
     { name: "Classifiche", path: "/staff/classifiche" },
     { name: "Pagamenti", path: "/staff/pagamenti" },
+    { name: "MVP", path: "/staff/mvp" },
   ];
 
   const filteredMenuItems = menuItems;

@@ -7,7 +7,8 @@ import {
   getBracket, saveBracket,
   getNotifiche, saveNotifiche,
   getCountdown, saveCountdown,
-  getSponsors, saveSponsors
+  getSponsors, saveSponsors,
+  getMvp, saveMvp
 } from "@/app/utils/db";
 
 // Helper per ottenere l'autenticazione ed il ruolo lato server (Clerk)
@@ -50,6 +51,7 @@ export async function GET(req) {
     else if (type === "notifiche") data = await getNotifiche();
     else if (type === "countdown") data = await getCountdown();
     else if (type === "sponsors") data = await getSponsors();
+    else if (type === "mvp") data = await getMvp();
     else {
       return NextResponse.json({ error: "Tipo database non valido" }, { status: 400 });
     }
@@ -73,7 +75,7 @@ export async function POST(req) {
     }
 
     // Controllo dei permessi di scrittura lato server
-    if (type === "tornei" || type === "gironi" || type === "bracket" || type === "iscrizioni" || type === "notifiche" || type === "countdown" || type === "sponsors") {
+    if (type === "tornei" || type === "gironi" || type === "bracket" || type === "iscrizioni" || type === "notifiche" || type === "countdown" || type === "sponsors" || type === "mvp") {
       if (role !== "admin" && role !== "staff") {
         return NextResponse.json({ error: "Accesso negato: richiesto ruolo Staff" }, { status: 403 });
       }
@@ -84,6 +86,7 @@ export async function POST(req) {
       if (type === "notifiche") await saveNotifiche(data);
       if (type === "countdown") await saveCountdown(data);
       if (type === "sponsors") await saveSponsors(data);
+      if (type === "mvp") await saveMvp(data);
     } 
     else {
       return NextResponse.json({ error: "Tipo database non valido o non supportato" }, { status: 400 });
