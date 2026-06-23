@@ -134,6 +134,22 @@ export default function StaffMvp() {
     setMvpForm(prev => ({ ...prev, titolo: e.target.value }));
   };
 
+  const handleTorneoChange = (e) => {
+    const newTorneo = e.target.value;
+    setSelectedTorneo(newTorneo);
+    
+    // Resetta i candidati (nomi, foto e voti)
+    setMvpForm(prev => ({
+      ...prev,
+      candidati: prev.candidati.map(c => ({
+        ...c,
+        nome: "",
+        fotoUrl: "",
+        voti: 0
+      }))
+    }));
+  };
+
   const handleCandidateChange = (index, field, value) => {
     const updatedCandidati = [...mvpForm.candidati];
     updatedCandidati[index] = {
@@ -394,7 +410,7 @@ export default function StaffMvp() {
                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Seleziona Torneo Candidati</label>
                   <select
                     value={selectedTorneo}
-                    onChange={(e) => setSelectedTorneo(e.target.value)}
+                    onChange={handleTorneoChange}
                     className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] transition-all text-sm shadow-sm cursor-pointer appearance-none"
                   >
                     <option value="Tutti">Tutti i Tornei</option>
@@ -454,6 +470,7 @@ export default function StaffMvp() {
                         )}
                       </div>
                       <input 
+                        key={`${selectedTorneo}-${candidato.id}-${candidato.fotoUrl ? 'has-photo' : 'no-photo'}`}
                         type="file" 
                         accept="image/*"
                         onChange={(e) => handleCandidatePhotoUpload(index, e)}
