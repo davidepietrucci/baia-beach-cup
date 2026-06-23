@@ -1407,7 +1407,7 @@ export default function GironiPubblici() {
                             : "text-gray-400 hover:text-[#295dab]"
                         }`}
                       >
-                        Campo Mare (1) 🌊
+                        Campo Mare (1)
                       </button>
                       <button
                         onClick={() => setViewMode("campoMonte")}
@@ -1417,7 +1417,7 @@ export default function GironiPubblici() {
                             : "text-gray-400 hover:text-[#295dab]"
                         }`}
                       >
-                        Campo Monte (2) ⛰️
+                        Campo Monte (2)
                       </button>
                     </div>
 

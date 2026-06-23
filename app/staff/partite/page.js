@@ -414,7 +414,7 @@ export default function StaffPartite() {
                     : "bg-white text-gray-400 border border-gray-100 hover:text-[#295dab] hover:bg-gray-50"
                 }`}
               >
-                🌊 Campo Mare (1)
+                Campo Mare (1)
               </button>
               <button
                 onClick={() => setActiveCourtTab("monte")}
@@ -424,7 +424,7 @@ export default function StaffPartite() {
                     : "bg-white text-gray-400 border border-gray-100 hover:text-[#295dab] hover:bg-gray-50"
                 }`}
               >
-                ⛰️ Campo Monte (2)
+                Campo Monte (2)
               </button>
             </div>
 
