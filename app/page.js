@@ -204,18 +204,21 @@ export default function Home() {
           {torneiLive.map((t, idx) => (
             <div
               key={idx}
-              className="w-full max-w-xl rounded-[2.5rem] flex flex-col items-center justify-end border border-white/10 shadow-2xl relative overflow-hidden group min-h-[380px] sm:min-h-[440px] p-8 sm:p-10"
+              className="w-full max-w-xl rounded-[2.5rem] flex flex-col items-center justify-end border border-gray-200 shadow-2xl relative overflow-hidden group min-h-[380px] sm:min-h-[440px] p-8 sm:p-10"
+              style={t.immagineRiquadro ? {} : { background: "#ffffff" }}
             >
-              {/* Background Image Container with hover zoom */}
-              <div 
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
-                style={{
-                  backgroundImage: `url('${t.immagineRiquadro || '/bg_torneo.jpg'}')`,
-                }}
-              />
+              {/* Background Image Container with hover zoom (only if image is set) */}
+              {t.immagineRiquadro && (
+                <div 
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
+                  style={{ backgroundImage: `url('${t.immagineRiquadro}')` }}
+                />
+              )}
               
-              {/* Dark Gradient Overlay at the bottom for button contrast, transparent on top to see image text */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent transition-opacity duration-300 group-hover:opacity-90" />
+              {/* Dark Gradient Overlay only when image is present */}
+              {t.immagineRiquadro && (
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent transition-opacity duration-300 group-hover:opacity-90" />
+              )}
 
               <div className="relative z-10 w-full flex justify-center">
                 <a
