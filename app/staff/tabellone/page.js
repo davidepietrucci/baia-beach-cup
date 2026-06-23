@@ -371,32 +371,11 @@ function TabelloneContent() {
     };
 
     if (bracketSize === 32) {
-      // Opzione A: 24 squadre. Le prime 8 (1-8) vanno direttamente agli ottavi con dei Bye nei sedicesimi.
-      // Le altre 16 (9-24) si sfidano tra di loro nei sedicesimi.
-      const customSeeding32 = [
-        [1, "bye"],   // Gara 1
-        [16, 17],     // Gara 2
-        [9, 24],      // Gara 3
-        [8, "bye"],   // Gara 4
-        [5, "bye"],   // Gara 5
-        [12, 21],     // Gara 6
-        [13, 20],     // Gara 7
-        [4, "bye"],   // Gara 8
-        [3, "bye"],   // Gara 9
-        [14, 19],     // Gara 10
-        [11, 22],     // Gara 11
-        [6, "bye"],   // Gara 12
-        [7, "bye"],   // Gara 13
-        [10, 23],     // Gara 14
-        [15, 18],     // Gara 15
-        [2, "bye"]    // Gara 16
-      ];
-
       for (let m = 1; m <= 16; m++) {
-        const seedL = customSeeding32[m - 1][0];
-        const seedR = customSeeding32[m - 1][1];
-        newAssignments[`r32-${m}-L`] = seedL === "bye" ? "—" : getTeamNameByRank(seedL);
-        newAssignments[`r32-${m}-R`] = seedR === "bye" ? "—" : getTeamNameByRank(seedR);
+        const seedL = seeding32[m - 1][0];
+        const seedR = seeding32[m - 1][1];
+        newAssignments[`r32-${m}-L`] = getTeamNameByRank(seedL);
+        newAssignments[`r32-${m}-R`] = getTeamNameByRank(seedR);
       }
     } else if (bracketSize === 16) {
       for (let m = 1; m <= 8; m++) {

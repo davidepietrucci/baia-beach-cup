@@ -1295,8 +1295,20 @@ export default function GironiPubblici() {
                           </thead>
                           <tbody className="divide-y divide-gray-50 text-xs font-bold">
                             {calculateUnifiedRanking(config).map((team, idx) => {
-                              const isDirectOttavi = idx < 8;
-                              const isSedicesimi = idx >= 8 && idx < 24;
+                              const size = bracketConfig?.bracketSize || 16;
+                              const isDirectOttavi = (size === 16 && idx < 16) || (size === 8 && idx < 8) || (size === 4 && idx < 4);
+                              const isSedicesimi = size === 32 && idx < 32;
+
+                              let qualificationLabel = "Eliminato";
+                              if (isDirectOttavi) {
+                                if (size === 16) qualificationLabel = "Ottavi di Finale";
+                                else if (size === 8) qualificationLabel = "Quarti di Finale";
+                                else if (size === 4) qualificationLabel = "Semifinali";
+                                else qualificationLabel = "Qualificato";
+                              } else if (isSedicesimi) {
+                                qualificationLabel = "Sedicesimi di Finale";
+                              }
+
                               const quotient = team.puntiSubiti === 0 ? team.puntiFatti : (team.puntiFatti / team.puntiSubiti).toFixed(3);
                               return (
                                 <tr
@@ -1314,7 +1326,7 @@ export default function GironiPubblici() {
                                           ? "bg-[#295dab] text-white shadow-sm"
                                           : "bg-gray-100 text-gray-400"
                                       }`}
-                                      title={isDirectOttavi ? "Ottavi Diretti" : isSedicesimi ? "Sedicesimi di Finale" : "Eliminato"}
+                                      title={qualificationLabel}
                                     >
                                       {idx + 1}
                                     </span>
