@@ -6,10 +6,10 @@ export default function CookieBanner() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    
+
     const consent = localStorage.getItem("baia_beach_cup_cookie_consent");
     if (!consent) {
-      
+
       const timer = setTimeout(() => {
         setIsVisible(true);
       }, 1000);
@@ -19,6 +19,7 @@ export default function CookieBanner() {
 
   const handleAccept = () => {
     localStorage.setItem("baia_beach_cup_cookie_consent", "accepted");
+    window.dispatchEvent(new Event("cookie-consent-updated"));
     setIsVisible(false);
   };
 
@@ -41,13 +42,13 @@ export default function CookieBanner() {
         </div>
       </div>
       <div className="flex gap-3 pt-2">
-        <button 
+        <button
           onClick={handleDecline}
           className="flex-1 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 cursor-pointer border border-white/5"
         >
           Solo Necessari
         </button>
-        <button 
+        <button
           onClick={handleAccept}
           className="flex-1 py-3 bg-[#C3562B] text-[#295dab] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-lg shadow-yellow-500/10"
         >
