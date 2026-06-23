@@ -210,7 +210,7 @@ export default function Home() {
               <div 
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
                 style={{
-                  backgroundImage: "url('/bg_torneo.jpg')",
+                  backgroundImage: `url('${t.immagineRiquadro || '/bg_torneo.jpg'}')`,
                 }}
               />
               

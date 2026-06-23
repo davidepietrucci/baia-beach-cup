@@ -161,6 +161,51 @@ export default function NuovoTorneo() {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Immagine Riquadro (Sfondo in Homepage - Max 1MB)</label>
+                {formData.immagineRiquadro && (
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, immagineRiquadro: "" }))}
+                    className="text-[9px] font-black text-red-500 hover:text-red-700 uppercase tracking-widest"
+                  >
+                    Rimuovi ✕
+                  </button>
+                )}
+              </div>
+              <input 
+                type="file" 
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    if (file.size > 1024 * 1024) {
+                      alert("L'immagine è troppo grande. Seleziona un file inferiore a 1MB.");
+                      e.target.value = "";
+                      return;
+                    }
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setFormData(prev => ({ ...prev, immagineRiquadro: reader.result }));
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+                className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:uppercase file:bg-[#295dab]/10 file:text-[#295dab] hover:file:bg-[#295dab]/20 cursor-pointer"
+              />
+              {formData.immagineRiquadro && (
+                <div className="mt-4 flex items-center gap-2 bg-gray-50 p-2.5 rounded-2xl border border-gray-100 max-w-max">
+                  <img 
+                    src={formData.immagineRiquadro} 
+                    alt="Anteprima Sfondo" 
+                    className="w-16 h-12 object-cover rounded-lg bg-white border" 
+                  />
+                  <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Anteprima caricata</span>
+                </div>
+              )}
+            </div>
+
 
 
           </div>
