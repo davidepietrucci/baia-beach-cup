@@ -115,7 +115,7 @@ export default function NuovoTorneo() {
                   className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] transition-all"
                 >
                   <option>Misto 2x2</option>
-                  <option>Maschile 2x2</option>
+                  <option>2x2</option>
                   <option>Femminile 2x2</option>
                   <option>Misto 4x4</option>
                   <option>Maschile 2x2 / Femminile 2x2</option>

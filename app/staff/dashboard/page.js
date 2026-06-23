@@ -213,7 +213,7 @@ export default function StaffDashboard() {
         nome: "Torneo Test 24",
         data: "20 Luglio 2026",
         location: "Baia Beach Cup Arena (Roma)",
-        categoria: "Maschile 2x2",
+        categoria: "2x2",
         stato: "Iscrizioni Aperte",
         iscritti: 24,
         maxSquadre: 24,

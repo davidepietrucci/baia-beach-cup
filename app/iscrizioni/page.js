@@ -141,7 +141,7 @@ export default function Iscrizioni() {
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-white font-semibold text-gray-800 shadow-sm cursor-pointer"
                 >
                   {torneiAperti.map((t, idx) => (
-                    <option key={idx} value={t.nome}>{t.nome} - {t.data} {t.categoria ? `(${t.categoria})` : ''}</option>
+                    <option key={idx} value={t.nome}>{t.nome} - {t.data} {t.categoria ? `(${t.categoria === "Maschile 2x2" ? "2x2" : t.categoria})` : ''}</option>
                   ))}
                 </select>
               </div>
