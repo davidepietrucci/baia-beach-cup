@@ -64,6 +64,13 @@ const formatPlayerName = (fullName) => {
   return `${surnameCap} ${initial}.`;
 };
 
+const defaultTestSponsors = [
+  { id: "s1", nome: "Mikasa", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Mikasa_Sports_logo.svg", linkUrl: "https://mikasasports.co.jp/en/" },
+  { id: "s2", nome: "Decathlon", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/12/Decathlon_Logo.svg", linkUrl: "https://www.decathlon.it" },
+  { id: "s3", nome: "Red Bull", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Red_Bull_Logo.svg", linkUrl: "https://www.redbull.com" },
+  { id: "s4", nome: "Wilson", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/07/Wilson_Sporting_Goods_logo.svg", linkUrl: "https://www.wilson.com" }
+];
+
 export default function PortaleLiveMobile() {
   const [tornei, setTornei] = useState([]);
   const [selectedTorneo, setSelectedTorneo] = useState("");
@@ -73,6 +80,14 @@ export default function PortaleLiveMobile() {
   const [viewMode, setViewMode] = useState("campoMare"); // "campoMare" or "campoMonte"
   const [loading, setLoading] = useState(true);
   const [selectedRoundTab, setSelectedRoundTab] = useState("");
+  const [sponsors, setSponsors] = useState([]);
+
+  const displaySponsors = sponsors && sponsors.length > 0 ? sponsors : defaultTestSponsors;
+  let baseSponsors = [...displaySponsors];
+  while (baseSponsors.length < 10) {
+    baseSponsors = [...baseSponsors, ...displaySponsors];
+  }
+  const doubleSponsors = [...baseSponsors, ...baseSponsors];
 
   const isMatchCompleted = (roundKey, matchNum) => {
     if (!bracketConfig) return false;
@@ -147,6 +162,16 @@ export default function PortaleLiveMobile() {
       }
       setLoading(false);
     });
+
+    // Leggi gli sponsor dal database
+    fetch("/api/db?type=sponsors")
+      .then(res => res.json())
+      .then(json => {
+        if (json.data) {
+          setSponsors(json.data);
+        }
+      })
+      .catch(err => console.error("Error fetching sponsors:", err));
   }, []);
 
   // 2. Caricamento live dei gironi e dei bracket del torneo selezionato
@@ -639,6 +664,45 @@ export default function PortaleLiveMobile() {
           Home
         </a>
       </header>
+
+      {/* Sezione Sponsor Marquee Compatta sotto Header */}
+      {doubleSponsors.length > 0 && (
+        <div className="w-full bg-white/10 backdrop-blur-xs border-b border-white/10 py-3 overflow-hidden select-none relative z-40">
+          <div
+            className="relative overflow-hidden w-full select-none animate-marquee-paused"
+            style={{
+              maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+              WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)"
+            }}
+          >
+            <div className="animate-marquee flex items-center gap-4">
+              {doubleSponsors.map((sp, idx) => (
+                <div
+                  key={idx}
+                  className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.04)] border border-white/60 flex items-center justify-center transition-all hover:scale-105 shrink-0 p-2.5"
+                >
+                  {sp.linkUrl ? (
+                    <a href={sp.linkUrl} target="_blank" rel="noopener noreferrer" title={sp.nome} className="w-full h-full flex items-center justify-center cursor-pointer">
+                      <img
+                        src={sp.logoUrl}
+                        alt={sp.nome}
+                        className="max-w-full max-h-full object-contain opacity-95 transition-opacity duration-300"
+                      />
+                    </a>
+                  ) : (
+                    <img
+                      src={sp.logoUrl}
+                      alt={sp.nome}
+                      title={sp.nome}
+                      className="max-w-full max-h-full object-contain opacity-95"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-md mx-auto px-4 pt-5 space-y-4">
         {/* Torneo Info Title Card */}
