@@ -479,12 +479,13 @@ function TabelloneContent() {
     const matchId = `${roundKey}-${matchNum}`;
 
     // Calculate match winner and sets score
+    const isSingleSet = roundKey === "r32" || roundKey === "r16";
     const s1L = parseInt(modalMeta.s1L);
     const s1R = parseInt(modalMeta.s1R);
-    const s2L = parseInt(modalMeta.s2L);
-    const s2R = parseInt(modalMeta.s2R);
-    const s3L = parseInt(modalMeta.s3L);
-    const s3R = parseInt(modalMeta.s3R);
+    const s2L = isSingleSet ? NaN : parseInt(modalMeta.s2L);
+    const s2R = isSingleSet ? NaN : parseInt(modalMeta.s2R);
+    const s3L = isSingleSet ? NaN : parseInt(modalMeta.s3L);
+    const s3R = isSingleSet ? NaN : parseInt(modalMeta.s3R);
 
     let winL = 0;
     let winR = 0;
@@ -500,6 +501,13 @@ function TabelloneContent() {
     }
 
     const updatedMeta = { ...modalMeta };
+    if (isSingleSet) {
+      updatedMeta.s2L = "";
+      updatedMeta.s2R = "";
+      updatedMeta.s3L = "";
+      updatedMeta.s3R = "";
+    }
+
     if (winL > 0 || winR > 0) {
       updatedMeta.scoreL = winL.toString();
       updatedMeta.scoreR = winR.toString();
@@ -971,28 +979,51 @@ function TabelloneContent() {
 
             {/* Set scores */}
             <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100 space-y-3 mt-1">
-              <div className="grid grid-cols-4 gap-2 items-center text-center text-[9px] font-black text-gray-400 uppercase tracking-widest pb-1 border-b">
-                <div>Set</div>
-                <div>Set 1</div>
-                <div>Set 2</div>
-                <div>Set 3</div>
-              </div>
-              
-              {/* Squadra A */}
-              <div className="grid grid-cols-4 gap-2 items-center">
-                <span className="text-[10px] font-bold text-gray-600 truncate max-w-[80px] text-right">{modalTeams.left || "A"}</span>
-                <input type="number" placeholder="0" value={modalMeta.s1L} onChange={(e) => setModalMeta(p => ({ ...p, s1L: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
-                <input type="number" placeholder="0" value={modalMeta.s2L} onChange={(e) => setModalMeta(p => ({ ...p, s2L: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
-                <input type="number" placeholder="0" value={modalMeta.s3L} onChange={(e) => setModalMeta(p => ({ ...p, s3L: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
-              </div>
+              {editingMatch && (editingMatch.roundKey === "r32" || editingMatch.roundKey === "r16") ? (
+                <>
+                  <div className="grid grid-cols-2 gap-4 items-center text-center text-[9px] font-black text-gray-400 uppercase tracking-widest pb-1 border-b">
+                    <div className="text-right">Squadra</div>
+                    <div className="text-center">Punti Incontro</div>
+                  </div>
+                  
+                  {/* Squadra A */}
+                  <div className="grid grid-cols-2 gap-4 items-center">
+                    <span className="text-[10px] font-bold text-gray-600 truncate max-w-[120px] text-right">{modalTeams.left || "A"}</span>
+                    <input type="number" placeholder="0" value={modalMeta.s1L} onChange={(e) => setModalMeta(p => ({ ...p, s1L: e.target.value }))} className="w-24 mx-auto text-center text-xs border border-gray-200 rounded-lg py-1.5 bg-white text-gray-900 font-bold focus:outline-none" />
+                  </div>
 
-              {/* Squadra B */}
-              <div className="grid grid-cols-4 gap-2 items-center">
-                <span className="text-[10px] font-bold text-gray-600 truncate max-w-[80px] text-right">{modalTeams.right || "B"}</span>
-                <input type="number" placeholder="0" value={modalMeta.s1R} onChange={(e) => setModalMeta(p => ({ ...p, s1R: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
-                <input type="number" placeholder="0" value={modalMeta.s2R} onChange={(e) => setModalMeta(p => ({ ...p, s2R: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
-                <input type="number" placeholder="0" value={modalMeta.s3R} onChange={(e) => setModalMeta(p => ({ ...p, s3R: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
-              </div>
+                  {/* Squadra B */}
+                  <div className="grid grid-cols-2 gap-4 items-center">
+                    <span className="text-[10px] font-bold text-gray-600 truncate max-w-[120px] text-right">{modalTeams.right || "B"}</span>
+                    <input type="number" placeholder="0" value={modalMeta.s1R} onChange={(e) => setModalMeta(p => ({ ...p, s1R: e.target.value }))} className="w-24 mx-auto text-center text-xs border border-gray-200 rounded-lg py-1.5 bg-white text-gray-900 font-bold focus:outline-none" />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="grid grid-cols-4 gap-2 items-center text-center text-[9px] font-black text-gray-400 uppercase tracking-widest pb-1 border-b">
+                    <div>Set</div>
+                    <div>Set 1</div>
+                    <div>Set 2</div>
+                    <div>Set 3</div>
+                  </div>
+                  
+                  {/* Squadra A */}
+                  <div className="grid grid-cols-4 gap-2 items-center">
+                    <span className="text-[10px] font-bold text-gray-600 truncate max-w-[80px] text-right">{modalTeams.left || "A"}</span>
+                    <input type="number" placeholder="0" value={modalMeta.s1L} onChange={(e) => setModalMeta(p => ({ ...p, s1L: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
+                    <input type="number" placeholder="0" value={modalMeta.s2L} onChange={(e) => setModalMeta(p => ({ ...p, s2L: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
+                    <input type="number" placeholder="0" value={modalMeta.s3L} onChange={(e) => setModalMeta(p => ({ ...p, s3L: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
+                  </div>
+
+                  {/* Squadra B */}
+                  <div className="grid grid-cols-4 gap-2 items-center">
+                    <span className="text-[10px] font-bold text-gray-600 truncate max-w-[80px] text-right">{modalTeams.right || "B"}</span>
+                    <input type="number" placeholder="0" value={modalMeta.s1R} onChange={(e) => setModalMeta(p => ({ ...p, s1R: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
+                    <input type="number" placeholder="0" value={modalMeta.s2R} onChange={(e) => setModalMeta(p => ({ ...p, s2R: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
+                    <input type="number" placeholder="0" value={modalMeta.s3R} onChange={(e) => setModalMeta(p => ({ ...p, s3R: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Modal Actions */}
