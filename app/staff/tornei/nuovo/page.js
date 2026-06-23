@@ -43,7 +43,7 @@ export default function NuovoTorneo() {
   };
 
   return (
-    <main className="min-h-screen pb-20 bg-[#f8faff]">
+    <main className="min-h-screen pb-20 bg-transparent">
       <StaffHeader />
 
       <div className="max-w-3xl mx-auto mt-6 md:mt-10 px-4">

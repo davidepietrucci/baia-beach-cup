@@ -365,7 +365,7 @@ export default function StaffDashboard() {
   };
 
   return (
-    <main className="min-h-screen pb-12 bg-[#f8faff]">
+    <main className="min-h-screen pb-12 bg-transparent">
       <StaffHeader />
 
       <div className="max-w-6xl mx-auto mt-6 md:mt-10 px-4">

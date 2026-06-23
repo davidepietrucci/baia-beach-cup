@@ -147,7 +147,7 @@ export default function StaffPagamenti() {
   const totaleDaIncassare = totaleAtteso - totaleIncassato;
 
   return (
-    <main className="min-h-screen bg-[#f8faff] pb-20">
+    <main className="min-h-screen bg-transparent pb-20">
       <StaffHeader />
 
       <div className="max-w-6xl mx-auto mt-6 md:mt-10 px-4">

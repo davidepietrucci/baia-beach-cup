@@ -81,7 +81,7 @@ export default function StaffClassifiche() {
   const isUnified = config?.rankingType === "avulsa";
 
   return (
-    <main className="min-h-screen bg-[#f8faff] pb-20">
+    <main className="min-h-screen bg-transparent pb-20">
       <StaffHeader />
 
       <div className="max-w-[1200px] mx-auto px-4 mt-6 md:mt-10">

@@ -5,7 +5,7 @@ import { SignIn } from "@clerk/nextjs";
 
 export default function StaffLogin() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-4" style={{backgroundColor: "#f4f7f6"}}>
+    <main className="min-h-screen flex flex-col items-center justify-center px-4 bg-transparent">
       <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full border-t-4 flex flex-col items-center" style={{borderColor: "#295dab"}}>
         
         {/* Intestazione */}

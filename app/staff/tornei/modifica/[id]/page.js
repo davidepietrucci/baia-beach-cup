@@ -52,7 +52,7 @@ export default function ModificaTorneo() {
 
   if (!formData) {
     return (
-      <main className="min-h-screen bg-[#f8faff] flex items-center justify-center">
+      <main className="min-h-screen bg-transparent flex items-center justify-center">
         <div className="w-16 h-16 border-4 border-[#295dab] border-t-transparent rounded-full animate-spin"></div>
       </main>
     );
@@ -61,7 +61,7 @@ export default function ModificaTorneo() {
   const displayQuota = formData.quota !== undefined ? formData.quota : 40;
 
   return (
-    <main className="min-h-screen pb-20 bg-[#f8faff]">
+    <main className="min-h-screen pb-20 bg-transparent">
       <StaffHeader />
 
       <div className="max-w-3xl mx-auto mt-6 md:mt-10 px-4">

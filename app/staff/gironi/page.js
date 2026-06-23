@@ -354,7 +354,7 @@ export default function StaffGironi() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f8faff] pb-20">
+    <main className="min-h-screen bg-transparent pb-20">
       <StaffHeader />
 
       <div className="max-w-[1400px] mx-auto px-4 mt-6 md:mt-10">
