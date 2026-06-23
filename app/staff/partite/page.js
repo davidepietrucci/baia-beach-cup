@@ -198,84 +198,34 @@ export default function StaffPartite() {
     alert(`Partite e punteggi salvati con successo! 💾`);
   };
 
-  const handleFillTestScores = () => {
+  const handleClearScores = async () => {
     if (!selectedTorneo) return;
-    if (!window.confirm("Vuoi caricare punteggi di test casuali per tutte le partite di tutti i gironi?")) return;
+    if (!window.confirm("Sei sicuro di voler eliminare tutti i punteggi inseriti? I dati di campo e orario verranno mantenuti.")) return;
 
-    const newMetadata = { ...matchMetadata };
-
-    allGironi.slice(0, numGironi).forEach((g) => {
-      const currentAssignments = {};
-      const count = teamCounts[g.id] || 0;
-      for (let i = 0; i < count; i++) {
-        currentAssignments[i] = gironeAssignments[g.id]?.[i] || "—";
-      }
-      const schedule = getScheduleShared(count, g.id, currentAssignments, gironeTypes, gironeSets, matchMetadata);
-      const isThreeSets = gironeSets[g.id] === "3 set";
-
-      schedule.forEach((match, idx) => {
-        const matchKey = `${g.id}-${idx}`;
-        if (
-          !match.left || 
-          match.left === "—" || 
-          match.left.startsWith("Slot") || 
-          match.left.startsWith("Vincente") || 
-          match.left.startsWith("Perdente") ||
-          !match.right || 
-          match.right === "—" || 
-          match.right.startsWith("Slot") || 
-          match.right.startsWith("Vincente") || 
-          match.right.startsWith("Perdente")
-        ) {
-          return;
-        }
-
-        if (!newMetadata[matchKey]?.court) {
-          newMetadata[matchKey] = {
-            ...(newMetadata[matchKey] || {}),
-            court: (Math.floor(Math.random() * 2) + 1).toString(), // 1 or 2
-            time: `1${Math.floor(Math.random() * 3)}:00`
-          };
-        }
-
-        if (isThreeSets) {
-          const s1L = Math.random() > 0.5 ? 21 : Math.floor(Math.random() * 5) + 15;
-          const s1R = s1L === 21 ? Math.floor(Math.random() * 5) + 15 : 21;
-          
-          const s2L = s1L === 21 ? Math.floor(Math.random() * 5) + 15 : 21;
-          const s2R = s2L === 21 ? Math.floor(Math.random() * 5) + 15 : 21;
-          
-          let s3L = "";
-          let s3R = "";
-          if ((s1L > s1R && s2L < s2R) || (s1L < s1R && s2L > s2R)) {
-            s3L = Math.random() > 0.5 ? 15 : Math.floor(Math.random() * 4) + 10;
-            s3R = s3L === 15 ? Math.floor(Math.random() * 4) + 10 : 15;
-          }
-
-          newMetadata[matchKey] = {
-            ...newMetadata[matchKey],
-            s1L: s1L.toString(),
-            s1R: s1R.toString(),
-            s2L: s2L.toString(),
-            s2R: s2R.toString(),
-            s3L: s3L.toString(),
-            s3R: s3R.toString()
-          };
-        } else {
-          const s1L = Math.random() > 0.5 ? 21 : Math.floor(Math.random() * 6) + 12;
-          const s1R = s1L === 21 ? Math.floor(Math.random() * 6) + 12 : 21;
-
-          newMetadata[matchKey] = {
-            ...newMetadata[matchKey],
-            s1L: s1L.toString(),
-            s1R: s1R.toString()
-          };
-        }
-      });
+    const newMetadata = {};
+    Object.entries(matchMetadata).forEach(([key, val]) => {
+      // Keep court and time, clear all score fields
+      newMetadata[key] = {
+        court: val.court || "",
+        time: val.time || ""
+      };
     });
 
     setMatchMetadata(newMetadata);
-    alert("Punteggi di test inseriti casualmente! Non dimenticare di salvare.");
+
+    const config = {
+      numGironi,
+      teamCounts,
+      gironeTypes,
+      gironeSets,
+      gironeAssignments,
+      matchMetadata: newMetadata,
+      pubblicato,
+      rankingType
+    };
+    const slug = selectedTorneo.toLowerCase().trim().replace(/\s+/g, '_');
+    await saveGironi(slug, config);
+    alert("Punteggi eliminati con successo! I dati di campo e orario sono stati mantenuti. 🗑️");
   };
 
   const getColors = (color) => {
@@ -372,11 +322,11 @@ export default function StaffPartite() {
               )}
             </select>
             <button 
-              onClick={handleFillTestScores}
+              onClick={handleClearScores}
               disabled={!selectedTorneo || !isLoaded}
-              className="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all disabled:opacity-50 cursor-pointer"
+              className="flex-1 md:flex-none bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all disabled:opacity-50 cursor-pointer"
             >
-              ⚡ Riempi Test
+              🗑️ Elimina Punteggi
             </button>
             <button 
               onClick={handleSave}
