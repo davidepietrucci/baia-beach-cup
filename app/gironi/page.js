@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { getTornei, getGironi, getBracket } from "@/app/utils/db";
 import { calculateUnifiedRanking, getSchedule as getScheduleShared } from "@/app/utils/ranking";
 
@@ -73,6 +74,9 @@ const defaultTestSponsors = [
 ];
 
 export default function GironiPubblici() {
+  const searchParams = useSearchParams();
+  const urlTour = searchParams.get("tour");
+
   const [tornei, setTornei] = useState([]);
   const [selectedTorneo, setSelectedTorneo] = useState("");
   const [config, setConfig] = useState(null);
@@ -147,9 +151,6 @@ export default function GironiPubblici() {
     getTornei().then((parsed) => {
       setTornei(parsed);
 
-      const params = new URLSearchParams(window.location.search);
-      const urlTour = params.get("tour");
-
       if (urlTour && parsed.some((t) => t.nome === urlTour)) {
         setSelectedTorneo(urlTour);
       } else {
@@ -175,7 +176,7 @@ export default function GironiPubblici() {
         }
       })
       .catch(err => console.error("Error fetching sponsors:", err));
-  }, []);
+  }, [urlTour]);
 
   // 2. Caricamento live dei gironi e dei bracket del torneo selezionato
   useEffect(() => {
