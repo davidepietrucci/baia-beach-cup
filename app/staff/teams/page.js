@@ -4,6 +4,23 @@ import { useState, useEffect } from "react";
 import StaffHeader from "@/app/components/StaffHeader";
 import { getTornei, getIscrizioni, saveIscrizioni, saveTornei } from "@/app/utils/db";
 
+const splitNames = (name) => {
+  if (!name) return [];
+  let parts = [];
+  if (name.includes(" & ")) {
+    parts = name.split(" & ");
+  } else if (name.includes(" / ")) {
+    parts = name.split(" / ");
+  } else if (name.includes(" - ")) {
+    parts = name.split(" - ");
+  } else if (name.includes("/")) {
+    parts = name.split("/");
+  } else {
+    parts = [name];
+  }
+  return parts.map((p) => p.trim());
+};
+
 export default function StaffTeams() {
   const [iscrizioni, setIscrizioni] = useState([]);
   const [tornei, setTornei] = useState([]);
@@ -83,8 +100,10 @@ export default function StaffTeams() {
   };
 
   const handleDeleteTeam = async (id) => {
-    if (typeof window !== "undefined" && !window.confirm("Sei sicuro di voler eliminare definitivamente questo team dall'iscrizione?")) return;
-    const deleted = iscrizioni.find(isc => isc.id === id);
+    const isc = iscrizioni.find(i => i.id === id);
+    const teamName = isc ? isc.giocatori : "questo team";
+    if (typeof window !== "undefined" && !window.confirm(`Sei sicuro di voler eliminare definitivamente la coppia "${teamName}"? Questa operazione rimuoverà entrambi i giocatori.`)) return;
+    const deleted = isc;
     const updated = iscrizioni.filter(isc => isc.id !== id);
     setIscrizioni(updated);
     await saveIscrizioni(updated);
@@ -138,11 +157,32 @@ export default function StaffTeams() {
     setEditingTeam(null);
   };
 
-  const filteredIscrizioni = iscrizioni.filter(isc => {
-    const matchTorneo = selectedTorneoFilter === "Tutti" || (isc.torneo || "").toLowerCase().trim() === selectedTorneoFilter.toLowerCase().trim();
-    const matchSearch = (isc.giocatori || "").toLowerCase().includes(searchTerm.toLowerCase()) || 
-                        (isc.tel || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        (isc.email || "").toLowerCase().includes(searchTerm.toLowerCase());
+  // Generiamo la lista degli atleti singoli
+  const allSinglePlayers = [];
+  iscrizioni.forEach(isc => {
+    const players = splitNames(isc.giocatori);
+    players.forEach(playerName => {
+      if (playerName) {
+        allSinglePlayers.push({
+          id: `${isc.id}-${playerName}`,
+          registrationId: isc.id,
+          atleta: playerName,
+          coppia: isc.giocatori,
+          torneo: isc.torneo,
+          data: isc.data,
+          stato: isc.stato,
+          rawRegistration: isc
+        });
+      }
+    });
+  });
+
+  const filteredPlayers = allSinglePlayers.filter(player => {
+    const matchTorneo = selectedTorneoFilter === "Tutti" || (player.torneo || "").toLowerCase().trim() === selectedTorneoFilter.toLowerCase().trim();
+    const matchSearch = (player.atleta || "").toLowerCase().includes(searchTerm.toLowerCase()) || 
+                        (player.coppia || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        (player.rawRegistration.tel || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        (player.rawRegistration.email || "").toLowerCase().includes(searchTerm.toLowerCase());
     return matchTorneo && matchSearch;
   });
 
@@ -185,10 +225,10 @@ export default function StaffTeams() {
                   : "bg-gray-50 text-gray-500 hover:bg-gray-100"
               }`}
             >
-              Tutti i Tornei ({iscrizioni.length})
+              Tutti i Tornei ({allSinglePlayers.length})
             </button>
             {tornei.map(t => {
-              const count = iscrizioni.filter(isc => (isc.torneo || "").toLowerCase().trim() === t.nome.toLowerCase().trim()).length;
+              const count = allSinglePlayers.filter(p => (p.torneo || "").toLowerCase().trim() === t.nome.toLowerCase().trim()).length;
               return (
                 <button
                   key={t.id}
@@ -207,7 +247,8 @@ export default function StaffTeams() {
 
         {/* Desktop Table Header */}
         <div className="hidden md:grid grid-cols-6 bg-gray-50 p-4 rounded-t-[2rem] border-x border-t border-gray-100 text-[10px] font-black text-gray-400 uppercase tracking-widest">
-            <div className="px-4 col-span-2">Squadra / Giocatori</div>
+            <div className="px-4">Atleta</div>
+            <div className="px-4">Coppia</div>
             <div className="px-4">Torneo</div>
             <div className="px-4">Data Iscr.</div>
             <div className="px-4">Stato</div>
@@ -216,16 +257,16 @@ export default function StaffTeams() {
 
         {/* Content rows/cards */}
         <div className="space-y-4 md:space-y-0 md:bg-white md:rounded-b-[2rem] md:shadow-xl md:border md:border-gray-100 md:divide-y">
-            {filteredIscrizioni.map((req) => (
-                <div key={req.id} className="bg-white p-6 rounded-[2rem] shadow-xl md:shadow-none md:rounded-none md:grid md:grid-cols-6 md:items-center hover:bg-blue-50/10 transition-all">
-                    {/* Squadra e Giocatori */}
-                    <div className="mb-4 md:mb-0 md:col-span-2 md:px-4">
-                        <h4 className="text-lg font-black text-[#295dab] leading-tight mb-1">{req.giocatori}</h4>
+            {filteredPlayers.map((player) => (
+                <div key={player.id} className="bg-white p-6 rounded-[2rem] shadow-xl md:shadow-none md:rounded-none md:grid md:grid-cols-6 md:items-center hover:bg-blue-50/10 transition-all">
+                    {/* Atleta */}
+                    <div className="mb-2 md:mb-0 md:px-4">
+                        <h4 className="text-base font-black text-[#295dab] leading-tight mb-0.5">{player.atleta}</h4>
                         <div className="flex flex-wrap gap-1.5 items-center">
-                            <span className="text-[10px] text-gray-400 font-bold">ID #{req.id}</span>
-                            {req.risposte && req.risposte.length > 0 && (
+                            <span className="text-[10px] text-gray-400 font-bold">ID #{player.registrationId}</span>
+                            {player.rawRegistration.risposte && player.rawRegistration.risposte.length > 0 && (
                                 <button 
-                                    onClick={() => setSelectedIscrizioneDetail(req)}
+                                    onClick={() => setSelectedIscrizioneDetail(player.rawRegistration)}
                                     className="px-2 py-0.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded text-[9px] font-black uppercase border border-indigo-100 transition-colors"
                                 >
                                     📋 Info Modulo
@@ -234,21 +275,26 @@ export default function StaffTeams() {
                         </div>
                     </div>
 
+                    {/* Coppia */}
+                    <div className="mb-4 md:mb-0 md:px-4 text-xs font-bold text-gray-500">
+                        {player.coppia}
+                    </div>
+
                     {/* Torneo */}
                     <div className="mb-4 md:mb-0 md:px-4">
                         <span className="inline-block px-2.5 py-1 bg-blue-50 text-[#295dab] rounded-lg text-[10px] font-black uppercase border border-blue-100/60">
-                            {req.torneo}
+                            {player.torneo}
                         </span>
                     </div>
 
                     {/* Data Iscrizione */}
                     <div className="mb-4 md:mb-0 md:px-4 text-xs font-bold text-gray-500">
-                        {req.data}
+                        {player.data}
                     </div>
 
                     {/* Stato Badge */}
                     <div className="mb-4 md:mb-0 md:px-4">
-                        {req.stato === "In Attesa" ? (
+                        {player.stato === "In Attesa" ? (
                             <span className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-[10px] font-black uppercase">
                                 <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span> In Attesa
                             </span>
@@ -262,14 +308,14 @@ export default function StaffTeams() {
                     {/* Azioni */}
                     <div className="flex gap-2 md:justify-end md:px-4">
                         <button
-                            onClick={() => startEditTorneo(req)}
+                            onClick={() => startEditTorneo(player.rawRegistration)}
                             title="Cambia Torneo"
                             className="flex-1 md:flex-none h-10 md:w-10 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-black text-sm flex items-center justify-center shadow-md shadow-blue-200 hover:scale-110 active:scale-95 transition-all"
                         >
                             ✏️
                         </button>
                         <button
-                            onClick={() => handleDeleteTeam(req.id)}
+                            onClick={() => handleDeleteTeam(player.registrationId)}
                             title="Elimina Team"
                             className="flex-1 md:flex-none h-10 md:w-10 bg-red-500 hover:bg-red-600 text-white rounded-xl font-black text-sm flex items-center justify-center shadow-md shadow-red-200 hover:scale-110 active:scale-95 transition-all"
                         >
@@ -279,9 +325,9 @@ export default function StaffTeams() {
                 </div>
             ))}
 
-            {filteredIscrizioni.length === 0 && (
+            {filteredPlayers.length === 0 && (
                 <div className="py-20 text-center text-gray-400 font-bold italic">
-                    Nessun team trovato.
+                    Nessun atleta trovato.
                 </div>
             )}
         </div>

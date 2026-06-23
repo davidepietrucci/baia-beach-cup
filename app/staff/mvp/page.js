@@ -73,10 +73,27 @@ export default function StaffMvp() {
         const iscrizioni = await getIscrizioni();
         const playersSet = new Set();
         
+        const splitNames = (name) => {
+          if (!name) return [];
+          let parts = [];
+          if (name.includes(" & ")) {
+            parts = name.split(" & ");
+          } else if (name.includes(" / ")) {
+            parts = name.split(" / ");
+          } else if (name.includes(" - ")) {
+            parts = name.split(" - ");
+          } else if (name.includes("/")) {
+            parts = name.split("/");
+          } else {
+            parts = [name];
+          }
+          return parts.map((p) => p.trim());
+        };
+
         iscrizioni.forEach(isc => {
           if (isc.giocatori && isc.stato === "Approvata") {
             // Divide la coppia per estrarre i singoli nomi
-            const nomi = isc.giocatori.split("&").map(n => n.trim());
+            const nomi = splitNames(isc.giocatori);
             nomi.forEach(n => {
               if (n) playersSet.add(n);
             });
