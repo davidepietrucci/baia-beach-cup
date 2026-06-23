@@ -4,8 +4,8 @@
   "description": "Gestione Tornei Baia Beach Cup",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f4f7f6",
-  "theme_color": "#0D3D31",
+  "background_color": "#295dab",
+  "theme_color": "#295dab",
   "icons": [
     {
       "src": "/webapp-icon.png",
