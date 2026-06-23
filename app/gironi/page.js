@@ -941,6 +941,11 @@ export default function GironiPubblici() {
     const matchId = `${roundKey}-${matchNum}`;
     const teamL = assignments[`${matchId}-L`] || "";
     const teamR = assignments[`${matchId}-R`] || "";
+
+    if (roundKey === "r32" && (teamL === "—" || teamR === "—" || !teamL || !teamR)) {
+      return null;
+    }
+
     const meta = metadata[matchId] || {};
 
     const scoreL = meta.scoreL || "";
@@ -1529,7 +1534,19 @@ export default function GironiPubblici() {
                     const matchElements = [];
                     for (let m = 1; m <= activeRound.matches; m++) {
                       let label = "";
-                      if (activeRound.key === "r32") label = `Sedicesimo ${m}`;
+                      if (activeRound.key === "r32") {
+                        const sLabelMap = {
+                          2: "Spareggio S1",
+                          4: "Spareggio S4",
+                          6: "Spareggio S3",
+                          8: "Spareggio S6",
+                          10: "Spareggio S2",
+                          12: "Spareggio S5",
+                          14: "Spareggio S7",
+                          16: "Spareggio S8"
+                        };
+                        label = sLabelMap[m] || `Spareggio ${m}`;
+                      }
                       else if (activeRound.key === "r16") label = `Ottavo ${m}`;
                       else if (activeRound.key === "qf") label = `Quarto ${m}`;
                       else if (activeRound.key === "sf") label = `Semifinale ${m}`;
