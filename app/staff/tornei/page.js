@@ -66,7 +66,7 @@ export default function StaffTornei() {
                     <span className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">📍</span> {torneo.location}
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">🏐</span> {torneo.categoria === "Maschile 2x2" ? "2x2" : torneo.categoria}
+                    <span className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">🏐</span> {torneo.categoria ? torneo.categoria.replace(/maschile 2x2/gi, "2x2") : ""}
                   </div>
                 </div>
 

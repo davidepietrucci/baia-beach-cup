@@ -251,7 +251,7 @@ export default function Home() {
                   </h3>
                   <div className="flex flex-wrap justify-center gap-2 mt-3">
                     <span className="text-[10px] font-black text-[#295dab] bg-blue-50/70 border border-blue-100/80 px-3 py-1 rounded-lg uppercase tracking-wider">
-                      {(t.categoria === "Maschile 2x2" ? "2x2" : t.categoria) || 'Categoria Libera'}
+                      {(t.categoria ? t.categoria.replace(/maschile 2x2/gi, "2x2") : "") || 'Categoria Libera'}
                     </span>
                     <span className="text-[10px] font-black text-[#295dab] bg-blue-50/70 border border-blue-100/80 px-3 py-1 rounded-lg uppercase tracking-wider">
                       {t.data}
@@ -301,7 +301,7 @@ export default function Home() {
                   <h4 className="text-2xl font-black mb-2 leading-tight" style={{ color: "#295dab" }}>{t.nome}</h4>
                   <div className="flex flex-col gap-2 mb-6">
                     <span className="text-sm font-bold text-gray-500 bg-gray-50 inline-block px-3 py-1 rounded-lg self-start">
-                      {(t.categoria === "Maschile 2x2" ? "2x2" : t.categoria) || 'Categoria Libera'}
+                      {(t.categoria ? t.categoria.replace(/maschile 2x2/gi, "2x2") : "") || 'Categoria Libera'}
                     </span>
                     {t.location && (
                       <span className="text-xs text-gray-400 font-semibold flex items-center gap-1.5 pl-1">

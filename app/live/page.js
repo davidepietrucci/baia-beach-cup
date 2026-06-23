@@ -725,7 +725,7 @@ export default function PortaleLiveMobile() {
             {selectedTorneo || "Nessun Torneo"}
           </h2>
           <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mt-1.5">
-            {(selectedTorneoObj?.categoria === "Maschile 2x2" ? "2x2" : selectedTorneoObj?.categoria)} · {selectedTorneoObj?.data}
+            {(selectedTorneoObj?.categoria ? selectedTorneoObj.categoria.replace(/maschile 2x2/gi, "2x2") : "")} · {selectedTorneoObj?.data}
           </p>
         </div>
 
