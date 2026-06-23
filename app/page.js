@@ -324,14 +324,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="mt-6 pb-1 text-center">
-            <a
-              href="/staff"
-              className="text-[9px] font-black uppercase tracking-widest text-slate-700 bg-white/65 hover:bg-white/85 backdrop-blur-sm px-3.5 py-1.5 rounded-full inline-block border border-white/40 shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-              Area Staff 🔒
-            </a>
-          </div>
         </section>
       )}
 
