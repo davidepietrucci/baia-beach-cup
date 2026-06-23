@@ -284,7 +284,11 @@ export default function Home() {
       {displaySponsors.length > 0 && (
         <section className="w-full py-8 sm:py-10 mt-auto relative overflow-hidden">
           <div className="w-full text-center">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-6">Powered by</h3>
+            <div className="mb-6">
+              <span className="text-[9px] font-black uppercase tracking-widest text-slate-700 bg-white/75 backdrop-blur-sm px-4 py-1.5 rounded-full inline-block border border-white/50 shadow-sm select-none">
+                Powered by
+              </span>
+            </div>
 
             <div
               className="relative overflow-hidden w-full select-none animate-marquee-paused"
@@ -321,7 +325,10 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-6 pb-1 text-center">
-            <a href="/staff" className="text-[9px] font-black uppercase tracking-widest text-white/40 hover:text-white/70 transition-colors">
+            <a
+              href="/staff"
+              className="text-[9px] font-black uppercase tracking-widest text-slate-700 bg-white/65 hover:bg-white/85 backdrop-blur-sm px-3.5 py-1.5 rounded-full inline-block border border-white/40 shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
               Area Staff 🔒
             </a>
           </div>
