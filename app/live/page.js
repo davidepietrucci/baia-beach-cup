@@ -1108,19 +1108,7 @@ export default function PortaleLiveMobile() {
                     const matchElements = [];
                     for (let m = 1; m <= activeRound.matches; m++) {
                       let label = "";
-                      if (activeRound.key === "r32") {
-                        const sLabelMap = {
-                          2: "Spareggio S1",
-                          4: "Spareggio S4",
-                          6: "Spareggio S3",
-                          8: "Spareggio S6",
-                          10: "Spareggio S2",
-                          12: "Spareggio S5",
-                          14: "Spareggio S7",
-                          16: "Spareggio S8"
-                        };
-                        label = sLabelMap[m] || `Spareggio ${m}`;
-                      }
+                      if (activeRound.key === "r32") label = "Sedicesimi";
                       else if (activeRound.key === "r16") label = `Ottavo ${m}`;
                       else if (activeRound.key === "qf") label = `Quarto ${m}`;
                       else if (activeRound.key === "sf") label = `Semifinale ${m}`;
