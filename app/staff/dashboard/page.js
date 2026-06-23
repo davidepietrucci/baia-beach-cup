@@ -32,7 +32,7 @@ export default function StaffDashboard() {
       });
     });
 
-    // Carica impostazioni countdown
+    
     fetch("/api/db?type=countdown", { cache: "no-store" })
       .then(res => res.json())
       .then(json => {
@@ -42,7 +42,7 @@ export default function StaffDashboard() {
       })
       .catch(err => console.error("Error loading countdown settings in dashboard:", err));
 
-    // Carica lista sponsor
+    
     fetch("/api/db?type=sponsors", { cache: "no-store" })
       .then(res => res.json())
       .then(json => {
@@ -65,7 +65,7 @@ export default function StaffDashboard() {
     if (typeof window !== "undefined" && window.confirm("Sei sicuro di voler cancellare TUTTI i dati (tornei, iscritti, gironi) dal database? Questa azione non è reversibile.")) {
       await saveTornei([]);
       await saveIscrizioni([]);
-      // Clear localStorage items
+      
       localStorage.removeItem("baia_beach_cup_tornei");
       localStorage.removeItem("baia_beach_cup_iscrizioni");
       for (let i = localStorage.length - 1; i >= 0; i--) {
@@ -171,7 +171,7 @@ export default function StaffDashboard() {
         date: "2026-08-15T09:00"
       };
 
-      // Salva nel database (Cloud o LocalStorage Fallback)
+      
       await saveTornei(mockTornei);
       await saveIscrizioni(mockIscrizioni);
       await saveGironi("torneo_di_ferragosto", mockGironiConfig);
@@ -191,7 +191,7 @@ export default function StaffDashboard() {
         console.error("Errore salvataggio demo sponsors/countdown:", e);
       }
 
-      // Sincronizza anche localmente per sicurezza/backward compatibility
+      
       localStorage.setItem("baia_beach_cup_tornei", JSON.stringify(mockTornei));
       localStorage.setItem("baia_beach_cup_iscrizioni", JSON.stringify(mockIscrizioni));
       localStorage.setItem("baia_beach_cup_gironi_v2_torneo_di_ferragosto", JSON.stringify(mockGironiConfig));
@@ -221,11 +221,11 @@ export default function StaffDashboard() {
         tipoIscrizione: "interno"
       };
       
-      // Rimuoviamo eventuale torneo esistente con lo stesso ID o nome
+      
       const filteredTornei = currentTornei.filter(t => t.id !== 4 && t.nome !== "Torneo Test 24");
       const updatedTornei = [...filteredTornei, newTorneo];
       
-      // Rimuoviamo iscrizioni esistenti per questo torneo
+      
       const filteredIscrizioni = currentIscrizioni.filter(i => i.torneo !== "Torneo Test 24");
       
       const mockPlayers = [
@@ -270,7 +270,7 @@ export default function StaffDashboard() {
       await saveTornei(updatedTornei);
       await saveIscrizioni(updatedIscrizioni);
       
-      // Salva in localStorage per sicurezza
+      
       localStorage.setItem("baia_beach_cup_tornei", JSON.stringify(updatedTornei));
       localStorage.setItem("baia_beach_cup_iscrizioni", JSON.stringify(updatedIscrizioni));
       
@@ -301,10 +301,10 @@ export default function StaffDashboard() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Limita la dimensione del file a 1MB per non sovraccaricare il database
+      
       if (file.size > 1024 * 1024) {
         alert("L'immagine è troppo grande. Seleziona un file inferiore a 1MB.");
-        e.target.value = ""; // Reset input file
+        e.target.value = ""; 
         return;
       }
       const reader = new FileReader();
@@ -374,7 +374,7 @@ export default function StaffDashboard() {
             <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Controllo Centrale Torneo</p>
         </div>
         
-        {/* Widget Statistici - Mobile Optimized */}
+        {}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <div className="bg-white rounded-[2rem] shadow-xl p-6 md:p-8 border-b-8 transition-transform active:scale-95" style={{borderColor: "#C3562B"}}>
             <div className="flex items-center justify-between mb-4">
@@ -401,7 +401,7 @@ export default function StaffDashboard() {
           </div>
         </div>
 
-        {/* Quick Actions - Full width buttons on mobile */}
+        {}
         <div className="mt-10 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full -mr-16 -mt-16"></div>
           <h3 className="text-xl md:text-2xl font-black mb-6 uppercase tracking-tight text-[#295dab] relative z-10">Azioni Rapide ⚡</h3>
@@ -437,7 +437,7 @@ export default function StaffDashboard() {
 
         </div>
 
-        {/* Gestione Dati */}
+        {}
         {role === "admin" && (
           <div className="mt-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full -mr-16 -mt-16"></div>
@@ -516,12 +516,12 @@ export default function StaffDashboard() {
               </form>
             </div>
 
-            {/* Gestione Sponsor */}
+            {}
             <div className="mt-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
               <h3 className="text-xl md:text-2xl font-black mb-2 uppercase tracking-tight text-[#295dab]">Gestione Sponsor 🤝</h3>
               <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mb-6">Aggiungi o rimuovi gli sponsor che appaiono in fondo alla homepage</p>
               
-              {/* Form aggiunta */}
+              {}
               <form onSubmit={handleAddSponsor} className="space-y-4 max-w-xl mb-8 p-6 bg-gray-50 rounded-3xl border border-gray-100">
                 <h4 className="text-xs font-black uppercase tracking-wider text-[#295dab]">Aggiungi Nuovo Sponsor</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -571,7 +571,7 @@ export default function StaffDashboard() {
                 </button>
               </form>
 
-              {/* Lista sponsor esistenti */}
+              {}
               {sponsorsList.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {sponsorsList.map((sp) => (

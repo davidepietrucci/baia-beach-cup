@@ -28,13 +28,13 @@ export default function StaffTeams() {
   const [selectedTorneoFilter, setSelectedTorneoFilter] = useState("Tutti");
   const [selectedIscrizioneDetail, setSelectedIscrizioneDetail] = useState(null);
 
-  // Add Team States
+  
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newTeamName, setNewTeamName] = useState("");
   const [selectedTorneoAdd, setSelectedTorneoAdd] = useState("");
   const [initialStatusAdd, setInitialStatusAdd] = useState("Approvata");
 
-  // Edit Tournament States
+  
   const [editingTeam, setEditingTeam] = useState(null);
   const [editTorneoValue, setEditTorneoValue] = useState("");
 
@@ -138,7 +138,7 @@ export default function StaffTeams() {
     setIscrizioni(updated);
     await saveIscrizioni(updated);
 
-    // Aggiorna i contatori dei tornei coinvolti
+    
     if (oldTorneo.toLowerCase().trim() !== newTorneo.toLowerCase().trim()) {
       const allTornei = await getTornei();
       const updatedTornei = allTornei.map(t => {
@@ -157,7 +157,7 @@ export default function StaffTeams() {
     setEditingTeam(null);
   };
 
-  // Generiamo la lista degli atleti singoli
+  
   const allSinglePlayers = [];
   iscrizioni.forEach(isc => {
     const players = splitNames(isc.giocatori);
@@ -215,7 +215,7 @@ export default function StaffTeams() {
             </div>
         </div>
 
-        {/* Tournament Filter Pills */}
+        {}
         <div className="flex flex-wrap gap-2 mb-8 bg-white p-3 rounded-2xl shadow-sm border border-gray-100/80">
             <button
               onClick={() => setSelectedTorneoFilter("Tutti")}
@@ -245,7 +245,7 @@ export default function StaffTeams() {
             })}
         </div>
 
-        {/* Desktop Table Header */}
+        {}
         <div className="hidden md:grid grid-cols-6 bg-gray-50 p-4 rounded-t-[2rem] border-x border-t border-gray-100 text-[10px] font-black text-gray-400 uppercase tracking-widest">
             <div className="px-4">Atleta</div>
             <div className="px-4">Coppia</div>
@@ -255,11 +255,11 @@ export default function StaffTeams() {
             <div className="px-4 text-right">Azioni</div>
         </div>
 
-        {/* Content rows/cards */}
+        {}
         <div className="space-y-4 md:space-y-0 md:bg-white md:rounded-b-[2rem] md:shadow-xl md:border md:border-gray-100 md:divide-y">
             {filteredPlayers.map((player) => (
                 <div key={player.id} className="bg-white p-6 rounded-[2rem] shadow-xl md:shadow-none md:rounded-none md:grid md:grid-cols-6 md:items-center hover:bg-blue-50/10 transition-all">
-                    {/* Atleta */}
+                    {}
                     <div className="mb-2 md:mb-0 md:px-4">
                         <h4 className="text-base font-black text-[#295dab] leading-tight mb-0.5">{player.atleta}</h4>
                         <div className="flex flex-wrap gap-1.5 items-center">
@@ -275,24 +275,24 @@ export default function StaffTeams() {
                         </div>
                     </div>
 
-                    {/* Coppia */}
+                    {}
                     <div className="mb-4 md:mb-0 md:px-4 text-xs font-bold text-gray-500">
                         {player.coppia}
                     </div>
 
-                    {/* Torneo */}
+                    {}
                     <div className="mb-4 md:mb-0 md:px-4">
                         <span className="inline-block px-2.5 py-1 bg-blue-50 text-[#295dab] rounded-lg text-[10px] font-black uppercase border border-blue-100/60">
                             {player.torneo}
                         </span>
                     </div>
 
-                    {/* Data Iscrizione */}
+                    {}
                     <div className="mb-4 md:mb-0 md:px-4 text-xs font-bold text-gray-500">
                         {player.data}
                     </div>
 
-                    {/* Stato Badge */}
+                    {}
                     <div className="mb-4 md:mb-0 md:px-4">
                         {player.stato === "In Attesa" ? (
                             <span className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-[10px] font-black uppercase">
@@ -305,7 +305,7 @@ export default function StaffTeams() {
                         )}
                     </div>
 
-                    {/* Azioni */}
+                    {}
                     <div className="flex gap-2 md:justify-end md:px-4">
                         <button
                             onClick={() => startEditTorneo(player.rawRegistration)}
@@ -333,7 +333,7 @@ export default function StaffTeams() {
         </div>
       </div>
 
-      {/* Details Modal */}
+      {}
       {selectedIscrizioneDetail && (
         <div className="fixed inset-0 bg-[#295dab]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 max-w-xl w-full p-6 sm:p-10 relative">
@@ -389,7 +389,7 @@ export default function StaffTeams() {
         </div>
       )}
 
-      {/* Add Team Modal */}
+      {}
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-[#295dab]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
           <form onSubmit={handleAddTeam} className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 max-w-md w-full p-6 sm:p-10 relative">
@@ -472,7 +472,7 @@ export default function StaffTeams() {
         </div>
       )}
 
-      {/* Edit Tournament Modal */}
+      {}
       {editingTeam && (
         <div className="fixed inset-0 bg-[#295dab]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 max-w-md w-full p-6 sm:p-10 relative">
@@ -489,7 +489,7 @@ export default function StaffTeams() {
               Sposta il team in un altro torneo
             </p>
 
-            {/* Team info */}
+            {}
             <div className="bg-blue-50 border border-blue-100 p-4 rounded-2xl mb-6">
               <p className="text-[10px] font-black text-emerald-700 uppercase tracking-widest mb-1">Team</p>
               <h4 className="text-base font-black text-[#295dab]">{editingTeam.giocatori}</h4>

@@ -15,7 +15,7 @@ export async function POST(request) {
       checkDuplicateName 
     } = body;
 
-    // Validazione campi minimi obbligatori
+    
     if (!torneo || !giocatori) {
       return NextResponse.json(
         { error: "Campi obbligatori mancanti: 'torneo' e 'giocatori' sono richiesti." },
@@ -23,7 +23,7 @@ export async function POST(request) {
       );
     }
 
-    // Carica tornei per verificare che esista
+    
     const tornei = await getTornei();
     const matchTorneo = tornei.find(
       t => t.nome.toLowerCase().trim() === torneo.toLowerCase().trim()
@@ -36,10 +36,10 @@ export async function POST(request) {
       );
     }
 
-    // Carica iscrizioni esistenti
+    
     const iscrizioni = await getIscrizioni();
 
-    // Controllo duplicati sul server (se richiesto dal client)
+    
     if (checkDuplicateName) {
       const lowerName = String(checkDuplicateName).toLowerCase().trim();
       const lowerTorneo = matchTorneo.nome.toLowerCase().trim();
@@ -57,14 +57,14 @@ export async function POST(request) {
       }
     }
 
-    // Genera un nuovo ID numerico progressivo per l'iscrizione
+    
     const numericIds = iscrizioni.map(i => parseInt(i.id)).filter(id => !isNaN(id));
     const newId = numericIds.length > 0 ? Math.max(...numericIds) + 1 : 100;
 
     const oggi = new Date();
     const dataFormatted = `${oggi.getDate().toString().padStart(2, "0")}/${(oggi.getMonth() + 1).toString().padStart(2, "0")}/${oggi.getFullYear()}`;
 
-    // Crea l'iscrizione
+    
     const nuovaIscrizione = {
       id: newId.toString(),
       data: dataFormatted,
@@ -81,11 +81,11 @@ export async function POST(request) {
       } : {})
     };
 
-    // Salva l'iscrizione accodata
+    
     const updatedIscrizioni = [...iscrizioni, nuovaIscrizione];
     await saveIscrizioni(updatedIscrizioni);
 
-    // Incrementa contatore iscritti del torneo specifico
+    
     const updatedTornei = tornei.map(t => {
       if (String(t.id) === String(matchTorneo.id)) {
         return { ...t, iscritti: (t.iscritti || 0) + 1 };

@@ -69,7 +69,7 @@ export default function StaffPartite() {
   const [selectedTorneo, setSelectedTorneo] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // States mirroring gironi config structure
+  
   const [numGironi, setNumGironi] = useState(4);
   const [teamCounts, setTeamCounts] = useState({});
   const [gironeAssignments, setGironeAssignments] = useState({});
@@ -79,7 +79,7 @@ export default function StaffPartite() {
   const [pubblicato, setPubblicato] = useState(false);
   const [rankingType, setRankingType] = useState("gironi");
 
-  const [activeCourtTab, setActiveCourtTab] = useState("tutte"); // "tutte", "mare", "monte"
+  const [activeCourtTab, setActiveCourtTab] = useState("tutte"); 
 
   const allGironi = [
     { id: 'A', colorClass: 'blue' },
@@ -146,7 +146,7 @@ export default function StaffPartite() {
     });
   }, [selectedTorneo]);
 
-  // Debounced auto-save
+  
   useEffect(() => {
     if (!selectedTorneo || !isLoaded) return;
     const config = {
@@ -204,7 +204,7 @@ export default function StaffPartite() {
 
     const newMetadata = {};
     Object.entries(matchMetadata).forEach(([key, val]) => {
-      // Keep court and time, clear all score fields
+      
       newMetadata[key] = {
         court: val.court || "",
         time: val.time || ""
@@ -252,7 +252,7 @@ export default function StaffPartite() {
     return hours * 60 + minutes;
   };
 
-  // Compile all matches of the current group setup
+  
   const getCompiledMatches = () => {
     const list = [];
     const activeGironi = allGironi.slice(0, numGironi);
@@ -276,7 +276,7 @@ export default function StaffPartite() {
       });
     });
 
-    // Filter by court
+    
     let filtered = list;
     if (activeCourtTab === "mare") {
       filtered = list.filter(m => m.meta.court === "1" || !m.meta.court || m.meta.court.trim() === "");
@@ -284,7 +284,7 @@ export default function StaffPartite() {
       filtered = list.filter(m => m.meta.court === "2");
     }
 
-    // Sort chronologically
+    
     return [...filtered].sort((a, b) => {
       const timeA = parseTimeToMinutes(a.meta?.time);
       const timeB = parseTimeToMinutes(b.meta?.time);
@@ -344,7 +344,7 @@ export default function StaffPartite() {
           </div>
         ) : (
           <div className="space-y-6">
-            {/* Court Tabs */}
+            {}
             <div className="flex gap-2 overflow-x-auto pb-1 justify-center">
               <button
                 onClick={() => setActiveCourtTab("tutte")}
@@ -378,7 +378,7 @@ export default function StaffPartite() {
               </button>
             </div>
 
-            {/* Matches list */}
+            {}
             {matches.length === 0 ? (
               <div className="bg-white p-12 rounded-[2.5rem] shadow-xl border border-gray-100 text-center space-y-3">
                 <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Nessuna partita trovata</p>
@@ -405,7 +405,7 @@ export default function StaffPartite() {
                         key={`${match.gironeId}-${match.idx}`}
                         className="bg-gray-50/50 hover:bg-gray-50/80 transition-all rounded-3xl p-4 md:p-5 border border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4"
                       >
-                        {/* Info details */}
+                        {}
                         <div className="flex items-center gap-3 min-w-[150px]">
                           <span className={`w-3 h-3 rounded-full ${c.main}`}></span>
                           <div className="flex flex-col">
@@ -418,7 +418,7 @@ export default function StaffPartite() {
                           </div>
                         </div>
 
-                        {/* Court & Time settings */}
+                        {}
                         <div className="flex items-center gap-2">
                           <div className="flex flex-col gap-0.5">
                             <label className="text-[8px] font-black text-gray-400 uppercase tracking-widest pl-1">Orario</label>
@@ -444,16 +444,16 @@ export default function StaffPartite() {
                           </div>
                         </div>
 
-                        {/* Matchup & Scores */}
+                        {}
                         <div className="flex-1 flex items-center justify-between gap-2 md:gap-4 bg-white/70 p-3 rounded-2xl border border-gray-50">
-                          {/* Left Team */}
+                          {}
                           <span className="flex-1 text-xs font-black text-[#295dab] text-right truncate max-w-[200px]" title={leftLabel}>
                             {leftLabel}
                           </span>
 
-                          {/* Inputs for scores */}
+                          {}
                           <div className="flex items-center gap-1">
-                            {/* Set 1 */}
+                            {}
                             <div className="flex gap-0.5">
                               <input 
                                 type="text" 
@@ -471,7 +471,7 @@ export default function StaffPartite() {
                               />
                             </div>
 
-                            {/* Set 2 (if 3 sets) */}
+                            {}
                             {isThreeSets && (
                               <>
                                 <span className="text-[10px] text-gray-300 font-bold px-0.5">|</span>
@@ -494,7 +494,7 @@ export default function StaffPartite() {
                               </>
                             )}
 
-                            {/* Set 3 (if 3 sets) */}
+                            {}
                             {isThreeSets && (
                               <>
                                 <span className="text-[10px] text-gray-300 font-bold px-0.5">|</span>
@@ -518,7 +518,7 @@ export default function StaffPartite() {
                             )}
                           </div>
 
-                          {/* Right Team */}
+                          {}
                           <span className="flex-1 text-xs font-black text-[#295dab] text-left truncate max-w-[200px]" title={rightLabel}>
                             {rightLabel}
                           </span>

@@ -6,10 +6,10 @@ export default function CookieBanner() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Check if consent has already been given
+    
     const consent = localStorage.getItem("baia_beach_cup_cookie_consent");
     if (!consent) {
-      // Small timeout to make the entry transition feel smooth
+      
       const timer = setTimeout(() => {
         setIsVisible(true);
       }, 1000);

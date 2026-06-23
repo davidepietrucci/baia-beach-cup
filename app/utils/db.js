@@ -22,7 +22,7 @@ if (isFirebaseConfigured) {
   }
 }
 
-// Safe JSON parse helper to prevent crashes
+
 function safeJsonParse(str, fallback) {
   try {
     if (!str || str === "undefined") return fallback;
@@ -33,7 +33,7 @@ function safeJsonParse(str, fallback) {
   }
 }
 
-// Helpers per il salvataggio su file JSON locali (solo lato Server)
+
 async function getLocalFileDb(type, slug = null, fallback = []) {
   if (typeof window !== "undefined") return fallback;
   try {
@@ -75,7 +75,7 @@ async function saveLocalFileDb(type, data, slug = null) {
   }
 }
 
-// Helper per eseguire chiamate HTTP sicure dal Client verso l'API del Server
+
 async function fetchFromServerDb(type, slug = null) {
   let url = `/api/db?type=${type}`;
   if (slug) url += `&slug=${slug}`;
@@ -107,12 +107,12 @@ async function saveToServerDb(type, data, slug = null) {
   }
 }
 
-// Helper to check if using Firestore
+
 export function isUsingFirebase() {
   return isFirebaseConfigured;
 }
 
-// 1. Tornei
+
 export async function getTornei() {
   if (typeof window === "undefined") {
     if (db) {
@@ -157,7 +157,7 @@ export async function saveTornei(list) {
   }
 }
 
-// 2. Iscrizioni
+
 export async function getIscrizioni() {
   if (typeof window === "undefined") {
     if (db) {
@@ -202,7 +202,7 @@ export async function saveIscrizioni(list) {
   }
 }
 
-// 3. Gironi (Tournament specific config)
+
 export async function getGironi(slug) {
   const key = `baia_beach_cup_gironi_v2_${slug}`;
   if (typeof window === "undefined") {
@@ -249,7 +249,7 @@ export async function saveGironi(slug, data) {
   }
 }
 
-// 4. Bracket (Tournament specific playoff/bracket matches)
+
 export async function getBracket(slug) {
   const key = `baia_beach_cup_bracket_v1_${slug}`;
   if (typeof window === "undefined") {
@@ -296,7 +296,7 @@ export async function saveBracket(slug, data) {
   }
 }
 
-// 5. Users (Athlete registrations)
+
 export async function getUsers() {
   if (typeof window === "undefined") {
     if (db) {
@@ -341,7 +341,7 @@ export async function saveUsers(list) {
   }
 }
 
-// 6. Moduli (Custom Form Configurations)
+
 export async function getModuli() {
   if (typeof window === "undefined") {
     if (db) {
@@ -386,7 +386,7 @@ export async function saveModuli(list) {
   }
 }
 
-// 7. Notifiche Staff
+
 export async function getNotifiche() {
   if (typeof window === "undefined") {
     if (db) {
@@ -431,7 +431,7 @@ export async function saveNotifiche(list) {
   }
 }
 
-// 8. Staff (Staff/Admin accounts)
+
 export async function getStaff() {
   if (typeof window === "undefined") {
     if (db) {
@@ -476,7 +476,7 @@ export async function saveStaff(list) {
   }
 }
 
-// 9. Impostazioni Countdown
+
 export async function getCountdown() {
   if (typeof window === "undefined") {
     if (db) {
@@ -521,7 +521,7 @@ export async function saveCountdown(settings) {
   }
 }
 
-// 10. Impostazioni Sponsor
+
 export async function getSponsors() {
   if (typeof window === "undefined") {
     if (db) {
@@ -566,7 +566,7 @@ export async function saveSponsors(list) {
   }
 }
 
-// 11. MVP (Most Valuable Player)
+
 export async function getMvp() {
   const fallback = { attivo: false, candidati: [], titolo: "Vota l'MVP del Torneo" };
   if (typeof window === "undefined") {
@@ -659,7 +659,7 @@ export async function voteMvpAtomic(candidateId) {
       }
     }
     
-    // Fallback locale su Server (JSON locale)
+    
     try {
       const mvpData = await getLocalFileDb("mvp", null, fallback);
       if (!mvpData.attivo) return { success: false, error: "Le votazioni per l'MVP non sono attualmente attive." };
@@ -682,7 +682,7 @@ export async function voteMvpAtomic(candidateId) {
     }
   }
   
-  // Lato client (fallback locale/browser)
+  
   try {
     const mvpData = await getMvp();
     if (!mvpData.attivo) return { success: false, error: "Le votazioni non sono attive." };

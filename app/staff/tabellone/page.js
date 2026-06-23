@@ -72,66 +72,66 @@ const formatTeamNameClean = (teamName) => {
   return splitNames(teamName).map(formatPlayerName).join(" - ");
 };
 
-// Seeding configuration arrays (1-based ranks)
+
 const seeding32 = [
-  [1, 32],  // Match 1
-  [16, 17], // Match 2
-  [9, 24],  // Match 3
-  [8, 25],  // Match 4
-  [5, 28],  // Match 5
-  [12, 21], // Match 6
-  [13, 20], // Match 7
-  [4, 29],  // Match 8
-  [3, 30],  // Match 9
-  [14, 19], // Match 10
-  [11, 22], // Match 11
-  [6, 27],  // Match 12
-  [7, 26],  // Match 13
-  [10, 23], // Match 14
-  [15, 18], // Match 15
-  [2, 31]   // Match 16
+  [1, 32],  
+  [16, 17], 
+  [9, 24],  
+  [8, 25],  
+  [5, 28],  
+  [12, 21], 
+  [13, 20], 
+  [4, 29],  
+  [3, 30],  
+  [14, 19], 
+  [11, 22], 
+  [6, 27],  
+  [7, 26],  
+  [10, 23], 
+  [15, 18], 
+  [2, 31]   
 ];
 
 const customSeeding32 = [
-  [1, "bye"],   // Match 1 -> Winner: 1ª PRIMA
-  [9, 24],      // Match 2 -> S1 (Winner: VINCENTE S1) -> plays 1ª PRIMA in r16-1
-  [4, "bye"],   // Match 3 -> Winner: 4ª PRIMA
-  [12, 21],     // Match 4 -> S4 (Winner: VINCENTE S4) -> plays 4ª PRIMA in r16-2
-  [7, "bye"],   // Match 5 -> Winner: 7ª PRIMA
-  [11, 22],     // Match 6 -> S3 (Winner: VINCENTE S3) -> plays 7ª PRIMA in r16-3
-  [6, "bye"],   // Match 7 -> Winner: 6ª PRIMA
-  [14, 19],     // Match 8 -> S6 (Winner: VINCENTE S6) -> plays 6ª PRIMA in r16-4
-  [2, "bye"],   // Match 9 -> Winner: 2ª PRIMA
-  [10, 23],     // Match 10 -> S2 (Winner: VINCENTE S2) -> plays 2ª PRIMA in r16-5
-  [3, "bye"],   // Match 11 -> Winner: 3ª PRIMA
-  [13, 20],     // Match 12 -> S5 (Winner: VINCENTE S5) -> plays 3ª PRIMA in r16-6
-  [5, "bye"],   // Match 13 -> Winner: 5ª PRIMA
-  [15, 18],     // Match 14 -> S7 (Winner: VINCENTE S7) -> plays 5ª PRIMA in r16-7
-  [8, "bye"],   // Match 15 -> Winner: 8ª PRIMA
-  [16, 17]      // Match 16 -> S8 (Winner: VINCENTE S8) -> plays 8ª PRIMA in r16-8
+  [1, "bye"],   
+  [9, 24],      
+  [4, "bye"],   
+  [12, 21],     
+  [7, "bye"],   
+  [11, 22],     
+  [6, "bye"],   
+  [14, 19],     
+  [2, "bye"],   
+  [10, 23],     
+  [3, "bye"],   
+  [13, 20],     
+  [5, "bye"],   
+  [15, 18],     
+  [8, "bye"],   
+  [16, 17]      
 ];
 
 const seeding16 = [
-  [1, 16], // Match 1
-  [8, 9],  // Match 2
-  [5, 12], // Match 3
-  [4, 13], // Match 4
-  [3, 14], // Match 5
-  [6, 11], // Match 6
-  [7, 10], // Match 7
-  [2, 15]  // Match 8
+  [1, 16], 
+  [8, 9],  
+  [5, 12], 
+  [4, 13], 
+  [3, 14], 
+  [6, 11], 
+  [7, 10], 
+  [2, 15]  
 ];
 
 const seeding8 = [
-  [1, 8], // Match 1
-  [4, 5], // Match 2
-  [3, 6], // Match 3
-  [2, 7]  // Match 4
+  [1, 8], 
+  [4, 5], 
+  [3, 6], 
+  [2, 7]  
 ];
 
 const seeding4 = [
-  [1, 4], // Match 1
-  [2, 3]  // Match 2
+  [1, 4], 
+  [2, 3]  
 ];
 
 function TabelloneContent() {
@@ -141,19 +141,19 @@ function TabelloneContent() {
 
   const [torneiAttivi, setTorneiAttivi] = useState([]);
   const [selectedTorneo, setSelectedTorneo] = useState("");
-  const [bracketSize, setBracketSize] = useState(16); // 32, 16, 8, 4
+  const [bracketSize, setBracketSize] = useState(16); 
   const [bracketAssignments, setBracketAssignments] = useState({});
   const [bracketMetadata, setBracketMetadata] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
   const [tabellonePubblicato, setTabellonePubblicato] = useState(false);
-  const [hoveredMatch, setHoveredMatch] = useState(null); // { roundKey, matchNum }
+  const [hoveredMatch, setHoveredMatch] = useState(null); 
 
   const getHighlightedMatches = (round, num) => {
     if (!round || !num) return new Set();
     const highlighted = new Set();
     highlighted.add(`${round}-${num}`);
     
-    // Go Forward
+    
     const getNextMatch = (r, n) => {
       if (r === "r32") return { round: "r16", num: Math.floor((n - 1) / 2) + 1 };
       if (r === "r16") return { round: "qf", num: Math.floor((n - 1) / 2) + 1 };
@@ -185,7 +185,7 @@ function TabelloneContent() {
       queue = nextQueue;
     }
     
-    // Go Backward
+    
     const getPrevMatches = (r, n) => {
       if (r === "f") return [
         { round: "sf", num: 1 },
@@ -225,8 +225,8 @@ function TabelloneContent() {
 
   const highlightedMatches = getHighlightedMatches(hoveredMatch?.roundKey, hoveredMatch?.matchNum);
 
-  // Modal edit match states
-  const [editingMatch, setEditingMatch] = useState(null); // { roundKey, matchNum, label }
+  
+  const [editingMatch, setEditingMatch] = useState(null); 
   const [modalMeta, setModalMeta] = useState({ s1L: "", s1R: "", s2L: "", s2R: "", s3L: "", s3R: "", time: "", court: "" });
   const [modalTeams, setModalTeams] = useState({ left: "", right: "" });
 
@@ -261,7 +261,7 @@ function TabelloneContent() {
     });
   }, [selectedTorneo]);
 
-  // Auto-save debounced
+  
   useEffect(() => {
     if (!selectedTorneo || !isLoaded) return;
     const slug = selectedTorneo.toLowerCase().trim().replace(/\s+/g, '_');
@@ -281,7 +281,7 @@ function TabelloneContent() {
     return () => clearTimeout(handler);
   }, [bracketSize, bracketAssignments, bracketMetadata, selectedTorneo, isLoaded, tabellonePubblicato]);
 
-  // Automatic winners progression
+  
   useEffect(() => {
     if (!isLoaded) return;
     const newAssignments = { ...bracketAssignments };
@@ -291,7 +291,7 @@ function TabelloneContent() {
       const left = bracketAssignments[`${round}-${matchNum}-L`];
       const right = bracketAssignments[`${round}-${matchNum}-R`];
 
-      // Automatic progression of byes
+      
       if (left === "—" && right && right !== "—") return right;
       if (right === "—" && left && left !== "—") return left;
       if (left === "—" && right === "—") return "—";
@@ -327,7 +327,7 @@ function TabelloneContent() {
       }
     };
 
-    // Progression definitions
+    
     const progressions = [
       { current: "r32", next: "r16", matches: 16 },
       { current: "r16", next: "qf", matches: 8 },
@@ -347,7 +347,7 @@ function TabelloneContent() {
       }
     });
 
-    // SF to Finals
+    
     if (bracketSize >= 4) {
       const winnerSF1 = resolveWinner("sf", 1);
       const loserSF1 = resolveLoser("sf", 1);
@@ -365,7 +365,7 @@ function TabelloneContent() {
     }
   }, [bracketMetadata, bracketAssignments, isLoaded, bracketSize]);
 
-  // Seeding generation from group standings
+  
   const handleAutoFill = async () => {
     const slug = selectedTorneo.toLowerCase().trim().replace(/\s+/g, '_');
     const gConfig = await getGironi(slug);
@@ -385,7 +385,7 @@ function TabelloneContent() {
 
     const getTeamNameByRank = (rank1) => {
       const name = progressionRanking[rank1 - 1];
-      if (!name) return "—"; // Bye
+      if (!name) return "—"; 
       return formatTeamNameClean(name);
     };
 
@@ -448,7 +448,7 @@ function TabelloneContent() {
     alert("Tabellone eliminato! 🗑️");
   };
 
-  // Popup Modal Functions
+  
   const openEditModal = (roundKey, matchNum, label) => {
     const matchId = `${roundKey}-${matchNum}`;
     const meta = bracketMetadata[matchId] || { s1L: "", s1R: "", s2L: "", s2R: "", s3L: "", s3R: "", time: "", court: "" };
@@ -478,7 +478,7 @@ function TabelloneContent() {
     const { roundKey, matchNum } = editingMatch;
     const matchId = `${roundKey}-${matchNum}`;
 
-    // Calculate match winner and sets score
+    
     const isSingleSet = roundKey === "r32" || roundKey === "r16";
     const s1L = parseInt(modalMeta.s1L);
     const s1R = parseInt(modalMeta.s1R);
@@ -516,7 +516,7 @@ function TabelloneContent() {
       updatedMeta.scoreR = "";
     }
 
-    // Update state
+    
     setBracketMetadata(prev => ({ ...prev, [matchId]: updatedMeta }));
     setBracketAssignments(prev => ({
       ...prev,
@@ -536,7 +536,7 @@ function TabelloneContent() {
     }));
   };
 
-  // Render match card inside tree
+  
   const renderBracketMatchCard = (roundKey, matchNum, label) => {
     const matchId = `${roundKey}-${matchNum}`;
     const teamL = bracketAssignments[`${matchId}-L`] || "";
@@ -568,7 +568,7 @@ function TabelloneContent() {
             : "border-gray-100 hover:border-[#C3562B] hover:shadow-lg"
         }`}
       >
-        {/* Card Header info */}
+        {}
         <div className="flex justify-between items-center mb-2 border-b border-gray-50 pb-1">
           <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{label}</span>
           <div className="flex gap-1 text-[8px] font-black uppercase">
@@ -577,9 +577,9 @@ function TabelloneContent() {
           </div>
         </div>
 
-        {/* Teams List */}
+        {}
         <div className="space-y-1.5">
-          {/* Team Left */}
+          {}
           <div className="flex items-center justify-between text-xs">
             <span className={`truncate font-bold max-w-[140px] ${hasScore ? (isWinnerL ? "text-green-700 font-black" : "text-gray-400") : "text-gray-700"}`}>
               {teamL || "—"}
@@ -589,7 +589,7 @@ function TabelloneContent() {
             </span>
           </div>
 
-          {/* Team Right */}
+          {}
           <div className="flex items-center justify-between text-xs">
             <span className={`truncate font-bold max-w-[140px] ${hasScore ? (isWinnerR ? "text-green-700 font-black" : "text-gray-400") : "text-gray-700"}`}>
               {teamR || "—"}
@@ -600,7 +600,7 @@ function TabelloneContent() {
           </div>
         </div>
 
-        {/* Set Details tooltips on hover */}
+        {}
         {hasSetDetails && (
           <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[9px] rounded-lg p-1.5 shadow-md z-30 mb-1 whitespace-nowrap font-bold">
             Set: {meta.s1L}-{meta.s1R}
@@ -612,7 +612,7 @@ function TabelloneContent() {
     );
   };
 
-  // Helper for computing connecting lines in tree
+  
   const renderConnectorLine = (roundIndex, matchIndex, totalMatches, containerHeight) => {
     const itemHeight = containerHeight / totalMatches;
     const center = (matchIndex - 0.5) * itemHeight;
@@ -635,7 +635,7 @@ function TabelloneContent() {
 
     return (
       <div className={`absolute inset-0 pointer-events-none ${lineZIndexClass}`}>
-        {/* Horizontal segment leaving match card */}
+        {}
         <div 
           className={`absolute ${lineColorClass}`}
           style={{
@@ -647,7 +647,7 @@ function TabelloneContent() {
           }}
         />
 
-        {/* Vertical segment connecting the pair */}
+        {}
         <div 
           className={`absolute ${lineColorClass}`}
           style={{
@@ -658,7 +658,7 @@ function TabelloneContent() {
           }}
         />
 
-        {/* Horizontal segment extending to next round */}
+        {}
         <div 
           className={`absolute ${lineColorClass}`}
           style={{
@@ -673,7 +673,7 @@ function TabelloneContent() {
     );
   };
 
-  // Dimension helpers for dynamic scaling
+  
   const getDynamicTreeDimensions = () => {
     const size = bracketSize || 16;
     if (size === 32) return { w: 1300, h: 1920 };
@@ -690,14 +690,14 @@ function TabelloneContent() {
       <StaffHeader />
 
       <div className="max-w-7xl mx-auto mt-6 md:mt-10 px-4">
-        {/* Header toolbar */}
+        {}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
           <div>
             <h2 className="text-3xl md:text-5xl font-black text-[#295dab] uppercase tracking-tighter leading-none">Tabellone ⚔️</h2>
             <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Eliminazione Diretta ad Albero</p>
           </div>
           <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-            {/* Tournament Selector */}
+            {}
             <select 
               className="flex-1 md:flex-none bg-white border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-[#295dab] text-sm shadow-xl cursor-pointer"
               value={selectedTorneo}
@@ -710,7 +710,7 @@ function TabelloneContent() {
               )}
             </select>
 
-            {/* Bracket Size Selector */}
+            {}
             <select 
               className="flex-1 md:flex-none bg-white border-2 border-gray-100 rounded-xl px-4 py-3 font-bold text-[#295dab] text-sm shadow-xl cursor-pointer"
               value={bracketSize}
@@ -739,7 +739,7 @@ function TabelloneContent() {
           </div>
         </div>
 
-        {/* Bracket visual representation */}
+        {}
         {!isLoaded ? (
           <div className="min-h-[400px] flex items-center justify-center">
             <div className="w-16 h-16 border-4 border-[#295dab] border-t-transparent rounded-full animate-spin"></div>
@@ -758,7 +758,7 @@ function TabelloneContent() {
           <div className="bg-white border border-gray-100 rounded-[2.5rem] shadow-xl overflow-hidden p-6 md:p-10 relative">
             <div className="overflow-x-auto min-w-full pb-6 scrollbar-thin">
               <div style={{ minWidth: `${currentW}px` }}>
-                {/* Headers Row */}
+                {}
                 <div className="flex gap-8 mb-6 border-b border-gray-100 pb-3 sticky top-0 bg-white z-20">
                   {bracketSize >= 32 && (
                     <div className="flex-1 text-[10px] font-black text-[#295dab] uppercase tracking-widest text-center py-2 bg-white">Sedicesimi</div>
@@ -775,10 +775,10 @@ function TabelloneContent() {
                   <div className="flex-1 text-[10px] font-black text-[#295dab] uppercase tracking-widest text-center py-2 bg-white">Finali</div>
                 </div>
 
-                {/* Columns Row */}
+                {}
                 <div className="flex gap-8 relative select-none" style={{ height: `${currentH}px` }}>
                   
-                  {/* 1. Round of 32 */}
+                  {}
                   {bracketSize >= 32 && (
                     <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
                       {Array.from({ length: 16 }, (_, idx) => {
@@ -797,7 +797,7 @@ function TabelloneContent() {
                     </div>
                   )}
 
-                  {/* 2. Round of 16 */}
+                  {}
                   {bracketSize >= 16 && (
                     <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
                       {Array.from({ length: 8 }, (_, idx) => {
@@ -816,7 +816,7 @@ function TabelloneContent() {
                     </div>
                   )}
 
-                  {/* 3. Quarterfinals */}
+                  {}
                   {bracketSize >= 8 && (
                     <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
                       {Array.from({ length: 4 }, (_, idx) => {
@@ -835,7 +835,7 @@ function TabelloneContent() {
                     </div>
                   )}
 
-                  {/* 4. Semifinals */}
+                  {}
                   {bracketSize >= 4 && (
                     <div className="flex-1 h-full relative border-r border-gray-100/50 pr-4">
                       {Array.from({ length: 2 }, (_, idx) => {
@@ -847,7 +847,7 @@ function TabelloneContent() {
                             <div className="absolute left-0 right-4 z-10" style={{ top: `${center}px`, transform: "translateY(-50%)" }}>
                               {renderBracketMatchCard("sf", matchNum, `Semifinale ${matchNum}`)}
                             </div>
-                            {/* SF to Final lines */}
+                            {}
                             {(() => {
                               const isSFToF1Highlighted = highlightedMatches.has(`sf-${matchNum}`) && highlightedMatches.has("f-1");
                               const isSFToF2Highlighted = highlightedMatches.has(`sf-${matchNum}`) && highlightedMatches.has("f-2");
@@ -859,12 +859,12 @@ function TabelloneContent() {
 
                               return (
                                 <div className={`absolute inset-0 pointer-events-none ${containerZIndex}`}>
-                                  {/* SF to Final 1 lines */}
+                                  {}
                                   <div className={`absolute ${f1ColorClass}`} style={{ top: `${center}px`, right: "-16px", width: "32px", height: "2px", transform: "translateY(-50%)" }} />
                                   <div className={`absolute ${f1ColorClass}`} style={{ top: `${idx === 0 ? center : center - sfHalfGap}px`, right: "-16px", width: "2px", height: `${sfHalfGap}px` }} />
                                   <div className={`absolute ${f1ColorClass}`} style={{ top: `${sfHalfGap}px`, right: "-32px", width: "16px", height: "2px", transform: "translateY(-50%)" }} />
 
-                                  {/* SF to Final 3/4 lines */}
+                                  {}
                                   <div className={`absolute ${f2ColorClass}`} style={{ top: `${center}px`, right: "-24px", width: "40px", height: "2px", transform: "translateY(-50%)" }} />
                                   <div className={`absolute ${f2ColorClass}`} style={{ top: `${idx === 0 ? center : center - sfHalfGap}px`, right: "-24px", width: "2px", height: `${sfHalfGap}px` }} />
                                   <div className={`absolute ${f2ColorClass}`} style={{ top: `${sfHalfGap * 3}px`, right: "-32px", width: "8px", height: "2px", transform: "translateY(-50%)" }} />
@@ -877,16 +877,16 @@ function TabelloneContent() {
                     </div>
                   )}
 
-                  {/* 5. Finals & Bronze */}
+                  {}
                   <div className="flex-1 h-full relative">
                     
-                    {/* Final 1st Place */}
+                    {}
                     <div className="absolute left-0 right-0 z-10" style={{ top: `${currentH / 4}px`, transform: "translateY(-50%)" }}>
                       <div className="text-[10px] font-black text-yellow-600 uppercase tracking-widest text-center mb-2 border-b border-yellow-600/10 pb-1">Finalissima 🥇</div>
                       {renderBracketMatchCard("f", 1, "1°/2° Posto")}
                     </div>
 
-                    {/* Final 3rd Place */}
+                    {}
                     <div className="absolute left-0 right-0 z-10" style={{ top: `${(currentH / 4) * 3}px`, transform: "translateY(-50%)" }}>
                       <div className="text-[10px] font-black text-amber-700 uppercase tracking-widest text-center mb-2 border-b border-amber-700/10 pb-1">Finale 3° Posto 🥉</div>
                       {renderBracketMatchCard("f", 2, "3°/4° Posto")}
@@ -900,12 +900,12 @@ function TabelloneContent() {
         )}
       </div>
 
-      {/* Edit Match Popup Modal */}
+      {}
       {editingMatch && (
         <div className="fixed inset-0 bg-[#295dab]/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl p-6 shadow-2xl max-w-md w-full border border-gray-100 flex flex-col gap-4 animate-scale-up">
             
-            {/* Title bar */}
+            {}
             <div className="flex justify-between items-start border-b border-gray-100 pb-3">
               <div>
                 <h4 className="text-lg font-black text-[#295dab] uppercase tracking-tight leading-none">{editingMatch.label}</h4>
@@ -914,7 +914,7 @@ function TabelloneContent() {
               <button onClick={closeEditModal} className="text-gray-400 hover:text-gray-600 transition-colors font-black text-lg p-1">✕</button>
             </div>
 
-            {/* Match info form */}
+            {}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Orario</label>
@@ -938,9 +938,9 @@ function TabelloneContent() {
               </div>
             </div>
 
-            {/* Teams edit */}
+            {}
             <div className="space-y-3.5 mt-2">
-              {/* Team L */}
+              {}
               <div className="space-y-1">
                 <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Squadra A (Sinistra)</label>
                 <input 
@@ -958,7 +958,7 @@ function TabelloneContent() {
                 />
               </div>
 
-              {/* Team R */}
+              {}
               <div className="space-y-1">
                 <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Squadra B (Destra)</label>
                 <input 
@@ -977,7 +977,7 @@ function TabelloneContent() {
               </div>
             </div>
 
-            {/* Set scores */}
+            {}
             <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100 space-y-3 mt-1">
               {editingMatch && (editingMatch.roundKey === "r32" || editingMatch.roundKey === "r16") ? (
                 <>
@@ -986,13 +986,13 @@ function TabelloneContent() {
                     <div className="text-center">Punti Incontro</div>
                   </div>
                   
-                  {/* Squadra A */}
+                  {}
                   <div className="grid grid-cols-2 gap-4 items-center">
                     <span className="text-[10px] font-bold text-gray-600 truncate max-w-[120px] text-right">{modalTeams.left || "A"}</span>
                     <input type="number" placeholder="0" value={modalMeta.s1L} onChange={(e) => setModalMeta(p => ({ ...p, s1L: e.target.value }))} className="w-24 mx-auto text-center text-xs border border-gray-200 rounded-lg py-1.5 bg-white text-gray-900 font-bold focus:outline-none" />
                   </div>
 
-                  {/* Squadra B */}
+                  {}
                   <div className="grid grid-cols-2 gap-4 items-center">
                     <span className="text-[10px] font-bold text-gray-600 truncate max-w-[120px] text-right">{modalTeams.right || "B"}</span>
                     <input type="number" placeholder="0" value={modalMeta.s1R} onChange={(e) => setModalMeta(p => ({ ...p, s1R: e.target.value }))} className="w-24 mx-auto text-center text-xs border border-gray-200 rounded-lg py-1.5 bg-white text-gray-900 font-bold focus:outline-none" />
@@ -1007,7 +1007,7 @@ function TabelloneContent() {
                     <div>Set 3</div>
                   </div>
                   
-                  {/* Squadra A */}
+                  {}
                   <div className="grid grid-cols-4 gap-2 items-center">
                     <span className="text-[10px] font-bold text-gray-600 truncate max-w-[80px] text-right">{modalTeams.left || "A"}</span>
                     <input type="number" placeholder="0" value={modalMeta.s1L} onChange={(e) => setModalMeta(p => ({ ...p, s1L: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
@@ -1015,7 +1015,7 @@ function TabelloneContent() {
                     <input type="number" placeholder="0" value={modalMeta.s3L} onChange={(e) => setModalMeta(p => ({ ...p, s3L: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
                   </div>
 
-                  {/* Squadra B */}
+                  {}
                   <div className="grid grid-cols-4 gap-2 items-center">
                     <span className="text-[10px] font-bold text-gray-600 truncate max-w-[80px] text-right">{modalTeams.right || "B"}</span>
                     <input type="number" placeholder="0" value={modalMeta.s1R} onChange={(e) => setModalMeta(p => ({ ...p, s1R: e.target.value }))} className="w-full text-center text-xs border border-gray-200 rounded-lg py-1 bg-white text-gray-900 font-bold focus:outline-none" />
@@ -1026,7 +1026,7 @@ function TabelloneContent() {
               )}
             </div>
 
-            {/* Modal Actions */}
+            {}
             <div className="flex gap-2 justify-end mt-2 pt-3 border-t border-gray-100">
               <button onClick={clearModalScores} className="px-4 py-2 border border-gray-200 rounded-xl text-xs font-bold text-gray-500 hover:bg-gray-50 transition-colors cursor-pointer">Svuota Punteggi</button>
               <div className="flex gap-2">

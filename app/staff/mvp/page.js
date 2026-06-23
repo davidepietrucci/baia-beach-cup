@@ -11,7 +11,7 @@ export default function StaffMvp() {
   const { user, isLoaded } = useUser();
   const [role, setRole] = useState("admin");
 
-  // Stato per la configurazione MVP
+  
   const [mvpForm, setMvpForm] = useState({
     attivo: false,
     titolo: "Vota l'MVP del Torneo",
@@ -27,7 +27,7 @@ export default function StaffMvp() {
   const [tornei, setTornei] = useState([]);
   const [selectedTorneo, setSelectedTorneo] = useState("Tutti");
 
-  // Lista di tutti i giocatori iscritti
+  
   const [availablePlayers, setAvailablePlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -46,13 +46,13 @@ export default function StaffMvp() {
   }, [user, isLoaded, router]);
 
   useEffect(() => {
-    // 1. Carica configurazione MVP esistente
+    
     const loadMvpData = async () => {
       try {
         const res = await fetch("/api/db?type=mvp", { cache: "no-store" });
         const json = await res.json();
         if (json.data) {
-          // Assicuriamoci che ci siano sempre 8 elementi
+          
           const existingCandidati = json.data.candidati || [];
           const candidatiWithEightItems = Array.from({ length: 8 }, (_, i) => {
             const indexStr = String(i + 1);
@@ -72,7 +72,7 @@ export default function StaffMvp() {
       }
     };
 
-    // 2. Carica tornei e iscrizioni
+    
     const loadData = async () => {
       try {
         const allTornei = await getTornei();
@@ -92,7 +92,7 @@ export default function StaffMvp() {
     loadData();
   }, []);
 
-  // Effetto per aggiornare la lista dei candidati in base al torneo selezionato
+  
   useEffect(() => {
     const playersSet = new Set();
     const splitNames = (name) => {
@@ -139,7 +139,7 @@ export default function StaffMvp() {
     const newTorneo = e.target.value;
     setSelectedTorneo(newTorneo);
     
-    // Resetta i candidati (nomi, foto e voti)
+    
     setMvpForm(prev => ({
       ...prev,
       candidati: prev.candidati.map(c => ({
@@ -180,7 +180,7 @@ export default function StaffMvp() {
     e.preventDefault();
     setSaving(true);
     try {
-      // Se si attiva l'MVP e non c'è ancora un sessionId, ne generiamo uno nuovo
+      
       const dataToSave = {
         ...mvpForm,
         sessionId: mvpForm.attivo && !mvpForm.sessionId
@@ -246,7 +246,7 @@ export default function StaffMvp() {
       return;
     }
 
-    // Nuovo sessionId: invalida i voti in localStorage di tutti gli utenti
+    
     const cleanForm = {
       attivo: false,
       titolo: "Vota l'MVP del Torneo",
@@ -278,7 +278,7 @@ export default function StaffMvp() {
     }
   };
 
-  // Calcolo statistiche voti
+  
   const totalVotes = mvpForm.candidati.reduce((acc, curr) => acc + (curr.voti || 0), 0);
 
   if (loading) {
@@ -298,7 +298,7 @@ export default function StaffMvp() {
       <StaffHeader />
 
       <div className="max-w-6xl mx-auto mt-6 md:mt-10 px-4">
-        {/* Intestazione */}
+        {}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
             <h2 className="text-3xl md:text-5xl font-black text-[#295dab] uppercase tracking-tighter leading-none">Gestione MVP 🗳️</h2>
@@ -327,13 +327,13 @@ export default function StaffMvp() {
           </div>
         </div>
 
-        {/* Layout Grid: Dashboard + Configurazione */}
+        {}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Colonna Sinistra: Stato e Classifica Voti */}
+          {}
           <div className="lg:col-span-1 space-y-6">
             
-            {/* Box Stato Votazione */}
+            {}
             <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-xl border border-gray-100">
               <h3 className="text-lg font-black mb-4 uppercase tracking-tight text-[#295dab]">Stato Votazione</h3>
               <div className="flex items-center justify-between bg-gray-50 p-4 rounded-2xl border border-gray-100">
@@ -356,7 +356,7 @@ export default function StaffMvp() {
               </div>
             </div>
 
-            {/* Box Risultati in Tempo Reale */}
+            {}
             <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-xl border border-gray-100">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-black uppercase tracking-tight text-[#295dab]">Risultati Live</h3>
@@ -399,12 +399,12 @@ export default function StaffMvp() {
 
           </div>
 
-          {/* Colonna Destra: Configurazione Candidati */}
+          {}
           <div className="lg:col-span-2">
             <form onSubmit={handleSaveMvp} className="bg-white p-6 md:p-10 rounded-[2.5rem] shadow-xl border border-gray-100 space-y-6">
               <h3 className="text-xl font-black uppercase tracking-tight text-[#295dab]">Configura Candidati (Top 8) 👥</h3>
               
-              {/* Campo Titolo e Selettore Torneo */}
+              {}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Titolo Sezione Voto</label>
@@ -432,20 +432,20 @@ export default function StaffMvp() {
                 </div>
               </div>
 
-              {/* Lista 8 Candidati */}
+              {}
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {mvpForm.candidati.map((candidato, index) => (
                   <div key={candidato.id} className="p-4 bg-gray-50 rounded-3xl border border-gray-100 space-y-3 shadow-sm relative">
                     <h4 className="text-xs font-black uppercase tracking-wider text-[#295dab]">Candidato {index + 1}</h4>
                     
-                    {/* Nome Giocatore */}
+                    {}
                     <div className="space-y-1">
                       <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider ml-1">Giocatore</label>
                       {availablePlayers.length > 0 ? (
                         <select
                           value={candidato.nome}
                           onChange={(e) => handleCandidateChange(index, "nome", e.target.value)}
-                          required={index < 4} // Almeno 4 candidati obbligatori
+                          required={index < 4} 
                           className="w-full bg-white border-none rounded-xl px-4 py-2.5 text-xs font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] cursor-pointer"
                         >
                           <option value="">Seleziona un giocatore...</option>
@@ -465,7 +465,7 @@ export default function StaffMvp() {
                       )}
                     </div>
 
-                    {/* Caricamento Foto */}
+                    {}
                     <div className="space-y-1">
                       <div className="flex justify-between items-center">
                         <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider ml-1">Carica Foto (Max 1MB)</label>
@@ -488,7 +488,7 @@ export default function StaffMvp() {
                       />
                     </div>
 
-                    {/* Anteprima Foto caricata */}
+                    {}
                     {candidato.fotoUrl && (
                       <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-gray-100 max-w-max">
                         <img 
@@ -504,7 +504,7 @@ export default function StaffMvp() {
                 ))}
               </div>
 
-              {/* Bottone di Invio */}
+              {}
               <div className="pt-4 border-t border-gray-100 flex justify-end">
                 <button 
                   type="submit" 

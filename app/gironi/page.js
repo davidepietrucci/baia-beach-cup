@@ -47,7 +47,7 @@ const formatPlayerName = (fullName) => {
     return cleanName;
   }
 
-  // Se contiene già un punto o l'ultima parte è una singola lettera, è già formattato
+  
   const parts = cleanName.split(/\s+/);
   const lastPart = parts[parts.length - 1];
   if (cleanName.includes(".") || lastPart.length === 1 || (lastPart.length === 2 && lastPart.endsWith("."))) {
@@ -81,9 +81,9 @@ function GironiContent() {
   const [selectedTorneo, setSelectedTorneo] = useState("");
   const [config, setConfig] = useState(null);
   const [bracketConfig, setBracketConfig] = useState(null);
-  const [activeTab, setActiveTab] = useState("gironi"); // "gironi", "partite", "finali"
-  const [fasiFinaliCategory, setFasiFinaliCategory] = useState("gold"); // "gold" or "silver"
-  const [viewMode, setViewMode] = useState("campoMare"); // "campoMare" or "campoMonte"
+  const [activeTab, setActiveTab] = useState("gironi"); 
+  const [fasiFinaliCategory, setFasiFinaliCategory] = useState("gold"); 
+  const [viewMode, setViewMode] = useState("campoMare"); 
   const [loading, setLoading] = useState(true);
   const [selectedRoundTab, setSelectedRoundTab] = useState("");
   const [sponsors, setSponsors] = useState([]);
@@ -146,7 +146,7 @@ function GironiContent() {
     return unlockedRounds;
   };
 
-  // 1. Carica l'elenco dei tornei e determina quello da visualizzare
+  
   useEffect(() => {
     getTornei().then((parsed) => {
       setTornei(parsed);
@@ -154,7 +154,7 @@ function GironiContent() {
       if (urlTour && parsed.some((t) => t.nome === urlTour)) {
         setSelectedTorneo(urlTour);
       } else {
-        // Cerca tornei attivi per primi
+        
         const attivi = parsed.filter(
           (t) => t.stato === "Iscrizioni Aperte" || t.stato === "In Programmazione"
         );
@@ -167,7 +167,7 @@ function GironiContent() {
       setLoading(false);
     });
 
-    // Leggi gli sponsor dal database
+    
     fetch("/api/db?type=sponsors")
       .then(res => res.json())
       .then(json => {
@@ -178,7 +178,7 @@ function GironiContent() {
       .catch(err => console.error("Error fetching sponsors:", err));
   }, [urlTour]);
 
-  // 2. Caricamento live dei gironi e dei bracket del torneo selezionato
+  
   useEffect(() => {
     if (!selectedTorneo) return;
     const slug = selectedTorneo.toLowerCase().trim().replace(/\s+/g, "_");
@@ -197,7 +197,7 @@ function GironiContent() {
     return () => clearInterval(interval);
   }, [selectedTorneo]);
 
-  // Auto-switch tab if only bracket is published
+  
   useEffect(() => {
     const isPub = !!(config && config.pubblicato);
     const isBracketPub = !!(bracketConfig && bracketConfig.tabellonePubblicato);
@@ -206,7 +206,7 @@ function GironiContent() {
     }
   }, [config, bracketConfig]);
 
-  // Initialize and validate the active round tab for final phases
+  
   useEffect(() => {
     if (bracketConfig && bracketConfig.bracketSize) {
       const avRounds = getAvailableRounds(bracketConfig.bracketSize);
@@ -222,7 +222,7 @@ function GironiContent() {
   const isBracketPublished = bracketConfig && bracketConfig.tabellonePubblicato;
   const rankingType = config?.rankingType || "gironi";
 
-  // 3. Calcola la lista dei gironi iniziali
+  
   const getInitialGroupsList = (currentConfig = config) => {
     const list = [];
     if (currentConfig && currentConfig.numGironi) {
@@ -235,7 +235,7 @@ function GironiContent() {
   };
 
   const parseTimeToMinutes = (timeStr) => {
-    if (!timeStr) return Infinity; // Put untimed matches at the end
+    if (!timeStr) return Infinity; 
     const parts = timeStr.trim().split(":");
     if (parts.length < 2) return Infinity;
     const hours = parseInt(parts[0], 10);
@@ -277,7 +277,7 @@ function GironiContent() {
     return all;
   };
 
-  // 4. Calcola la lista dei gironi intermedi (Gold/Silver) se presenti
+  
   const getIntermediateGroupsList = () => {
     const list = [];
     if (
@@ -313,12 +313,12 @@ function GironiContent() {
     return list;
   };
 
-  // Logica per il calendario incontri
+  
   const getSchedule = (numTeams, gironeId, assignments = {}) => {
     return getScheduleShared(numTeams, gironeId, assignments, config?.gironeTypes, config?.gironeSets, config?.matchMetadata);
   };
 
-  // Fix fontName typo
+  
   const getScheduleFixed = (numTeams, gironeId, assignments = {}) => {
     return getScheduleShared(numTeams, gironeId, assignments, config?.gironeTypes, config?.gironeSets, config?.matchMetadata);
   };
@@ -484,7 +484,7 @@ function GironiContent() {
       );
   };
 
-  // Restituisce la lista di partite playoff lineare
+  
   const getPlayoffMatchesList = () => {
     if (!bracketConfig || !bracketConfig.bracketAssignments) return [];
     const assignments = bracketConfig.bracketAssignments;
@@ -550,7 +550,7 @@ function GironiContent() {
     if (bracketConfig.phaseType === "gold_silver") {
       const isGroups = bracketConfig.subPhaseType === "groups";
       if (isGroups) {
-        // --- GROUPS FLOW ---
+        
         let goldSlots = 0;
         let silverSlots = 0;
         if (config && config.numGironi) {
@@ -601,11 +601,11 @@ function GironiContent() {
           });
         }
       } else {
-        // --- DIRECT FLOW ---
+        
         const tToGold = bracketConfig.teamsToGold || 8;
         const tToSilver = bracketConfig.teamsToSilver || 8;
 
-        // Gold round matches definition
+        
         const goldOttaviMatches = tToGold === 16 
           ? ["gold-o1", "gold-o2", "gold-o3", "gold-o4", "gold-o5", "gold-o6", "gold-o7", "gold-o8"]
           : tToGold === 12 
@@ -614,7 +614,7 @@ function GironiContent() {
         const goldQuartiMatches = ["gold-q1", "gold-q2", "gold-q3", "gold-q4"];
         const goldSemifinaliMatches = ["gold-s1", "gold-s2"];
 
-        // Silver round matches definition
+        
         const silverOttaviMatches = tToSilver === 16 
           ? ["silver-o1", "silver-o2", "silver-o3", "silver-o4", "silver-o5", "silver-o6", "silver-o7", "silver-o8"]
           : tToSilver === 12 
@@ -623,7 +623,7 @@ function GironiContent() {
         const silverQuartiMatches = ["silver-q1", "silver-q2", "silver-q3", "silver-q4"];
         const silverSemifinaliMatches = ["silver-s1", "silver-s2"];
 
-        // Completion status
+        
         const goldOttaviDone = goldOttaviMatches.length === 0 || isRoundCompleted(goldOttaviMatches);
         const goldQuartiDone = isRoundCompleted(goldQuartiMatches);
         const goldSemifinaliDone = isRoundCompleted(goldSemifinaliMatches);
@@ -632,7 +632,7 @@ function GironiContent() {
         const silverQuartiDone = isRoundCompleted(silverQuartiMatches);
         const silverSemifinaliDone = isRoundCompleted(silverSemifinaliMatches);
 
-        // Gold additions
+        
         if (tToGold === 12 || tToGold === 16) {
           list.push({
             title: "Ottavi Gold 🏆",
@@ -675,7 +675,7 @@ function GironiContent() {
           });
         }
 
-        // Silver additions
+        
         if (tToSilver === 12 || tToSilver === 16) {
           list.push({
             title: "Ottavi Silver 🥈",
@@ -719,7 +719,7 @@ function GironiContent() {
         }
       }
     } else {
-      // Doppia Eliminazione
+      
       const wbQuarti = ["wb-q1", "wb-q2", "wb-q3", "wb-q4"];
       const wbSemifinali = ["wb-s1", "wb-s2"];
       const wbFinale = ["wb-f"];
@@ -777,7 +777,7 @@ function GironiContent() {
 
 
 
-  // Rendering del singolo blocco partita SofaScore
+  
   const renderMatchRow = (teamL, teamR, meta, idx, matchKeyPrefix, gironeId = null, matchLabel = null) => {
     const isPlayoffMatch = !gironeId;
     const scoreL = isPlayoffMatch 
@@ -790,7 +790,7 @@ function GironiContent() {
       ? (meta?.scoreL !== undefined && meta?.scoreL !== "")
       : ((meta?.s1L !== undefined && meta?.s1L !== "") || (meta?.scoreL !== undefined && meta?.scoreL !== ""));
 
-    // Altri set per partite a 3 set
+    
     const s2L = parseInt(meta?.s2L || 0);
     const s2R = parseInt(meta?.s2R || 0);
     const s3L = parseInt(meta?.s3L || 0);
@@ -861,7 +861,7 @@ function GironiContent() {
         </div>
 
         <div className="flex items-center justify-between gap-3 py-1.5">
-          {/* Team Left */}
+          
           <div className="flex-1 text-right min-w-0 pr-1">
             <span
               className={`font-bold break-words leading-tight block ${fontSizeL} ${
@@ -880,7 +880,7 @@ function GironiContent() {
             </span>
           </div>
 
-          {/* Score Badge */}
+          
           <div className="shrink-0 flex flex-col items-center justify-center min-w-[70px]">
             {hasScore && (scoreL > 0 || scoreR > 0) && (
               <span className="text-[10px] font-black text-black uppercase tracking-wider mb-1.5">
@@ -910,7 +910,7 @@ function GironiContent() {
             )}
           </div>
 
-          {/* Team Right */}
+          
           <div className="flex-1 text-left min-w-0 pl-1">
             <span
               className={`font-bold break-words leading-tight block ${fontSizeR} ${
@@ -933,7 +933,7 @@ function GironiContent() {
     );
   };
 
-  // Render a bracket match card in a clean vertical list for mobile
+  
   const renderBracketMatchRow = (roundKey, matchNum, label, idx) => {
     if (!bracketConfig) return null;
     const assignments = bracketConfig.bracketAssignments || {};
@@ -1066,7 +1066,7 @@ function GironiContent() {
 
   return (
     <main className="min-h-screen pb-24 relative">
-      {/* Sfondo fisso */}
+      
       <div
         className="fixed inset-0 -z-10"
         style={{
@@ -1076,7 +1076,7 @@ function GironiContent() {
           backgroundPosition: "center"
         }}
       />
-      {/* Header Mobile Premium */}
+      
       <header
         style={{ backgroundColor: "#295dab" }}
         className="text-white py-4 px-5 flex justify-between items-center shadow-md border-b-4 border-[#C3562B] sticky top-0 z-50"
@@ -1095,7 +1095,7 @@ function GironiContent() {
         </a>
       </header>
 
-      {/* Sezione Sponsor Marquee Compatta sotto Header */}
+      
       {doubleSponsors.length > 0 && (
         <div className="w-full bg-white/10 backdrop-blur-xs border-b border-white/10 py-3 overflow-hidden select-none relative z-40">
           <div
@@ -1135,7 +1135,7 @@ function GironiContent() {
       )}
 
       <div className="max-w-md mx-auto px-4 pt-5 space-y-4">
-        {/* Torneo Info Title Card */}
+        
         <div className="relative bg-white rounded-3xl p-5 border border-gray-100 shadow-sm overflow-hidden text-center">
           {isConcluso ? (
             <span className="inline-block px-3 py-1 rounded-full text-[8px] font-black bg-gray-100 text-gray-600 uppercase tracking-widest mb-2">
@@ -1156,10 +1156,10 @@ function GironiContent() {
 
         </div>
 
-        {/* Controllo Pubblicazione */}
+        
         {isPublished || isBracketPublished ? (
           <>
-            {/* 1. SEZIONE GIRONI (COMPOSIZIONE SQUADRE INIZIALI) */}
+            
             {activeTab === "gironi" && (
               <div className="space-y-5">
                 {isPublished ? (
@@ -1271,7 +1271,7 @@ function GironiContent() {
               </div>
             )}
 
-            {/* 1b. SEZIONE CLASSIFICA GENERALE (Solo se rankingType === "avulsa") */}
+            
             {activeTab === "classifica" && rankingType === "avulsa" && (
               <div className="space-y-5">
                 {isPublished ? (
@@ -1394,7 +1394,7 @@ function GironiContent() {
               </div>
             )}
 
-            {/* 2. SEZIONE PARTITE */}
+            
             {activeTab === "partite" && (
               <div className="space-y-6">
                 {isPublished ? (
@@ -1500,7 +1500,7 @@ function GironiContent() {
               </div>
             )}
 
-            {/* 4. SEZIONE FASI FINALI */}
+            
             {activeTab === "finali" && isBracketPublished && (
               <div className="space-y-5 animate-fade-in">
                 <div className="flex justify-between items-center pl-1 border-l-4 border-[#C3562B] pl-2 mb-2">
@@ -1509,7 +1509,7 @@ function GironiContent() {
                   </h3>
                 </div>
 
-                {/* Round selection tabs */}
+                
                 <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none justify-center">
                   {getAvailableRounds(bracketConfig.bracketSize).map((round) => (
                     <button
@@ -1553,7 +1553,7 @@ function GironiContent() {
             )}
           </>
         ) : (
-          /* Messaggio Gironi non Pubblicati */
+          
           <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
             <span className="text-5xl mb-4 block">⏳</span>
             <h3 className="text-lg font-black text-[#295dab] uppercase tracking-tight mb-2">
@@ -1567,12 +1567,12 @@ function GironiContent() {
         )}
       </div>
 
-      {/* BOTTOM NAV BAR FISSA - 4 Pulsanti */}
+      
       {(isPublished || isBracketPublished) && (
         <nav className="fixed bottom-0 left-0 right-0 z-50">
           <div className="absolute inset-0 bg-[#295dab]/95 backdrop-blur-xl border-t border-blue-950/80 shadow-[0_-4px_30px_rgba(0,0,0,0.25)]" />
           <div className="relative flex justify-around px-1 pb-safe">
-            {/* Pulsante Gironi (Composizione) */}
+            
             <button
               onClick={() => setActiveTab("gironi")}
               className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform ${
@@ -1601,7 +1601,7 @@ function GironiContent() {
               )}
             </button>
 
-            {/* Pulsante Partite */}
+            
             <button
               onClick={() => setActiveTab("partite")}
               className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform ${
@@ -1630,7 +1630,7 @@ function GironiContent() {
               )}
             </button>
 
-            {/* Pulsante Classifica - visibile se rankingType === "avulsa" */}
+            
             {rankingType === "avulsa" && (
               <button
                 onClick={() => setActiveTab("classifica")}
@@ -1661,7 +1661,7 @@ function GironiContent() {
               </button>
             )}
 
-            {/* Pulsante Fasi Finali - visibile solo se tabellone pubblicato */}
+            
             {isBracketPublished && (
             <button
               onClick={() => setActiveTab("finali")}
@@ -1692,7 +1692,7 @@ function GironiContent() {
             </button>
             )}
           </div>
-          {/* iOS spacer */}
+          
           <div className="h-safe-area-inset-bottom bg-[#295dab]" />
         </nav>
       )}

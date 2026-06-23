@@ -13,7 +13,7 @@ export async function POST(request) {
       );
     }
 
-    // Esegui la votazione atomica con transazione
+    
     const result = await voteMvpAtomic(candidateId);
 
     if (!result.success) {

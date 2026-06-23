@@ -40,7 +40,7 @@ export default function StaffTornei() {
             </button>
         </div>
 
-        {/* Lista Tornei - Grid */}
+        {}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {tornei.map((torneo) => (
             <div key={torneo.id} className="bg-white rounded-[2rem] shadow-xl border-b-8 overflow-hidden flex flex-col hover:shadow-2xl transition-all group" style={{borderColor: torneo.stato === "Concluso" ? "#cbd5e1" : "#C3562B"}}>

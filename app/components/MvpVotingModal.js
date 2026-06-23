@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 export default function MvpVotingModal({ isOpen, onClose, mvpData, onVoteSuccess }) {
   const [hasVoted, setHasVoted] = useState(false);
   const [votedCandidateId, setVotedCandidateId] = useState("");
-  const [votingId, setVotingId] = useState(""); // ID del candidato che si sta votando
+  const [votingId, setVotingId] = useState(""); 
   const [localMvpData, setLocalMvpData] = useState(mvpData);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function MvpVotingModal({ isOpen, onClose, mvpData, onVoteSuccess
   if (!isOpen) return null;
 
   const handleVote = async (candidateId) => {
-    if (votingId) return; // Evita clic multipli durante il caricamento
+    if (votingId) return; 
     setVotingId(candidateId);
 
     try {
@@ -57,7 +57,7 @@ export default function MvpVotingModal({ isOpen, onClose, mvpData, onVoteSuccess
     }
   };
 
-  // Filtriamo i candidati che hanno effettivamente un nome configurato
+  
   const activeCandidates = (localMvpData?.candidati || []).filter(c => c.nome);
   const totalVotes = activeCandidates.reduce((acc, curr) => acc + (curr.voti || 0), 0);
 
@@ -67,7 +67,7 @@ export default function MvpVotingModal({ isOpen, onClose, mvpData, onVoteSuccess
         className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 max-w-4xl w-full max-h-[90vh] overflow-y-auto flex flex-col relative transform transition-all duration-300 scale-100 animate-[bounce_0.4s_ease-out]"
         onClick={e => e.stopPropagation()}
       >
-        {/* Pulsante di Chiusura */}
+        {}
         <button 
           onClick={onClose}
           className="absolute top-6 right-6 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 font-bold text-lg flex items-center justify-center transition-all z-20 cursor-pointer"
@@ -75,7 +75,7 @@ export default function MvpVotingModal({ isOpen, onClose, mvpData, onVoteSuccess
           ✕
         </button>
 
-        {/* Header Modal */}
+        {}
         <div className="p-8 pb-4 text-center border-b border-gray-100">
           <h2 className="text-3xl font-black text-[#295dab] uppercase tracking-tight leading-tight">
             {localMvpData?.titolo || "Vota l'MVP del Torneo"}
@@ -87,10 +87,10 @@ export default function MvpVotingModal({ isOpen, onClose, mvpData, onVoteSuccess
           </p>
         </div>
 
-        {/* Contenuto principale */}
+        {}
         <div className="p-8 flex-1">
           {hasVoted ? (
-            /* SE L'UTENTE HA GIÀ VOTATO: Mostra Messaggio di Conferma */
+            
             <div className="space-y-6 max-w-lg mx-auto py-4 text-center">
               <div className="bg-green-50 border border-green-200/70 p-8 rounded-[2rem] shadow-sm space-y-4">
                 <span className="text-5xl animate-bounce inline-block">🎉</span>
@@ -113,7 +113,7 @@ export default function MvpVotingModal({ isOpen, onClose, mvpData, onVoteSuccess
               </div>
             </div>
           ) : (
-            /* SE L'UTENTE NON HA ANCORA VOTATO: Mostra la griglia dei Candidati */
+            
             activeCandidates.length === 0 ? (
               <p className="text-center text-gray-400 font-bold uppercase tracking-widest py-12">Nessun candidato configurato dallo staff.</p>
             ) : (
@@ -123,13 +123,13 @@ export default function MvpVotingModal({ isOpen, onClose, mvpData, onVoteSuccess
                     key={c.id} 
                     className="bg-white rounded-3xl border border-gray-200/80 shadow-sm overflow-hidden flex flex-col group hover:shadow-xl hover:border-[#295dab]/30 hover:-translate-y-1.5 transition-all duration-300"
                   >
-                    {/* Immagine o Placeholder */}
+                    {}
                     <div className="h-44 w-full bg-gray-50 relative overflow-hidden flex items-center justify-center border-b border-gray-100">
                       {c.fotoUrl ? (
                         <img 
                           src={c.fotoUrl} 
                           alt={c.nome} 
-                          onError={(e) => { e.target.src = "" }} // In caso di errore mostra il placeholder
+                          onError={(e) => { e.target.src = "" }} 
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                         />
                       ) : (
@@ -140,7 +140,7 @@ export default function MvpVotingModal({ isOpen, onClose, mvpData, onVoteSuccess
                       )}
                     </div>
 
-                    {/* Nome e Azione */}
+                    {}
                     <div className="p-4 flex-1 flex flex-col justify-between gap-4">
                       <h4 className="text-sm font-black text-gray-800 text-center leading-snug tracking-tight uppercase line-clamp-2 min-h-[2.5rem] flex items-center justify-center">
                         {c.nome}
@@ -168,7 +168,7 @@ export default function MvpVotingModal({ isOpen, onClose, mvpData, onVoteSuccess
           )}
         </div>
 
-        {/* Footer del Modal */}
+        {}
         <div className="p-6 border-t border-gray-100 text-center bg-gray-50/50 rounded-b-[2.5rem]">
           <button 
             onClick={onClose}

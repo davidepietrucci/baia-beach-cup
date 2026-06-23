@@ -46,7 +46,7 @@ const formatPlayerName = (fullName) => {
     return cleanName;
   }
 
-  // Se contiene già un punto o l'ultima parte è una singola lettera, è già formattato
+  
   const parts = cleanName.split(/\s+/);
   const lastPart = parts[parts.length - 1];
   if (cleanName.includes(".") || lastPart.length === 1 || (lastPart.length === 2 && lastPart.endsWith("."))) {
@@ -79,7 +79,7 @@ export default function StaffGironi() {
   const [matchMetadata, setMatchMetadata] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
   const [pubblicato, setPubblicato] = useState(false);
-  const [rankingType, setRankingType] = useState("gironi"); // "avulsa" o "gironi"
+  const [rankingType, setRankingType] = useState("gironi"); 
   
   const [isDragging, setIsDragging] = useState(false);
   const [dragOverSlot, setDragOverSlot] = useState(null);
@@ -91,15 +91,15 @@ export default function StaffGironi() {
     const hasPlayer = playerInSlot !== "—";
     
     if (selectedAthlete) {
-      // Assign selected athlete from sidebar to this slot
+      
       handleAssignmentChange(gironeId, idx, selectedAthlete);
       setSelectedAthlete(null);
     } else if (selectedSlot) {
       if (selectedSlot.gironeId === gironeId && selectedSlot.slotIdx === idx) {
-        // Deselect if clicking the same slot
+        
         setSelectedSlot(null);
       } else {
-        // Swap or move
+        
         const athlete1 = selectedSlot.name;
         const athlete2 = playerInSlot;
         handleAssignmentChange(selectedSlot.gironeId, selectedSlot.slotIdx, athlete2);
@@ -107,7 +107,7 @@ export default function StaffGironi() {
         setSelectedSlot(null);
       }
     } else {
-      // Select slot for moving/swapping
+      
       if (hasPlayer) {
         setSelectedSlot({ gironeId, slotIdx: idx, name: playerInSlot });
         setSelectedAthlete(null);
@@ -117,7 +117,7 @@ export default function StaffGironi() {
 
   const handleSidebarClick = () => {
     if (selectedSlot) {
-      // If a slot was selected for moving, tapping the sidebar clears it
+      
       handleAssignmentChange(selectedSlot.gironeId, selectedSlot.slotIdx, "—");
       setSelectedSlot(null);
     }
@@ -177,7 +177,7 @@ export default function StaffGironi() {
     });
   }, [selectedTorneo]);
 
-  // Auto-save whenever configurations change (after they have been fully loaded)
+  
   useEffect(() => {
     if (!selectedTorneo || !isLoaded) return;
     const config = {
@@ -191,10 +191,10 @@ export default function StaffGironi() {
       rankingType
     };
     
-    // Immediate save to localStorage
+    
     localStorage.setItem(getConfigKey(selectedTorneo), JSON.stringify(config));
 
-    // Debounced save to cloud db
+    
     const handler = setTimeout(() => {
       const slug = selectedTorneo.toLowerCase().trim().replace(/\s+/g, '_');
       saveGironi(slug, config);
@@ -394,7 +394,7 @@ export default function StaffGironi() {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
-            {/* Configurazione Gironi */}
+            {}
             <div className="flex-1 space-y-8">
                 <div className="bg-white p-6 rounded-[2.5rem] shadow-xl border border-gray-100">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-gray-50 pb-4">

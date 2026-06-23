@@ -11,21 +11,21 @@ export default function StaffIscrizioni() {
   const [iscrizioni, setIscrizioni] = useState([]);
   const [tornei, setTornei] = useState([]);
   
-  // Import Modal States
+  
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [selectedTorneoImport, setSelectedTorneoImport] = useState("");
   const [initialStatusImport, setInitialStatusImport] = useState("Approvata");
-  const [inputMethod, setInputMethod] = useState("paste"); // 'paste' or 'file'
+  const [inputMethod, setInputMethod] = useState("paste"); 
   const [pastedText, setPastedText] = useState("");
   const [importedTeams, setImportedTeams] = useState([]);
   
-  // Filter by Tournament state
+  
   const [selectedTorneoFilter, setSelectedTorneoFilter] = useState("Tutti");
 
-  // Detail modal for custom fields
+  
   const [selectedIscrizioneDetail, setSelectedIscrizioneDetail] = useState(null);
 
-  // Edit Modal States
+  
   const [editingIscrizione, setEditingIscrizione] = useState(null);
   const [editFormData, setEditFormData] = useState({
     giocatori: "",
@@ -118,7 +118,7 @@ export default function StaffIscrizioni() {
   const parsePlayersList = (text) => {
     if (!text || !text.trim()) return [];
     
-    // Split into lines
+    
     const lines = text.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
     if (lines.length === 0) return [];
     
@@ -179,7 +179,7 @@ export default function StaffIscrizioni() {
       return;
     }
     
-    // Genera gli ID progressivi corretti
+    
     const numericIds = iscrizioni.map(i => parseInt(i.id)).filter(id => !isNaN(id));
     let nextId = numericIds.length > 0 ? Math.max(...numericIds) + 1 : 100;
 
@@ -247,7 +247,7 @@ export default function StaffIscrizioni() {
       return `"${escaped}"`;
     };
 
-    // Raccoglie tutte le domande/etichette personalizzate uniche presenti nelle iscrizioni filtrate
+    
     const customLabels = [];
     targetIscrizioni.forEach(isc => {
       if (isc.risposte && Array.isArray(isc.risposte)) {
@@ -287,7 +287,7 @@ export default function StaffIscrizioni() {
           isc.note || ""
         ];
 
-        // Aggiunge le risposte ai campi custom corrispondenti
+        
         customLabels.forEach(label => {
           const answer = isc.risposte && Array.isArray(isc.risposte)
             ? isc.risposte.find(r => r.label === label)
@@ -365,9 +365,9 @@ export default function StaffIscrizioni() {
             })}
         </div>
 
-        {/* Mobile Cards / Desktop Table Wrapper */}
+        {}
         <div className="space-y-4 md:space-y-0">
-            {/* Desktop Table Header (Visible only on MD+) */}
+            {}
             <div className="hidden md:grid grid-cols-6 bg-gray-50 p-4 rounded-t-[2rem] border-x border-t border-gray-100 text-[10px] font-black text-gray-400 uppercase tracking-widest">
                 <div className="px-4">Ricevuta</div>
                 <div className="px-4 col-span-2">Squadra / Torneo</div>
@@ -380,13 +380,13 @@ export default function StaffIscrizioni() {
             <div className="space-y-4 md:space-y-0 md:bg-white md:rounded-b-[2rem] md:shadow-xl md:border md:border-gray-100 md:divide-y">
                 {filteredIscrizioni.map((req) => (
                     <div key={req.id} className="bg-white p-6 rounded-[2rem] shadow-xl md:shadow-none md:rounded-none md:grid md:grid-cols-6 md:items-center hover:bg-blue-50/20 transition-all">
-                        {/* Mobile Header: Badge ID e Data */}
+                        {}
                         <div className="flex justify-between items-center mb-4 md:mb-0 md:px-4">
                             <span className="text-[10px] font-black text-gray-300 md:hidden">#{req.id}</span>
                             <span className="text-sm font-bold text-gray-500">{req.data}</span>
                         </div>
 
-                        {/* Squadra e Torneo */}
+                        {/* Team and Tournament */}
                         <div className="mb-4 md:mb-0 md:col-span-2 md:px-4">
                             <h4 className="text-lg font-black text-[#295dab] leading-tight mb-1">{req.giocatori}</h4>
                             <div className="flex flex-wrap gap-1.5 items-center">
@@ -404,14 +404,14 @@ export default function StaffIscrizioni() {
                             </div>
                         </div>
 
-                        {/* Contatto */}
+                        {}
                         <div className="mb-4 md:mb-0 md:px-4">
                             <p className="text-xs font-bold text-gray-400 flex items-center gap-1">
                                 <span className="md:hidden">📞</span> {req.tel}
                             </p>
                         </div>
 
-                        {/* Stato */}
+                        {/* Status */}
                         <div className="mb-6 md:mb-0 md:px-4">
                             {req.stato === "In Attesa" ? (
                                 <span className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-[10px] font-black uppercase">
@@ -424,7 +424,7 @@ export default function StaffIscrizioni() {
                             )}
                         </div>
 
-                        {/* Azioni */}
+                        {}
                         <div className="flex gap-2 md:justify-end md:px-4">
                             <button 
                                 onClick={() => startEdit(req)}
@@ -477,7 +477,7 @@ export default function StaffIscrizioni() {
             </p>
 
             <div className="space-y-6 text-left">
-              {/* Select Torneo */}
+              {/* Select Tournament */}
               <div>
                 <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Seleziona Torneo di Destinazione</label>
                 <select
@@ -490,7 +490,7 @@ export default function StaffIscrizioni() {
                 </select>
               </div>
 
-              {/* Select Stato Iniziale */}
+              {/* Select Initial Status */}
               <div>
                 <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Stato Iniziale delle Iscrizioni</label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -511,7 +511,7 @@ export default function StaffIscrizioni() {
                 </div>
               </div>
 
-              {/* Input Method Selector */}
+              {}
               <div>
                 <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Metodo di Inserimento</label>
                 <div className="flex bg-gray-100 p-1 rounded-xl mb-4">

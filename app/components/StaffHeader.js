@@ -64,7 +64,7 @@ export default function StaffHeader() {
         </div>
       </div>
 
-      {/* Desktop Navigation */}
+      {}
       <nav className="hidden xl:flex gap-1 bg-gray-50 p-1 rounded-xl border border-gray-200">
         {filteredMenuItems.map((item) => (
           <a
@@ -85,7 +85,7 @@ export default function StaffHeader() {
         {username && <span className="text-gray-500 hidden sm:inline text-xs font-bold uppercase tracking-widest">Ciao, {username}</span>}
         <button onClick={handleLogout} className="hidden sm:block hover:underline font-bold text-red-500 text-xs uppercase tracking-widest cursor-pointer bg-transparent border-none">Esci</button>
         
-        {/* Mobile Menu Button */}
+        {}
         <button 
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="xl:hidden w-10 h-10 flex items-center justify-center bg-gray-100 rounded-xl text-[#295dab]"
@@ -94,7 +94,7 @@ export default function StaffHeader() {
         </button>
       </div>
 
-      {/* Mobile Sidebar Overlay */}
+      {}
       {isMenuOpen && (
         <div className="fixed inset-0 bg-black/50 z-[110] xl:hidden" onClick={() => setIsMenuOpen(false)}>
           <div className="absolute right-0 top-0 h-full w-72 bg-white shadow-2xl p-6 flex flex-col gap-6 animate-in slide-in-from-right" onClick={e => e.stopPropagation()}>

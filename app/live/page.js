@@ -76,8 +76,8 @@ export default function PortaleLiveMobile() {
   const [selectedTorneo, setSelectedTorneo] = useState("");
   const [config, setConfig] = useState(null);
   const [bracketConfig, setBracketConfig] = useState(null);
-  const [activeTab, setActiveTab] = useState("gironi"); // "gironi", "partite", "finali"
-  const [viewMode, setViewMode] = useState("campoMare"); // "campoMare" or "campoMonte"
+  const [activeTab, setActiveTab] = useState("gironi"); 
+  const [viewMode, setViewMode] = useState("campoMare"); 
   const [loading, setLoading] = useState(true);
   const [selectedRoundTab, setSelectedRoundTab] = useState("");
   const [sponsors, setSponsors] = useState([]);
@@ -140,7 +140,7 @@ export default function PortaleLiveMobile() {
     return unlockedRounds;
   };
 
-  // 1. Carica l'elenco dei tornei e determina quello da visualizzare
+  
   useEffect(() => {
     getTornei().then((parsed) => {
       setTornei(parsed);
@@ -163,7 +163,7 @@ export default function PortaleLiveMobile() {
       setLoading(false);
     });
 
-    // Leggi gli sponsor dal database
+    
     fetch("/api/db?type=sponsors")
       .then(res => res.json())
       .then(json => {
@@ -174,7 +174,7 @@ export default function PortaleLiveMobile() {
       .catch(err => console.error("Error fetching sponsors:", err));
   }, []);
 
-  // 2. Caricamento live dei gironi e dei bracket del torneo selezionato
+  
   useEffect(() => {
     if (!selectedTorneo) return;
     const slug = selectedTorneo.toLowerCase().trim().replace(/\s+/g, "_");
@@ -193,7 +193,7 @@ export default function PortaleLiveMobile() {
     return () => clearInterval(interval);
   }, [selectedTorneo]);
 
-  // Auto-switch tab if only bracket is published
+  
   useEffect(() => {
     const isPub = !!(config && config.pubblicato);
     const isBracketPub = !!(bracketConfig && bracketConfig.tabellonePubblicato);
@@ -202,7 +202,7 @@ export default function PortaleLiveMobile() {
     }
   }, [config, bracketConfig]);
 
-  // Initialize and validate the active round tab for final phases
+  
   useEffect(() => {
     if (bracketConfig && bracketConfig.bracketSize) {
       const avRounds = getAvailableRounds(bracketConfig.bracketSize);
@@ -218,7 +218,7 @@ export default function PortaleLiveMobile() {
   const isBracketPublished = bracketConfig && bracketConfig.tabellonePubblicato;
   const rankingType = config?.rankingType || "gironi";
 
-  // 3. Calcola la lista dei gironi iniziali
+  
   const getInitialGroupsList = (currentConfig = config) => {
     const list = [];
     if (currentConfig && currentConfig.numGironi) {
@@ -373,7 +373,7 @@ export default function PortaleLiveMobile() {
     });
   };
 
-  // SofaScore style renderer for initial groups matches
+  
   const renderMatchRow = (teamL, teamR, meta, idx, matchKeyPrefix, gironeId = null, matchLabel = null) => {
     const isPlayoffMatch = !gironeId;
     const scoreL = isPlayoffMatch 
@@ -451,7 +451,7 @@ export default function PortaleLiveMobile() {
         </div>
 
         <div className="flex items-center justify-between gap-3 py-1.5">
-          {/* Team Left */}
+          {}
           <div className="flex-1 text-right min-w-0 pr-1">
             <span
               className={`font-bold break-words leading-tight block ${fontSizeL} ${
@@ -470,7 +470,7 @@ export default function PortaleLiveMobile() {
             </span>
           </div>
 
-          {/* Score Badge */}
+          {}
           <div className="shrink-0 flex flex-col items-center justify-center min-w-[70px]">
             {hasScore && (scoreL > 0 || scoreR > 0) && (
               <span className="text-[10px] font-black text-black uppercase tracking-wider mb-1.5">
@@ -495,7 +495,7 @@ export default function PortaleLiveMobile() {
             )}
           </div>
 
-          {/* Team Right */}
+          {}
           <div className="flex-1 text-left min-w-0 pl-1">
             <span
               className={`font-bold break-words leading-tight block ${fontSizeR} ${
@@ -518,7 +518,7 @@ export default function PortaleLiveMobile() {
     );
   };
 
-  // Render a bracket match card in a clean vertical list for mobile
+  
   const renderBracketMatchRow = (roundKey, matchNum, label, idx) => {
     if (!bracketConfig) return null;
     const assignments = bracketConfig.bracketAssignments || {};
@@ -651,7 +651,7 @@ export default function PortaleLiveMobile() {
 
   return (
     <main className="min-h-screen bg-[#f4f7f6] pb-24">
-      {/* Header Mobile Premium */}
+      {}
       <header
         style={{ backgroundColor: "#295dab" }}
         className="text-white py-4 px-5 flex justify-between items-center shadow-md border-b-4 border-[#C3562B] sticky top-0 z-50"
@@ -670,7 +670,7 @@ export default function PortaleLiveMobile() {
         </a>
       </header>
 
-      {/* Sezione Sponsor Marquee Compatta sotto Header */}
+      {}
       {doubleSponsors.length > 0 && (
         <div className="w-full bg-white/10 backdrop-blur-xs border-b border-white/10 py-3 overflow-hidden select-none relative z-40">
           <div
@@ -710,7 +710,7 @@ export default function PortaleLiveMobile() {
       )}
 
       <div className="max-w-md mx-auto px-4 pt-5 space-y-4">
-        {/* Torneo Info Title Card */}
+        {}
         <div className="relative bg-white rounded-3xl p-5 border border-gray-100 shadow-sm overflow-hidden text-center">
           {isConcluso ? (
             <span className="inline-block px-3 py-1 rounded-full text-[8px] font-black bg-gray-100 text-gray-600 uppercase tracking-widest mb-2">
@@ -729,10 +729,10 @@ export default function PortaleLiveMobile() {
           </p>
         </div>
 
-        {/* Controllo Pubblicazione */}
+        {}
         {isPublished || isBracketPublished ? (
           <>
-            {/* 1. SEZIONE GIRONI */}
+            {}
             {activeTab === "gironi" && (
               <div className="space-y-5">
                 {isPublished ? (
@@ -844,7 +844,7 @@ export default function PortaleLiveMobile() {
               </div>
             )}
 
-            {/* 1b. SEZIONE CLASSIFICA GENERALE (Solo se rankingType === "avulsa") */}
+            {}
             {activeTab === "classifica" && rankingType === "avulsa" && (
               <div className="space-y-5">
                 {isPublished ? (
@@ -967,7 +967,7 @@ export default function PortaleLiveMobile() {
               </div>
             )}
 
-            {/* 2. SEZIONE PARTITE */}
+            {}
             {activeTab === "partite" && (
               <div className="space-y-6">
                 {isPublished ? (
@@ -1073,7 +1073,7 @@ export default function PortaleLiveMobile() {
               </div>
             )}
 
-            {/* 4. SEZIONE FASI FINALI */}
+            {}
             {activeTab === "finali" && isBracketPublished && (
               <div className="space-y-5 animate-fade-in">
                 <div className="flex justify-between items-center pl-1 border-l-4 border-[#C3562B] pl-2 mb-2">
@@ -1082,7 +1082,7 @@ export default function PortaleLiveMobile() {
                   </h3>
                 </div>
 
-                {/* Round selection tabs */}
+                {}
                 <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none justify-center">
                   {getAvailableRounds(bracketConfig.bracketSize).map((round) => (
                     <button
@@ -1125,7 +1125,7 @@ export default function PortaleLiveMobile() {
               </div>
             )}
 
-            {/* Messaggio tabellone non pubblicato */}
+            {}
             {activeTab === "finali" && !isBracketPublished && (
               <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
                 <span className="text-5xl mb-4 block">⚔️</span>
@@ -1139,7 +1139,7 @@ export default function PortaleLiveMobile() {
             )}
           </>
         ) : (
-          /* Messaggio Gironi non Pubblicati */
+          
           <div className="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 px-6">
             <span className="text-5xl mb-4 block">⏳</span>
             <h3 className="text-lg font-black text-[#295dab] uppercase tracking-tight mb-2">
@@ -1153,13 +1153,13 @@ export default function PortaleLiveMobile() {
         )}
       </div>
 
-      {/* BOTTOM NAV BAR */}
+      {}
       {(isPublished || isBracketPublished) && (
         <nav className="fixed bottom-0 left-0 right-0 z-50">
           <div className="absolute inset-0 bg-[#295dab]/95 backdrop-blur-xl border-t border-blue-950/80 shadow-[0_-4px_30px_rgba(0,0,0,0.25)]" />
           <div className="relative flex justify-around px-1 pb-safe">
             
-            {/* Pulsante Gironi */}
+            {}
             <button
               onClick={() => setActiveTab("gironi")}
               className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform cursor-pointer ${
@@ -1173,7 +1173,7 @@ export default function PortaleLiveMobile() {
               {activeTab === "gironi" && <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />}
             </button>
 
-            {/* Pulsante Partite */}
+            {}
             <button
               onClick={() => setActiveTab("partite")}
               className={`relative flex flex-col items-center gap-1.5 py-5.5 px-3 flex-1 active:scale-95 transition-transform cursor-pointer ${
@@ -1187,7 +1187,7 @@ export default function PortaleLiveMobile() {
               {activeTab === "partite" && <span className="absolute top-3 w-1.5 h-1.5 rounded-full bg-[#C3562B]" />}
             </button>
 
-            {/* Pulsante Classifica - visibile se rankingType === "avulsa" */}
+            {}
             {rankingType === "avulsa" && (
               <button
                 onClick={() => setActiveTab("classifica")}
@@ -1203,7 +1203,7 @@ export default function PortaleLiveMobile() {
               </button>
             )}
 
-            {/* Pulsante Fasi Finali */}
+            {}
             {isBracketPublished && (
               <button
                 onClick={() => setActiveTab("finali")}
@@ -1220,7 +1220,7 @@ export default function PortaleLiveMobile() {
             )}
             
           </div>
-          {/* iOS spacer */}
+          {}
           <div className="h-safe-area-inset-bottom bg-[#295dab]" />
         </nav>
       )}

@@ -26,7 +26,7 @@ export default function Home() {
 
   const displaySponsors = sponsors && sponsors.length > 0 ? sponsors : defaultTestSponsors;
 
-  // Assicuriamoci che ci siano abbastanza elementi prima di duplicare per il marquee loop
+  
   let baseSponsors = [...displaySponsors];
   while (baseSponsors.length < 10) {
     baseSponsors = [...baseSponsors, ...displaySponsors];
@@ -34,18 +34,18 @@ export default function Home() {
   const doubleSponsors = [...baseSponsors, ...baseSponsors];
 
   useEffect(() => {
-    // Leggi i tornei dal database per mostrarli in home
+    
     getTornei().then(allTornei => {
-      // Filtriamo i tornei in programmazione per la sezione live
+      
       const live = allTornei.filter(t => t.stato === "In Programmazione");
       setTorneiLive(live);
 
-      // Mostriamo i tornei conclusi
+      
       const conclusi = allTornei.filter(t => t.stato === "Concluso");
       setTorneiConclusi(conclusi);
     });
 
-    // Leggi le impostazioni del countdown
+    
     fetch("/api/db?type=countdown", { cache: "no-store" })
       .then(res => res.json())
       .then(json => {
@@ -55,7 +55,7 @@ export default function Home() {
       })
       .catch(err => console.error("Error fetching countdown:", err));
 
-    // Leggi gli sponsor dal database
+    
     fetch("/api/db?type=sponsors", { cache: "no-store" })
       .then(res => res.json())
       .then(json => {
@@ -68,7 +68,7 @@ export default function Home() {
     getMvp().then(data => {
       if (data) {
         setMvpData(data);
-        // Controlla se l'utente ha già votato per questa sessione MVP
+        
         if (typeof window !== "undefined") {
           const sessionId = data.sessionId || "default";
           const storageKey = `baia_beach_cup_mvp_voted_${sessionId}`;
@@ -119,7 +119,7 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleScroll);
 
-    // Esegui dopo un piccolo ritardo per attendere il rendering del DOM e il calcolo delle altezze
+    
     const timer = setTimeout(handleScroll, 100);
 
     return () => {
@@ -131,7 +131,7 @@ export default function Home() {
 
   return (
     <main className="min-h-[140vh] flex flex-col relative">
-      {/* Sfondo fisso con effetto parallasse mappato sullo scorrimento della pagina */}
+      {}
       <div
         className="fixed inset-0 -z-10"
         style={{
@@ -144,7 +144,7 @@ export default function Home() {
 
 
 
-      {/* Logo Centrato (Al posto del vecchio countdown) */}
+      {}
       <div className="w-full flex justify-center mt-10 px-4 relative z-20">
         <div className="relative group">
           <div className="absolute inset-0 bg-[#295dab]/20 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
@@ -159,7 +159,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Banner MVP */}
+      {}
       {mvpData.attivo && (
         <div className="w-full max-w-xl mx-auto mt-8 px-4 relative z-20 animate-fade-in">
           <div className="relative overflow-hidden bg-gradient-to-r from-[#295dab] to-[#1e3a8a] text-white p-6 rounded-[2rem] shadow-2xl border border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4 group">
@@ -185,7 +185,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* Bottone Instagram (Subito sotto il countdown o l'header) */}
+      {}
       <div className="w-full flex justify-center mt-6 relative z-20">
         <a
           href="https://www.instagram.com/baia_beach_cup/"
@@ -202,7 +202,7 @@ export default function Home() {
         </a>
       </div>
 
-      {/* Hero Section / Live Event Center */}
+      {}
       {torneiLive.length > 0 && (
         <section className="pt-10 pb-6 px-4 sm:px-8 flex flex-col items-center justify-center text-center relative z-20 gap-6">
           {torneiLive.map((t, idx) => (
@@ -211,7 +211,7 @@ export default function Home() {
               className="w-full max-w-xl rounded-[2.5rem] flex flex-col items-center justify-end border border-gray-200 shadow-2xl relative overflow-hidden group min-h-[380px] sm:min-h-[440px] p-8 sm:p-10"
               style={t.immagineRiquadro ? {} : { background: "#ffffff" }}
             >
-              {/* Background Image Container with hover zoom (only if image is set) */}
+              {}
               {t.immagineRiquadro && (
                 <div 
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
@@ -219,7 +219,7 @@ export default function Home() {
                 />
               )}
               
-              {/* Dark Gradient Overlay only when image is present */}
+              {}
               {t.immagineRiquadro && (
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent transition-opacity duration-300 group-hover:opacity-90" />
               )}
@@ -237,7 +237,7 @@ export default function Home() {
         </section>
       )}
 
-      {/* Sezione Tornei Conclusi */}
+      {}
       {torneiConclusi.length > 0 && (
         <section className="px-4 sm:px-8 pb-24 max-w-6xl mx-auto">
           <div className="flex items-center gap-4 mb-8 border-b-2 pb-4" style={{ borderColor: "#cbd5e1" }}>
@@ -277,7 +277,7 @@ export default function Home() {
           </div>
         </section>
       )}
-      {/* Sezione Sponsor */}
+      {}
       {displaySponsors.length > 0 && (
         <section className="w-full py-8 sm:py-10 mt-auto relative overflow-hidden">
           <div className="w-full text-center">
@@ -324,7 +324,7 @@ export default function Home() {
         </section>
       )}
 
-      {/* Modal di Votazione MVP */}
+      {}
       <MvpVotingModal 
         isOpen={isMvpModalOpen}
         onClose={() => setIsMvpModalOpen(false)}
@@ -335,7 +335,7 @@ export default function Home() {
         }}
       />
 
-      {/* Footer */}
+      {}
       <footer className="w-full text-center py-6 mt-10 relative z-20">
         <a
           href="/staff"

@@ -11,7 +11,7 @@ export default function Iscrizioni() {
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   
-  // Risposte per i campi standard
+  
   const [formData, setFormData] = useState({
     torneo: "",
     giocatore1: "",
@@ -27,7 +27,7 @@ export default function Iscrizioni() {
 
   useEffect(() => {
     getTornei().then(allTornei => {
-      // Mostriamo solo i tornei aperti se possibile
+      
       const aperti = allTornei.filter(t => t.stato === "Iscrizioni Aperte" || !t.stato);
       const daMostrare = aperti.length > 0 ? aperti : allTornei;
       
@@ -100,7 +100,7 @@ export default function Iscrizioni() {
 
   return (
     <main className="min-h-screen pb-20 relative" style={{ backgroundColor: "#f4f7f6" }}>
-      {/* Header */}
+      
       <header style={{ backgroundColor: "#295dab" }} className="text-white py-4 px-8 flex justify-between items-center shadow-md">
         <div className="flex items-center gap-3">
           <Image src="/logo_v2.png" alt="Baia Beach Cup Logo" width={50} height={50} className="object-contain" />
@@ -117,7 +117,7 @@ export default function Iscrizioni() {
         </nav>
       </header>
 
-      {/* Form Section */}
+      
       <div className="max-w-3xl mx-auto mt-12 px-4">
         {torneiAperti.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8 border-t-4 text-center" style={{ borderColor: "#C3562B" }}>
@@ -126,7 +126,7 @@ export default function Iscrizioni() {
           </div>
         ) : (
           <form className="space-y-6 animate-fade-in" onSubmit={handleSubmit}>
-            {/* Card Selezione Torneo */}
+            
             <div className="bg-white rounded-2xl shadow-xl p-8 border-t-8" style={{ borderColor: "#295dab" }}>
               <h2 className="text-3xl font-extrabold mb-2" style={{ color: "#295dab" }}>Modulo d'Iscrizione al Torneo 📝</h2>
               <p className="text-gray-500 mb-6 font-medium text-sm">Seleziona il torneo a cui intendi iscriverti per caricare i dettagli.</p>
@@ -147,7 +147,7 @@ export default function Iscrizioni() {
               </div>
             </div>
 
-            {/* Se è un modulo esterno (Google Form) */}
+            
             {activeTorneo?.tipoIscrizione === "esterno" ? (
               <div className="bg-white rounded-2xl shadow-xl p-8 border-t-8 border-indigo-600 space-y-6 text-center">
                 <div className="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center mx-auto">
@@ -176,21 +176,17 @@ export default function Iscrizioni() {
                 </p>
               </div>
             ) : (
-              // MODULO INTERNO STANDARD
               <>
                 <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8 border-t-4 space-y-6" style={{ borderColor: "#C3562B" }}>
-                  {/* Giocatori */}
                   <div>
                     <h3 className="text-xl font-bold border-b pb-2 mb-4" style={{ color: "#295dab" }}>Anagrafica Giocatori</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Giocatore 1 */}
                       <div className="space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
                         <h4 className="font-semibold text-gray-800">Giocatore 1 (Referente)</h4>
                         <input type="text" name="giocatore1" value={formData.giocatore1} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Nome e Cognome" />
                         <input type="email" name="email1" value={formData.email1} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Email" />
                         <input type="tel" name="tel1" value={formData.tel1} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Telefono (WhatsApp)" />
                       </div>
-                      {/* Giocatore 2 */}
                       <div className="space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
                         <h4 className="font-semibold text-gray-800">Giocatore 2</h4>
                         <input type="text" name="giocatore2" value={formData.giocatore2} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 text-gray-900 bg-white" placeholder="Nome e Cognome" />
@@ -199,15 +195,11 @@ export default function Iscrizioni() {
                       </div>
                     </div>
                   </div>
-
-                  {/* Note */}
                   <div className="pt-4">
                     <label className="block text-sm font-semibold text-gray-700 mb-1">Note / Richieste per lo Staff</label>
                     <textarea name="note" value={formData.note} onChange={handleChange} rows="3" className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Es. Arriveremo con 30 minuti di ritardo..."></textarea>
                   </div>
                 </div>
-
-                {/* Invia */}
                 <div className="pt-6">
                   <button 
                     type="submit" 
@@ -231,7 +223,7 @@ export default function Iscrizioni() {
         )}
       </div>
 
-      {/* POPUP MODAL DI SUCCESSO */}
+      
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border-t-8 border-green-500 transform animate-[bounce_0.5s_ease-out]">

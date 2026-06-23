@@ -118,7 +118,7 @@ export default function StaffClassifiche() {
           </div>
         ) : (
           <div className="space-y-8 animate-fade-in">
-            {/* Header info */}
+            {}
             <div className="bg-white p-5 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-gray-500">Tipo Classifica Attiva:</span>
@@ -138,9 +138,9 @@ export default function StaffClassifiche() {
               </div>
             </div>
 
-            {/* Classification Rendering */}
+            {}
             {isUnified ? (
-              // 1. Unified standings (Avulsa)
+              
               <div className="bg-white p-6 rounded-[2.5rem] shadow-xl border border-gray-100">
                 <h3 className="text-sm font-black uppercase tracking-widest text-gray-400 mb-6 pl-1 border-l-4 border-[#295dab] pl-2">
                   Classifica Avulsa (Generale)
@@ -194,7 +194,7 @@ export default function StaffClassifiche() {
                 </div>
               </div>
             ) : (
-              // 2. Separate standings (Gironi)
+              
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {allGironi.slice(0, config.numGironi).map((g) => {
                   const c = getColors(g.colorClass);

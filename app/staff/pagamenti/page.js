@@ -158,7 +158,7 @@ export default function StaffPagamenti() {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-            {/* Search query field */}
+            {}
             <div className="flex-1 md:w-80 bg-white px-6 py-3 rounded-2xl shadow-xl border border-gray-100 flex flex-col gap-1">
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Cerca Team</span>
               <input 
@@ -170,7 +170,7 @@ export default function StaffPagamenti() {
               />
             </div>
 
-            {/* Tournament selector */}
+            {}
             <div className="bg-white px-6 py-3 rounded-2xl shadow-xl border border-gray-100 flex flex-col gap-1 min-w-[200px]">
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Filtra Torneo</span>
               <select 
@@ -186,7 +186,7 @@ export default function StaffPagamenti() {
           </div>
         </div>
 
-        {/* Dashboard Statistiche */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           <div className="bg-white rounded-[2rem] p-8 shadow-xl border-b-8 border-blue-500 relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-500"></div>
@@ -205,7 +205,7 @@ export default function StaffPagamenti() {
           </div>
         </div>
 
-        {/* Mobile-Friendly List */}
+        {}
         <div className="space-y-6">
           {iscrizioniFiltrate.map((isc) => {
             const saldoMancante = isc.quotaTotale - isc.quotaPagata;
@@ -229,7 +229,7 @@ export default function StaffPagamenti() {
                   
                   <h3 className="text-2xl font-black text-[#295dab] leading-tight mb-3">{isc.giocatori}</h3>
                   
-                  {/* Individual player buttons displaying their payment status */}
+                  {}
                   {players.length > 0 && (
                     <div className="flex flex-wrap gap-2 mb-3">
                       {players.map((playerName) => {

@@ -27,7 +27,7 @@ export const getSchedule = (numTeams, gironeId, assignments = {}, gironeTypes = 
       return rrMatches;
     }
 
-    // Hash parameters to get a deterministic seed
+    
     let baseSeed = 12345;
     const seedStr = `${numTeams}-${gironeId}-${Object.values(assignments).join(",")}`;
     for (let i = 0; i < seedStr.length; i++) {
@@ -37,7 +37,7 @@ export const getSchedule = (numTeams, gironeId, assignments = {}, gironeTypes = 
     let bestSchedule = null;
     let bestBackToBacks = Infinity;
 
-    // Run the deterministic search with different seeds (based on baseSeed)
+    
     for (let attempt = 0; attempt < 50; attempt++) {
       const remaining = [...rrMatches];
       const scheduled = [];
@@ -46,13 +46,13 @@ export const getSchedule = (numTeams, gironeId, assignments = {}, gironeTypes = 
       const nextRand = mulberry32(baseSeed + attempt);
 
       while (remaining.length > 0) {
-        // Calculate costs for all remaining matches
+        
         const candidates = remaining.map((m, idx) => {
           let cost = 0;
           const A = m.left;
           const B = m.right;
 
-          // Check last match
+          
           if (scheduled.length >= 1) {
             const last = scheduled[scheduled.length - 1];
             const lastTeams = [last.left, last.right];
@@ -60,15 +60,15 @@ export const getSchedule = (numTeams, gironeId, assignments = {}, gironeTypes = 
             if (lastTeams.includes(B)) cost += 1000;
           }
 
-          // Check second to last match
+          
           if (scheduled.length >= 2) {
             const last = scheduled[scheduled.length - 1];
             const prev = scheduled[scheduled.length - 2];
             const lastTeams = [last.left, last.right];
             const prevTeams = [prev.left, prev.right];
 
-            // 3-in-a-row checks: if team played in both the last and 2nd last match,
-            // playing them again makes it 3 in a row.
+            
+            
             if (lastTeams.includes(A) && prevTeams.includes(A)) {
               cost += 1000000;
             }
@@ -80,7 +80,7 @@ export const getSchedule = (numTeams, gironeId, assignments = {}, gironeTypes = 
             if (prevTeams.includes(B)) cost += 100;
           }
 
-          // Small random noise to break ties differently per attempt
+          
           cost += nextRand() * 50;
 
           return { match: m, cost, index: idx };
@@ -205,7 +205,7 @@ export const calculateSingleGroupStats = (groupId, config) => {
         perse: 0,
         puntiFatti: 0,
         puntiSubiti: 0,
-        score: 0, // wins
+        score: 0, 
       };
     }
   }
@@ -273,10 +273,9 @@ export const calculateUnifiedRanking = (config) => {
     allTeams = [...allTeams, ...groupStats];
   }
 
-  // Ordina per:
-  // 1. Vittorie (score) desc
-  // 2. Quoziente punti (punti fatti / punti subiti) desc
-  // 3. Punti fatti desc
+  
+  
+  
   return allTeams.sort((a, b) => {
     if (b.score !== a.score) return b.score - a.score;
     const quotientA = a.puntiSubiti === 0 ? a.puntiFatti : a.puntiFatti / a.puntiSubiti;
@@ -301,7 +300,7 @@ export const calculateProgressionRanking = (config) => {
   if (isUnified) {
     return calculateUnifiedRanking(config);
   } else {
-    const positions = {}; // maps position (0-indexed) to array of teams
+    const positions = {}; 
     for (let i = 0; i < config.numGironi; i++) {
       const gid = String.fromCharCode(65 + i);
       const stats = calculateSingleGroupStats(gid, config);

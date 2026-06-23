@@ -13,7 +13,7 @@ import {
   getMvp, saveMvp
 } from "@/app/utils/db";
 
-// Helper per ottenere l'autenticazione ed il ruolo lato server (Clerk)
+
 async function getAuthAndRole(req) {
   try {
     const clerkUser = await currentUser();
@@ -29,14 +29,14 @@ async function getAuthAndRole(req) {
   return { isAuth: false, role: null };
 }
 
-// 1. GET: Gestisce le letture del database controllando i permessi di lettura
+
 export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
     const type = searchParams.get("type");
     const slug = searchParams.get("slug");
 
-    // Controlliamo l'autenticazione per le letture sensibili
+    
     if (type === "iscrizioni") {
       const { isAuth } = await getAuthAndRole(req);
       
@@ -65,7 +65,7 @@ export async function GET(req) {
   }
 }
 
-// 2. POST: Gestisce le scritture sicure sul database verificando l'autenticazione ed il ruolo lato server
+
 export async function POST(req) {
   try {
     const { isAuth, role } = await getAuthAndRole(req);
@@ -76,7 +76,7 @@ export async function POST(req) {
       return NextResponse.json({ error: "Non autenticato" }, { status: 401 });
     }
 
-    // Controllo dei permessi di scrittura lato server
+    
     if (type === "tornei" || type === "gironi" || type === "bracket" || type === "iscrizioni" || type === "notifiche" || type === "countdown" || type === "sponsors" || type === "mvp") {
       if (role !== "admin" && role !== "staff") {
         return NextResponse.json({ error: "Accesso negato: richiesto ruolo Staff" }, { status: 403 });
