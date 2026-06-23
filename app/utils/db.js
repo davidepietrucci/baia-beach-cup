@@ -130,6 +130,8 @@ export async function getTornei() {
     return await getLocalFileDb("tornei", null, []);
   }
 
+  const serverData = await fetchFromServerDb("tornei");
+  if (serverData !== null) return serverData;
   const saved = localStorage.getItem("baia_beach_cup_tornei");
   return safeJsonParse(saved, []);
 }
@@ -173,6 +175,8 @@ export async function getIscrizioni() {
     return await getLocalFileDb("iscrizioni", null, []);
   }
 
+  const serverData = await fetchFromServerDb("iscrizioni");
+  if (serverData !== null) return serverData;
   const saved = localStorage.getItem("baia_beach_cup_iscrizioni");
   return safeJsonParse(saved, []);
 }
@@ -310,6 +314,8 @@ export async function getUsers() {
     return await getLocalFileDb("users", null, []);
   }
 
+  const serverData = await fetchFromServerDb("users");
+  if (serverData !== null) return serverData;
   const saved = localStorage.getItem("baia_beach_cup_users");
   return safeJsonParse(saved, []);
 }
@@ -353,6 +359,8 @@ export async function getModuli() {
     return await getLocalFileDb("moduli", null, []);
   }
 
+  const serverData = await fetchFromServerDb("moduli");
+  if (serverData !== null) return serverData;
   const saved = localStorage.getItem("baia_beach_cup_moduli");
   return safeJsonParse(saved, []);
 }
@@ -396,6 +404,8 @@ export async function getNotifiche() {
     return await getLocalFileDb("notifiche", null, []);
   }
 
+  const serverData = await fetchFromServerDb("notifiche");
+  if (serverData !== null) return serverData;
   const saved = localStorage.getItem("baia_beach_cup_notifiche");
   return safeJsonParse(saved, []);
 }
@@ -439,6 +449,8 @@ export async function getStaff() {
     return await getLocalFileDb("staff", null, []);
   }
 
+  const serverData = await fetchFromServerDb("staff");
+  if (serverData !== null) return serverData;
   const saved = localStorage.getItem("baia_beach_cup_staff");
   return safeJsonParse(saved, []);
 }
@@ -482,6 +494,8 @@ export async function getCountdown() {
     return await getLocalFileDb("countdown", null, { enabled: false, date: "", label: "" });
   }
 
+  const serverData = await fetchFromServerDb("countdown");
+  if (serverData !== null) return serverData;
   const saved = localStorage.getItem("baia_beach_cup_countdown");
   return safeJsonParse(saved, { enabled: false, date: "", label: "" });
 }
@@ -525,6 +539,8 @@ export async function getSponsors() {
     return await getLocalFileDb("sponsors", null, []);
   }
 
+  const serverData = await fetchFromServerDb("sponsors");
+  if (serverData !== null) return serverData;
   const saved = localStorage.getItem("baia_beach_cup_sponsors");
   return safeJsonParse(saved, []);
 }
@@ -569,6 +585,8 @@ export async function getMvp() {
     return await getLocalFileDb("mvp", null, fallback);
   }
 
+  const serverData = await fetchFromServerDb("mvp");
+  if (serverData !== null) return serverData;
   const saved = localStorage.getItem("baia_beach_cup_mvp");
   return safeJsonParse(saved, fallback);
 }
