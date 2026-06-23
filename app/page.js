@@ -46,7 +46,7 @@ export default function Home() {
     });
 
     // Leggi le impostazioni del countdown
-    fetch("/api/db?type=countdown")
+    fetch("/api/db?type=countdown", { cache: "no-store" })
       .then(res => res.json())
       .then(json => {
         if (json.data) {
@@ -56,7 +56,7 @@ export default function Home() {
       .catch(err => console.error("Error fetching countdown:", err));
 
     // Leggi gli sponsor dal database
-    fetch("/api/db?type=sponsors")
+    fetch("/api/db?type=sponsors", { cache: "no-store" })
       .then(res => res.json())
       .then(json => {
         if (json.data) {

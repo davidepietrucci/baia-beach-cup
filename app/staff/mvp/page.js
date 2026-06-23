@@ -45,7 +45,7 @@ export default function StaffMvp() {
     // 1. Carica configurazione MVP esistente
     const loadMvpData = async () => {
       try {
-        const res = await fetch("/api/db?type=mvp");
+        const res = await fetch("/api/db?type=mvp", { cache: "no-store" });
         const json = await res.json();
         if (json.data) {
           // Assicuriamoci che ci siano sempre 8 elementi

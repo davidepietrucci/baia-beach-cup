@@ -33,7 +33,7 @@ export default function StaffDashboard() {
     });
 
     // Carica impostazioni countdown
-    fetch("/api/db?type=countdown")
+    fetch("/api/db?type=countdown", { cache: "no-store" })
       .then(res => res.json())
       .then(json => {
         if (json.data) {
@@ -43,7 +43,7 @@ export default function StaffDashboard() {
       .catch(err => console.error("Error loading countdown settings in dashboard:", err));
 
     // Carica lista sponsor
-    fetch("/api/db?type=sponsors")
+    fetch("/api/db?type=sponsors", { cache: "no-store" })
       .then(res => res.json())
       .then(json => {
         if (json.data) {
