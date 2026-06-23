@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { getTornei, getGironi, getBracket } from "@/app/utils/db";
 import { calculateUnifiedRanking, getSchedule as getScheduleShared } from "@/app/utils/ranking";
@@ -73,7 +73,7 @@ const defaultTestSponsors = [
   { id: "s4", nome: "Wilson", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/07/Wilson_Sporting_Goods_logo.svg", linkUrl: "https://www.wilson.com" }
 ];
 
-export default function GironiPubblici() {
+function GironiContent() {
   const searchParams = useSearchParams();
   const urlTour = searchParams.get("tour");
 
@@ -1697,5 +1697,13 @@ export default function GironiPubblici() {
         </nav>
       )}
     </main>
+  );
+}
+
+export default function GironiPubblici() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#295dab] flex items-center justify-center"><div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin" /></div>}>
+      <GironiContent />
+    </Suspense>
   );
 }
