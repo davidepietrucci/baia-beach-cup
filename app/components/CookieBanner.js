@@ -7,7 +7,7 @@ export default function CookieBanner() {
 
   useEffect(() => {
     // Check if consent has already been given
-    const consent = localStorage.getItem("bvi_cookie_consent");
+    const consent = localStorage.getItem("baia_beach_cup_cookie_consent");
     if (!consent) {
       // Small timeout to make the entry transition feel smooth
       const timer = setTimeout(() => {
@@ -18,12 +18,12 @@ export default function CookieBanner() {
   }, []);
 
   const handleAccept = () => {
-    localStorage.setItem("bvi_cookie_consent", "accepted");
+    localStorage.setItem("baia_beach_cup_cookie_consent", "accepted");
     setIsVisible(false);
   };
 
   const handleDecline = () => {
-    localStorage.setItem("bvi_cookie_consent", "declined");
+    localStorage.setItem("baia_beach_cup_cookie_consent", "declined");
     setIsVisible(false);
   };
 

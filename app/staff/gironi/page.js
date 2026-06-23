@@ -145,7 +145,7 @@ export default function StaffGironi() {
 
   const getConfigKey = (nomeTorneo) => {
     if (!nomeTorneo) return "";
-    return `bvi_gironi_v2_${nomeTorneo.toLowerCase().trim().replace(/\s+/g, '_')}`;
+    return `baia_beach_cup_gironi_v2_${nomeTorneo.toLowerCase().trim().replace(/\s+/g, '_')}`;
   };
 
   useEffect(() => {

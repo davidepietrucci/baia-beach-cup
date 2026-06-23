@@ -66,11 +66,11 @@ export default function StaffDashboard() {
       await saveTornei([]);
       await saveIscrizioni([]);
       // Clear localStorage items
-      localStorage.removeItem("bvi_tornei");
-      localStorage.removeItem("bvi_iscrizioni");
+      localStorage.removeItem("baia_beach_cup_tornei");
+      localStorage.removeItem("baia_beach_cup_iscrizioni");
       for (let i = localStorage.length - 1; i >= 0; i--) {
         const key = localStorage.key(i);
-        if (key && (key.startsWith("bvi_gironi_") || key.startsWith("bvi_bracket_") || key.startsWith("bvi_iscrizioni") || key.startsWith("bvi_tornei"))) {
+        if (key && (key.startsWith("baia_beach_cup_gironi_") || key.startsWith("baia_beach_cup_bracket_") || key.startsWith("baia_beach_cup_iscrizioni") || key.startsWith("baia_beach_cup_tornei"))) {
           localStorage.removeItem(key);
         }
       }
@@ -192,11 +192,11 @@ export default function StaffDashboard() {
       }
 
       // Sincronizza anche localmente per sicurezza/backward compatibility
-      localStorage.setItem("bvi_tornei", JSON.stringify(mockTornei));
-      localStorage.setItem("bvi_iscrizioni", JSON.stringify(mockIscrizioni));
-      localStorage.setItem("bvi_gironi_v2_torneo_di_ferragosto", JSON.stringify(mockGironiConfig));
-      localStorage.setItem("bvi_sponsors", JSON.stringify(mockSponsors));
-      localStorage.setItem("bvi_countdown", JSON.stringify(mockCountdown));
+      localStorage.setItem("baia_beach_cup_tornei", JSON.stringify(mockTornei));
+      localStorage.setItem("baia_beach_cup_iscrizioni", JSON.stringify(mockIscrizioni));
+      localStorage.setItem("baia_beach_cup_gironi_v2_torneo_di_ferragosto", JSON.stringify(mockGironiConfig));
+      localStorage.setItem("baia_beach_cup_sponsors", JSON.stringify(mockSponsors));
+      localStorage.setItem("baia_beach_cup_countdown", JSON.stringify(mockCountdown));
       
       alert("Dati di esempio (tornei, gironi, sponsor e countdown) caricati con successo!");
       window.location.reload();
@@ -271,8 +271,8 @@ export default function StaffDashboard() {
       await saveIscrizioni(updatedIscrizioni);
       
       // Salva in localStorage per sicurezza
-      localStorage.setItem("bvi_tornei", JSON.stringify(updatedTornei));
-      localStorage.setItem("bvi_iscrizioni", JSON.stringify(updatedIscrizioni));
+      localStorage.setItem("baia_beach_cup_tornei", JSON.stringify(updatedTornei));
+      localStorage.setItem("baia_beach_cup_iscrizioni", JSON.stringify(updatedIscrizioni));
       
       alert("Torneo 'Torneo Test 24' con 24 iscrizioni approvate caricato con successo!");
       window.location.reload();

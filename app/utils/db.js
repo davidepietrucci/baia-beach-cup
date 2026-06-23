@@ -130,9 +130,7 @@ export async function getTornei() {
     return await getLocalFileDb("tornei", null, []);
   }
 
-  const serverData = await fetchFromServerDb("tornei");
-  if (serverData !== null) return serverData;
-  const saved = localStorage.getItem("bvi_tornei");
+  const saved = localStorage.getItem("baia_beach_cup_tornei");
   return safeJsonParse(saved, []);
 }
 
@@ -153,7 +151,7 @@ export async function saveTornei(list) {
 
   const success = await saveToServerDb("tornei", list);
   if (!success) {
-    localStorage.setItem("bvi_tornei", JSON.stringify(list));
+    localStorage.setItem("baia_beach_cup_tornei", JSON.stringify(list));
   }
 }
 
@@ -175,9 +173,7 @@ export async function getIscrizioni() {
     return await getLocalFileDb("iscrizioni", null, []);
   }
 
-  const serverData = await fetchFromServerDb("iscrizioni");
-  if (serverData !== null) return serverData;
-  const saved = localStorage.getItem("bvi_iscrizioni");
+  const saved = localStorage.getItem("baia_beach_cup_iscrizioni");
   return safeJsonParse(saved, []);
 }
 
@@ -198,13 +194,13 @@ export async function saveIscrizioni(list) {
 
   const success = await saveToServerDb("iscrizioni", list);
   if (!success) {
-    localStorage.setItem("bvi_iscrizioni", JSON.stringify(list));
+    localStorage.setItem("baia_beach_cup_iscrizioni", JSON.stringify(list));
   }
 }
 
 // 3. Gironi (Tournament specific config)
 export async function getGironi(slug) {
-  const key = `bvi_gironi_v2_${slug}`;
+  const key = `baia_beach_cup_gironi_v2_${slug}`;
   if (typeof window === "undefined") {
     if (db) {
       try {
@@ -228,7 +224,7 @@ export async function getGironi(slug) {
 }
 
 export async function saveGironi(slug, data) {
-  const key = `bvi_gironi_v2_${slug}`;
+  const key = `baia_beach_cup_gironi_v2_${slug}`;
   if (typeof window === "undefined") {
     if (db) {
       try {
@@ -251,7 +247,7 @@ export async function saveGironi(slug, data) {
 
 // 4. Bracket (Tournament specific playoff/bracket matches)
 export async function getBracket(slug) {
-  const key = `bvi_bracket_v1_${slug}`;
+  const key = `baia_beach_cup_bracket_v1_${slug}`;
   if (typeof window === "undefined") {
     if (db) {
       try {
@@ -275,7 +271,7 @@ export async function getBracket(slug) {
 }
 
 export async function saveBracket(slug, data) {
-  const key = `bvi_bracket_v1_${slug}`;
+  const key = `baia_beach_cup_bracket_v1_${slug}`;
   if (typeof window === "undefined") {
     if (db) {
       try {
@@ -314,9 +310,7 @@ export async function getUsers() {
     return await getLocalFileDb("users", null, []);
   }
 
-  const serverData = await fetchFromServerDb("users");
-  if (serverData !== null) return serverData;
-  const saved = localStorage.getItem("bvi_users");
+  const saved = localStorage.getItem("baia_beach_cup_users");
   return safeJsonParse(saved, []);
 }
 
@@ -337,7 +331,7 @@ export async function saveUsers(list) {
 
   const success = await saveToServerDb("users", list);
   if (!success) {
-    localStorage.setItem("bvi_users", JSON.stringify(list));
+    localStorage.setItem("baia_beach_cup_users", JSON.stringify(list));
   }
 }
 
@@ -359,9 +353,7 @@ export async function getModuli() {
     return await getLocalFileDb("moduli", null, []);
   }
 
-  const serverData = await fetchFromServerDb("moduli");
-  if (serverData !== null) return serverData;
-  const saved = localStorage.getItem("bvi_moduli");
+  const saved = localStorage.getItem("baia_beach_cup_moduli");
   return safeJsonParse(saved, []);
 }
 
@@ -382,7 +374,7 @@ export async function saveModuli(list) {
 
   const success = await saveToServerDb("moduli", list);
   if (!success) {
-    localStorage.setItem("bvi_moduli", JSON.stringify(list));
+    localStorage.setItem("baia_beach_cup_moduli", JSON.stringify(list));
   }
 }
 
@@ -404,9 +396,7 @@ export async function getNotifiche() {
     return await getLocalFileDb("notifiche", null, []);
   }
 
-  const serverData = await fetchFromServerDb("notifiche");
-  if (serverData !== null) return serverData;
-  const saved = localStorage.getItem("bvi_notifiche");
+  const saved = localStorage.getItem("baia_beach_cup_notifiche");
   return safeJsonParse(saved, []);
 }
 
@@ -427,7 +417,7 @@ export async function saveNotifiche(list) {
 
   const success = await saveToServerDb("notifiche", list);
   if (!success) {
-    localStorage.setItem("bvi_notifiche", JSON.stringify(list));
+    localStorage.setItem("baia_beach_cup_notifiche", JSON.stringify(list));
   }
 }
 
@@ -449,9 +439,7 @@ export async function getStaff() {
     return await getLocalFileDb("staff", null, []);
   }
 
-  const serverData = await fetchFromServerDb("staff");
-  if (serverData !== null) return serverData;
-  const saved = localStorage.getItem("bvi_staff");
+  const saved = localStorage.getItem("baia_beach_cup_staff");
   return safeJsonParse(saved, []);
 }
 
@@ -472,7 +460,7 @@ export async function saveStaff(list) {
 
   const success = await saveToServerDb("staff", list);
   if (!success) {
-    localStorage.setItem("bvi_staff", JSON.stringify(list));
+    localStorage.setItem("baia_beach_cup_staff", JSON.stringify(list));
   }
 }
 
@@ -494,9 +482,7 @@ export async function getCountdown() {
     return await getLocalFileDb("countdown", null, { enabled: false, date: "", label: "" });
   }
 
-  const serverData = await fetchFromServerDb("countdown");
-  if (serverData !== null) return serverData;
-  const saved = localStorage.getItem("bvi_countdown");
+  const saved = localStorage.getItem("baia_beach_cup_countdown");
   return safeJsonParse(saved, { enabled: false, date: "", label: "" });
 }
 
@@ -517,7 +503,7 @@ export async function saveCountdown(settings) {
 
   const success = await saveToServerDb("countdown", settings);
   if (!success) {
-    localStorage.setItem("bvi_countdown", JSON.stringify(settings));
+    localStorage.setItem("baia_beach_cup_countdown", JSON.stringify(settings));
   }
 }
 
@@ -539,9 +525,7 @@ export async function getSponsors() {
     return await getLocalFileDb("sponsors", null, []);
   }
 
-  const serverData = await fetchFromServerDb("sponsors");
-  if (serverData !== null) return serverData;
-  const saved = localStorage.getItem("bvi_sponsors");
+  const saved = localStorage.getItem("baia_beach_cup_sponsors");
   return safeJsonParse(saved, []);
 }
 
@@ -562,7 +546,7 @@ export async function saveSponsors(list) {
 
   const success = await saveToServerDb("sponsors", list);
   if (!success) {
-    localStorage.setItem("bvi_sponsors", JSON.stringify(list));
+    localStorage.setItem("baia_beach_cup_sponsors", JSON.stringify(list));
   }
 }
 
@@ -585,9 +569,7 @@ export async function getMvp() {
     return await getLocalFileDb("mvp", null, fallback);
   }
 
-  const serverData = await fetchFromServerDb("mvp");
-  if (serverData !== null) return serverData;
-  const saved = localStorage.getItem("bvi_mvp");
+  const saved = localStorage.getItem("baia_beach_cup_mvp");
   return safeJsonParse(saved, fallback);
 }
 
@@ -608,7 +590,7 @@ export async function saveMvp(mvpData) {
 
   const success = await saveToServerDb("mvp", mvpData);
   if (!success) {
-    localStorage.setItem("bvi_mvp", JSON.stringify(mvpData));
+    localStorage.setItem("baia_beach_cup_mvp", JSON.stringify(mvpData));
   }
 }
 

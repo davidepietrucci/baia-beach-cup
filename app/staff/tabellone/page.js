@@ -272,7 +272,7 @@ function TabelloneContent() {
       tabellonePubblicato
     };
     
-    localStorage.setItem(`bvi_bracket_v1_${slug}`, JSON.stringify(config));
+    localStorage.setItem(`baia_beach_cup_bracket_v1_${slug}`, JSON.stringify(config));
 
     const handler = setTimeout(() => {
       saveBracket(slug, config);
@@ -432,7 +432,7 @@ function TabelloneContent() {
       bracketMetadata,
       tabellonePubblicato
     };
-    localStorage.setItem(`bvi_bracket_v1_${slug}`, JSON.stringify(config));
+    localStorage.setItem(`baia_beach_cup_bracket_v1_${slug}`, JSON.stringify(config));
     await saveBracket(slug, config);
     alert(`Salvataggio completato con successo! 💾`);
   };
@@ -443,7 +443,7 @@ function TabelloneContent() {
     setBracketAssignments({});
     setBracketMetadata({});
     setBracketSize(16);
-    localStorage.removeItem(`bvi_bracket_v1_${slug}`);
+    localStorage.removeItem(`baia_beach_cup_bracket_v1_${slug}`);
     await saveBracket(slug, null);
     alert("Tabellone eliminato! 🗑️");
   };

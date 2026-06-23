@@ -6,7 +6,7 @@ export async function POST(request) {
     // Verifica token di sicurezza (Webhook API Key)
     const { searchParams } = new URL(request.url);
     const secret = searchParams.get("secret") || request.headers.get("x-webhook-secret");
-    const expectedSecret = process.env.WEBHOOK_SECRET || "bvi_forms_secret_2026";
+    const expectedSecret = process.env.WEBHOOK_SECRET || "baia_beach_cup_forms_secret_2026";
 
     if (!secret || secret !== expectedSecret) {
       return NextResponse.json(
