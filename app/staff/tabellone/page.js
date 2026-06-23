@@ -92,6 +92,25 @@ const seeding32 = [
   [2, 31]   // Match 16
 ];
 
+const customSeeding32 = [
+  [1, "bye"],   // Match 1 -> Winner: 1ª PRIMA
+  [9, 24],      // Match 2 -> S1 (Winner: VINCENTE S1) -> plays 1ª PRIMA in r16-1
+  [4, "bye"],   // Match 3 -> Winner: 4ª PRIMA
+  [12, 21],     // Match 4 -> S4 (Winner: VINCENTE S4) -> plays 4ª PRIMA in r16-2
+  [7, "bye"],   // Match 5 -> Winner: 7ª PRIMA
+  [11, 22],     // Match 6 -> S3 (Winner: VINCENTE S3) -> plays 7ª PRIMA in r16-3
+  [6, "bye"],   // Match 7 -> Winner: 6ª PRIMA
+  [14, 19],     // Match 8 -> S6 (Winner: VINCENTE S6) -> plays 6ª PRIMA in r16-4
+  [2, "bye"],   // Match 9 -> Winner: 2ª PRIMA
+  [10, 23],     // Match 10 -> S2 (Winner: VINCENTE S2) -> plays 2ª PRIMA in r16-5
+  [3, "bye"],   // Match 11 -> Winner: 3ª PRIMA
+  [13, 20],     // Match 12 -> S5 (Winner: VINCENTE S5) -> plays 3ª PRIMA in r16-6
+  [5, "bye"],   // Match 13 -> Winner: 5ª PRIMA
+  [15, 18],     // Match 14 -> S7 (Winner: VINCENTE S7) -> plays 5ª PRIMA in r16-7
+  [8, "bye"],   // Match 15 -> Winner: 8ª PRIMA
+  [16, 17]      // Match 16 -> S8 (Winner: VINCENTE S8) -> plays 8ª PRIMA in r16-8
+];
+
 const seeding16 = [
   [1, 16], // Match 1
   [8, 9],  // Match 2
@@ -372,10 +391,10 @@ function TabelloneContent() {
 
     if (bracketSize === 32) {
       for (let m = 1; m <= 16; m++) {
-        const seedL = seeding32[m - 1][0];
-        const seedR = seeding32[m - 1][1];
-        newAssignments[`r32-${m}-L`] = getTeamNameByRank(seedL);
-        newAssignments[`r32-${m}-R`] = getTeamNameByRank(seedR);
+        const seedL = customSeeding32[m - 1][0];
+        const seedR = customSeeding32[m - 1][1];
+        newAssignments[`r32-${m}-L`] = seedL === "bye" ? "—" : getTeamNameByRank(seedL);
+        newAssignments[`r32-${m}-R`] = seedR === "bye" ? "—" : getTeamNameByRank(seedR);
       }
     } else if (bracketSize === 16) {
       for (let m = 1; m <= 8; m++) {

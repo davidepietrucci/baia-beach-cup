@@ -870,17 +870,23 @@ export default function PortaleLiveMobile() {
                           <tbody className="divide-y divide-gray-50 text-xs font-bold">
                             {calculateUnifiedRanking(config).map((team, idx) => {
                               const size = bracketConfig?.bracketSize || 16;
-                              const isDirectOttavi = (size === 16 && idx < 16) || (size === 8 && idx < 8) || (size === 4 && idx < 4);
-                              const isSedicesimi = size === 32 && idx < 32;
-
+                              
+                              let isDirectOttavi = false;
+                              let isSedicesimi = false;
                               let qualificationLabel = "Eliminato";
-                              if (isDirectOttavi) {
-                                if (size === 16) qualificationLabel = "Ottavi di Finale";
-                                else if (size === 8) qualificationLabel = "Quarti di Finale";
-                                else if (size === 4) qualificationLabel = "Semifinali";
-                                else qualificationLabel = "Qualificato";
-                              } else if (isSedicesimi) {
-                                qualificationLabel = "Sedicesimi di Finale";
+
+                              if (size === 32) {
+                                isDirectOttavi = idx < 8;
+                                isSedicesimi = idx >= 8 && idx < 24;
+                                if (isDirectOttavi) qualificationLabel = "Ottavi Diretti";
+                                else if (isSedicesimi) qualificationLabel = "Sedicesimi (Spareggi)";
+                              } else {
+                                isDirectOttavi = (size === 16 && idx < 16) || (size === 8 && idx < 8) || (size === 4 && idx < 4);
+                                if (isDirectOttavi) {
+                                  if (size === 16) qualificationLabel = "Ottavi di Finale";
+                                  else if (size === 8) qualificationLabel = "Quarti di Finale";
+                                  else if (size === 4) qualificationLabel = "Semifinali";
+                                }
                               }
 
                               const quotient = team.puntiSubiti === 0 ? team.puntiFatti : (team.puntiFatti / team.puntiSubiti).toFixed(3);
