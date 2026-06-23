@@ -422,10 +422,9 @@ export default function StaffMvp() {
               </div>
 
               {/* Lista 8 Candidati */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {mvpForm.candidati.map((candidato, index) => (
                   <div key={candidato.id} className="p-4 bg-gray-50 rounded-3xl border border-gray-100 space-y-3 shadow-sm relative">
-                    <span className="absolute top-3 right-4 font-mono font-black text-2xl text-gray-200/80">#0{index + 1}</span>
                     <h4 className="text-xs font-black uppercase tracking-wider text-[#295dab]">Candidato {index + 1}</h4>
                     
                     {/* Nome Giocatore */}

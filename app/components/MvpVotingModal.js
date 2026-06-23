@@ -134,11 +134,6 @@ export default function MvpVotingModal({ isOpen, onClose, mvpData, onVoteSuccess
                           <span className="text-[9px] font-black uppercase tracking-wider text-gray-400 mt-2">Baia Beach Cup</span>
                         </div>
                       )}
-                      
-                      {/* Badge ID */}
-                      <span className="absolute top-3 left-3 bg-[#295dab] text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wide shadow-md">
-                        #0{c.id}
-                      </span>
                     </div>
 
                     {/* Nome e Azione */}
