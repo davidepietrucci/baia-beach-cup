@@ -139,8 +139,7 @@ export default function Home() {
         <nav className="sm:absolute sm:right-8 flex items-center">
           {countdownData.enabled && !timeLeft.expired ? (
             <div className="flex items-center gap-2 sm:gap-3 bg-white/15 backdrop-blur-lg px-5 py-3 rounded-full border border-white/15 shadow-xl text-sm sm:text-base font-black">
-              <span className="text-yellow-400 animate-pulse text-base sm:text-lg">⚡</span>
-              <span className="text-gray-300 uppercase tracking-widest text-[10px] hidden lg:inline">
+              <span className="text-gray-300 uppercase tracking-widest text-[10px]">
                 {countdownData.label || "Inizio"}:
               </span>
               <span className="font-mono text-white tracking-wide flex items-center gap-1.5 sm:gap-2">
