@@ -63,7 +63,8 @@ export default function StaffMvp() {
           setMvpForm({
             attivo: json.data.attivo || false,
             titolo: json.data.titolo || "Vota l'MVP del Torneo",
-            candidati: candidatiWithEightItems
+            candidati: candidatiWithEightItems,
+            sessionId: json.data.sessionId || ""
           });
         }
       } catch (err) {
@@ -179,12 +180,20 @@ export default function StaffMvp() {
     e.preventDefault();
     setSaving(true);
     try {
+      // Se si attiva l'MVP e non c'è ancora un sessionId, ne generiamo uno nuovo
+      const dataToSave = {
+        ...mvpForm,
+        sessionId: mvpForm.attivo && !mvpForm.sessionId
+          ? Date.now().toString()
+          : mvpForm.sessionId || ""
+      };
       const res = await fetch("/api/db", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "mvp", data: mvpForm })
+        body: JSON.stringify({ type: "mvp", data: dataToSave })
       });
       if (res.ok) {
+        setMvpForm(dataToSave);
         alert("Configurazione MVP salvata con successo!");
       } else {
         const json = await res.json();
@@ -237,9 +246,11 @@ export default function StaffMvp() {
       return;
     }
 
+    // Nuovo sessionId: invalida i voti in localStorage di tutti gli utenti
     const cleanForm = {
       attivo: false,
       titolo: "Vota l'MVP del Torneo",
+      sessionId: Date.now().toString(),
       candidati: Array.from({ length: 8 }, (_, i) => ({
         id: String(i + 1),
         nome: "",

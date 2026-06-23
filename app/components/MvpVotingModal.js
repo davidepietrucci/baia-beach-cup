@@ -10,12 +10,14 @@ export default function MvpVotingModal({ isOpen, onClose, mvpData, onVoteSuccess
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const voted = localStorage.getItem("baia_beach_cup_mvp_voted") === "true";
-      const candidateId = localStorage.getItem("baia_beach_cup_mvp_voted_id") || "";
+      const sessionId = mvpData?.sessionId || "default";
+      const storageKey = `baia_beach_cup_mvp_voted_${sessionId}`;
+      const voted = localStorage.getItem(storageKey) === "true";
+      const candidateId = localStorage.getItem(`${storageKey}_id`) || "";
       setHasVoted(voted);
       setVotedCandidateId(candidateId);
     }
-  }, [isOpen]);
+  }, [isOpen, mvpData?.sessionId]);
 
   useEffect(() => {
     setLocalMvpData(mvpData);
@@ -36,11 +38,13 @@ export default function MvpVotingModal({ isOpen, onClose, mvpData, onVoteSuccess
 
       const json = await res.json();
       if (res.ok && json.success) {
-        localStorage.setItem("baia_beach_cup_mvp_voted", "true");
-        localStorage.setItem("baia_beach_cup_mvp_voted_id", candidateId);
+        const sessionId = localMvpData?.sessionId || "default";
+        const storageKey = `baia_beach_cup_mvp_voted_${sessionId}`;
+        localStorage.setItem(storageKey, "true");
+        localStorage.setItem(`${storageKey}_id`, candidateId);
         setHasVoted(true);
         setVotedCandidateId(candidateId);
-        setLocalMvpData(json.data); // Aggiorna i dati con i voti live
+        setLocalMvpData(json.data);
         if (onVoteSuccess) onVoteSuccess(json.data);
       } else {
         alert(json.error || "Si è verificato un errore durante la registrazione del voto.");
