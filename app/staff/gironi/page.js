@@ -426,12 +426,15 @@ export default function StaffGironi() {
                             </div>
                             <div className="flex items-center gap-3">
                                 <span className="text-xs font-bold text-gray-500">Numero Gironi:</span>
-                                <input 
-                                    type="number" 
-                                    value={numGironi} 
-                                    onChange={(e) => setNumGironi(Math.max(1, Math.min(12, parseInt(e.target.value) || 1)))}
-                                    className="w-16 bg-gray-50 border-none rounded-xl px-3 py-2 text-center font-black text-[#295dab] shadow-inner" 
-                                />
+                                <select
+                                    value={numGironi}
+                                    onChange={(e) => setNumGironi(parseInt(e.target.value))}
+                                    className="bg-gray-50 border-none rounded-xl px-3 py-2 font-black text-[#295dab] text-xs shadow-inner focus:ring-1 focus:ring-[#295dab] cursor-pointer"
+                                >
+                                    {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => (
+                                        <option key={n} value={n}>{n} {n === 1 ? "Girone" : "Gironi"}</option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
                     </div>
