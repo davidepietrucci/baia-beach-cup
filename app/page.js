@@ -204,7 +204,7 @@ export default function Home() {
           {torneiLive.map((t, idx) => (
             <div
               key={idx}
-              className="w-full max-w-xl rounded-[2.5rem] text-center flex flex-col items-center justify-center border border-white/10 shadow-2xl relative overflow-hidden group min-h-[260px] p-8 sm:p-10"
+              className="w-full max-w-xl rounded-[2.5rem] flex flex-col items-center justify-end border border-white/10 shadow-2xl relative overflow-hidden group min-h-[380px] sm:min-h-[440px] p-8 sm:p-10"
             >
               {/* Background Image Container with hover zoom */}
               <div 
@@ -214,37 +214,16 @@ export default function Home() {
                 }}
               />
               
-              {/* Dark Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 to-slate-950/85 transition-opacity duration-300 group-hover:opacity-90" />
+              {/* Dark Gradient Overlay at the bottom for button contrast, transparent on top to see image text */}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent transition-opacity duration-300 group-hover:opacity-90" />
 
-              <div className="relative z-10 flex flex-col items-center gap-4 w-full">
-                <div className="w-full">
-                  <h3 className="text-2xl sm:text-4xl font-black text-white leading-tight uppercase tracking-tight drop-shadow-md">
-                    {t.nome}
-                  </h3>
-                  <div className="flex flex-wrap justify-center gap-2 mt-4">
-                    <span className="text-[10px] font-black text-white bg-white/15 border border-white/10 px-3.5 py-1.5 rounded-xl uppercase tracking-wider backdrop-blur-md">
-                      {(t.categoria ? t.categoria.replace(/maschile 2x2/gi, "2x2") : "") || 'Categoria Libera'}
-                    </span>
-                    <span className="text-[10px] font-black text-white bg-white/15 border border-white/10 px-3.5 py-1.5 rounded-xl uppercase tracking-wider backdrop-blur-md">
-                      {t.data}
-                    </span>
-                    {t.location && (
-                      <span className="text-[10px] font-black text-white bg-white/15 border border-white/10 px-3.5 py-1.5 rounded-xl uppercase tracking-wider backdrop-blur-md">
-                        📍 {t.location}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="w-full mt-6">
-                  <a
-                    href={`/gironi?tour=${encodeURIComponent(t.nome)}`}
-                    className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-black text-xs text-[#295dab] bg-[#f2d022] hover:bg-yellow-400 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] uppercase tracking-widest w-full sm:w-auto"
-                  >
-                    Guarda Gironi e Tabellone
-                  </a>
-                </div>
+              <div className="relative z-10 w-full flex justify-center">
+                <a
+                  href={`/gironi?tour=${encodeURIComponent(t.nome)}`}
+                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-black text-xs text-[#295dab] bg-[#f2d022] hover:bg-yellow-400 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] uppercase tracking-widest w-full sm:w-auto"
+                >
+                  Guarda Gironi e Tabellone
+                </a>
               </div>
             </div>
           ))}
