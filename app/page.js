@@ -66,12 +66,16 @@ export default function Home() {
       .catch(err => console.error("Error fetching sponsors:", err));
 
     getMvp().then(data => {
-      if (data) setMvpData(data);
+      if (data) {
+        setMvpData(data);
+        // Controlla se l'utente ha già votato per questa sessione MVP
+        if (typeof window !== "undefined") {
+          const sessionId = data.sessionId || "default";
+          const storageKey = `baia_beach_cup_mvp_voted_${sessionId}`;
+          setUserHasVoted(localStorage.getItem(storageKey) === "true");
+        }
+      }
     });
-
-    if (typeof window !== "undefined") {
-      setUserHasVoted(localStorage.getItem("baia_beach_cup_mvp_voted") === "true");
-    }
   }, []);
 
   useEffect(() => {
