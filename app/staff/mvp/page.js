@@ -216,6 +216,41 @@ export default function StaffMvp() {
     }
   };
 
+  const handleDeleteMvp = async () => {
+    if (typeof window !== "undefined" && !window.confirm("Sei sicuro di voler ELIMINARE interamente la configurazione MVP? Questo azzererà tutti i candidati, le foto, i voti e disattiverà la votazione dalla Homepage. Questa azione è irreversibile.")) {
+      return;
+    }
+
+    const cleanForm = {
+      attivo: false,
+      titolo: "Vota l'MVP del Torneo",
+      candidati: Array.from({ length: 8 }, (_, i) => ({
+        id: String(i + 1),
+        nome: "",
+        fotoUrl: "",
+        voti: 0
+      }))
+    };
+
+    setMvpForm(cleanForm);
+
+    try {
+      const res = await fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "mvp", data: cleanForm })
+      });
+      if (res.ok) {
+        alert("Configurazione MVP eliminata e resettata con successo!");
+      } else {
+        alert("Errore durante l'eliminazione della configurazione.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Errore di connessione.");
+    }
+  };
+
   // Calcolo statistiche voti
   const totalVotes = mvpForm.candidati.reduce((acc, curr) => acc + (curr.voti || 0), 0);
 
@@ -242,7 +277,13 @@ export default function StaffMvp() {
             <h2 className="text-3xl md:text-5xl font-black text-[#295dab] uppercase tracking-tighter leading-none">Gestione MVP 🗳️</h2>
             <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Configura gli 8 candidati finalisti e segui i voti</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
+            <button 
+              onClick={handleDeleteMvp}
+              className="px-5 py-3 rounded-2xl font-black text-xs uppercase tracking-widest text-white bg-red-600 hover:bg-red-700 transition-all shadow-sm border border-red-700 cursor-pointer"
+            >
+              Elimina MVP 🗑️
+            </button>
             <button 
               onClick={handleResetVotes}
               disabled={totalVotes === 0}
@@ -375,23 +416,17 @@ export default function StaffMvp() {
                     <div className="space-y-1">
                       <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider ml-1">Giocatore</label>
                       {availablePlayers.length > 0 ? (
-                        <div className="relative">
-                          {/* Possibilità di selezionare da lista o digitare a mano */}
-                          <input
-                            type="text"
-                            list={`players-list-${index}`}
-                            value={candidato.nome}
-                            onChange={(e) => handleCandidateChange(index, "nome", e.target.value)}
-                            placeholder="Seleziona o digita il nome"
-                            required={index < 4} // Almeno 4 candidati obbligatori per test
-                            className="w-full bg-white border-none rounded-xl px-4 py-2.5 text-xs font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab]"
-                          />
-                          <datalist id={`players-list-${index}`}>
-                            {availablePlayers.map(name => (
-                              <option key={name} value={name} />
-                            ))}
-                          </datalist>
-                        </div>
+                        <select
+                          value={candidato.nome}
+                          onChange={(e) => handleCandidateChange(index, "nome", e.target.value)}
+                          required={index < 4} // Almeno 4 candidati obbligatori
+                          className="w-full bg-white border-none rounded-xl px-4 py-2.5 text-xs font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] cursor-pointer"
+                        >
+                          <option value="">Seleziona un giocatore...</option>
+                          {availablePlayers.map(name => (
+                            <option key={name} value={name}>{name}</option>
+                          ))}
+                        </select>
                       ) : (
                         <input 
                           type="text" 
