@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc, runTransaction } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -609,6 +609,99 @@ export async function saveMvp(mvpData) {
   const success = await saveToServerDb("mvp", mvpData);
   if (!success) {
     localStorage.setItem("baia_beach_cup_mvp", JSON.stringify(mvpData));
+  }
+}
+
+export async function voteMvpAtomic(candidateId) {
+  const fallback = { attivo: false, candidati: [], titolo: "Vota l'MVP del Torneo" };
+  
+  if (typeof window === "undefined") {
+    if (db) {
+      try {
+        const docRef = doc(db, "config", "mvp");
+        
+        const result = await runTransaction(db, async (transaction) => {
+          const docSnap = await transaction.get(docRef);
+          if (!docSnap.exists()) {
+            throw new Error("Configurazione MVP non trovata nel database.");
+          }
+          const mvpData = docSnap.data().mvpData || fallback;
+          if (!mvpData.attivo) {
+            throw new Error("Le votazioni per l'MVP non sono attualmente attive.");
+          }
+          
+          let candidateFound = false;
+          const updatedCandidati = mvpData.candidati.map(c => {
+            if (String(c.id) === String(candidateId)) {
+              candidateFound = true;
+              return { ...c, voti: (c.voti || 0) + 1 };
+            }
+            return c;
+          });
+          
+          if (!candidateFound) {
+            throw new Error("Candidato non trovato nel database.");
+          }
+          
+          const updatedMvp = {
+            ...mvpData,
+            candidati: updatedCandidati
+          };
+          
+          transaction.set(docRef, { mvpData: updatedMvp });
+          return updatedMvp;
+        });
+        
+        return { success: true, data: result };
+      } catch (e) {
+        console.error("Firestore transaction mvp vote error:", e);
+        return { success: false, error: e.message };
+      }
+    }
+    
+    // Fallback locale su Server (JSON locale)
+    try {
+      const mvpData = await getLocalFileDb("mvp", null, fallback);
+      if (!mvpData.attivo) return { success: false, error: "Le votazioni per l'MVP non sono attualmente attive." };
+      
+      let candidateFound = false;
+      const updatedCandidati = mvpData.candidati.map(c => {
+        if (String(c.id) === String(candidateId)) {
+          candidateFound = true;
+          return { ...c, voti: (c.voti || 0) + 1 };
+        }
+        return c;
+      });
+      
+      if (!candidateFound) return { success: false, error: "Candidato non trovato." };
+      const updatedMvp = { ...mvpData, candidati: updatedCandidati };
+      await saveLocalFileDb("mvp", updatedMvp);
+      return { success: true, data: updatedMvp };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  }
+  
+  // Lato client (fallback locale/browser)
+  try {
+    const mvpData = await getMvp();
+    if (!mvpData.attivo) return { success: false, error: "Le votazioni non sono attive." };
+    
+    let candidateFound = false;
+    const updatedCandidati = mvpData.candidati.map(c => {
+      if (String(c.id) === String(candidateId)) {
+        candidateFound = true;
+        return { ...c, voti: (c.voti || 0) + 1 };
+      }
+      return c;
+    });
+    
+    if (!candidateFound) return { success: false, error: "Candidato non trovato." };
+    const updatedMvp = { ...mvpData, candidati: updatedCandidati };
+    await saveMvp(updatedMvp);
+    return { success: true, data: updatedMvp };
+  } catch (e) {
+    return { success: false, error: e.message };
   }
 }
 
