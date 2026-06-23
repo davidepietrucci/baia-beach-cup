@@ -282,9 +282,9 @@ export default function Home() {
       )}
       {/* Sezione Sponsor */}
       {displaySponsors.length > 0 && (
-        <section className="w-full bg-white/70 backdrop-blur-md border-t border-gray-200/40 py-4 mt-auto relative overflow-hidden">
+        <section className="w-full bg-[#f0f4f9]/90 backdrop-blur-md border-t border-[#dce6f2] py-8 sm:py-10 mt-auto relative overflow-hidden">
           <div className="w-full text-center">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Powered by</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6">Powered by</h3>
 
             <div
               className="relative overflow-hidden w-full select-none animate-marquee-paused"
@@ -293,18 +293,18 @@ export default function Home() {
                 WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)"
               }}
             >
-              <div className="animate-marquee flex items-center gap-16">
+              <div className="animate-marquee flex items-center gap-6 sm:gap-8">
                 {doubleSponsors.map((sp, idx) => (
                   <div
                     key={idx}
-                    className="inline-flex items-center justify-center transition-all hover:scale-105 active:scale-95 duration-300 mx-4 shrink-0"
+                    className="w-28 h-28 sm:w-36 sm:h-36 bg-white rounded-[1.8rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/80 flex items-center justify-center transition-all hover:scale-105 hover:shadow-[0_12px_40px_rgba(41,93,171,0.08)] active:scale-95 duration-300 shrink-0 p-4 sm:p-6"
                   >
                     {sp.linkUrl ? (
-                      <a href={sp.linkUrl} target="_blank" rel="noopener noreferrer" title={sp.nome} className="block cursor-pointer">
+                      <a href={sp.linkUrl} target="_blank" rel="noopener noreferrer" title={sp.nome} className="w-full h-full flex items-center justify-center cursor-pointer">
                         <img
                           src={sp.logoUrl}
                           alt={sp.nome}
-                          className="h-8 sm:h-10 w-auto object-contain opacity-95 hover:opacity-100 transition-all duration-300"
+                          className="max-w-full max-h-full object-contain opacity-95 hover:opacity-100 transition-opacity duration-300"
                         />
                       </a>
                     ) : (
@@ -312,7 +312,7 @@ export default function Home() {
                         src={sp.logoUrl}
                         alt={sp.nome}
                         title={sp.nome}
-                        className="h-8 sm:h-10 w-auto object-contain opacity-95 hover:opacity-100 transition-all duration-300"
+                        className="max-w-full max-h-full object-contain opacity-95 transition-opacity"
                       />
                     )}
                   </div>
@@ -320,8 +320,8 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="mt-4 pb-1 text-center">
-            <a href="/staff" className="text-[9px] font-black uppercase tracking-widest text-gray-300 hover:text-gray-500 transition-colors">
+          <div className="mt-6 pb-1 text-center">
+            <a href="/staff" className="text-[9px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-600 transition-colors">
               Area Staff 🔒
             </a>
           </div>
