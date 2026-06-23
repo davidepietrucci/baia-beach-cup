@@ -282,9 +282,9 @@ export default function Home() {
       )}
       {/* Sezione Sponsor */}
       {displaySponsors.length > 0 && (
-        <section className="w-full bg-[#f0f4f9]/90 backdrop-blur-md border-t border-[#dce6f2] py-8 sm:py-10 mt-auto relative overflow-hidden">
+        <section className="w-full py-8 sm:py-10 mt-auto relative overflow-hidden">
           <div className="w-full text-center">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6">Powered by</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-6">Powered by</h3>
 
             <div
               className="relative overflow-hidden w-full select-none animate-marquee-paused"
@@ -297,7 +297,7 @@ export default function Home() {
                 {doubleSponsors.map((sp, idx) => (
                   <div
                     key={idx}
-                    className="w-28 h-28 sm:w-36 sm:h-36 bg-white rounded-[1.8rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/80 flex items-center justify-center transition-all hover:scale-105 hover:shadow-[0_12px_40px_rgba(41,93,171,0.08)] active:scale-95 duration-300 shrink-0 p-4 sm:p-6"
+                    className="w-28 h-28 sm:w-36 sm:h-36 bg-white rounded-[1.8rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-white/80 flex items-center justify-center transition-all hover:scale-105 hover:shadow-[0_12px_40px_rgba(41,93,171,0.12)] active:scale-95 duration-300 shrink-0 p-4 sm:p-6"
                   >
                     {sp.linkUrl ? (
                       <a href={sp.linkUrl} target="_blank" rel="noopener noreferrer" title={sp.nome} className="w-full h-full flex items-center justify-center cursor-pointer">
@@ -321,7 +321,7 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-6 pb-1 text-center">
-            <a href="/staff" className="text-[9px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-600 transition-colors">
+            <a href="/staff" className="text-[9px] font-black uppercase tracking-widest text-white/40 hover:text-white/70 transition-colors">
               Area Staff 🔒
             </a>
           </div>
