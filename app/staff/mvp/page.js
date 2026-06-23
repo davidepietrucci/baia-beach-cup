@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import StaffHeader from "@/app/components/StaffHeader";
-import { getIscrizioni } from "@/app/utils/db";
+import { getIscrizioni, getTornei } from "@/app/utils/db";
 
 export default function StaffMvp() {
   const router = useRouter();
@@ -22,6 +22,10 @@ export default function StaffMvp() {
       voti: 0
     }))
   });
+
+  const [iscrizioni, setIscrizioni] = useState([]);
+  const [tornei, setTornei] = useState([]);
+  const [selectedTorneo, setSelectedTorneo] = useState("Tutti");
 
   // Lista di tutti i giocatori iscritti
   const [availablePlayers, setAvailablePlayers] = useState([]);
@@ -67,52 +71,60 @@ export default function StaffMvp() {
       }
     };
 
-    // 2. Carica iscrizioni per estrarre tutti i giocatori registrati
-    const loadRegisteredPlayers = async () => {
+    // 2. Carica tornei e iscrizioni
+    const loadData = async () => {
       try {
-        const iscrizioni = await getIscrizioni();
-        const playersSet = new Set();
+        const allTornei = await getTornei();
+        const attivi = allTornei.filter(t => t.stato === "Iscrizioni Aperte" || t.stato === "In Programmazione");
+        setTornei(attivi);
         
-        const splitNames = (name) => {
-          if (!name) return [];
-          let parts = [];
-          if (name.includes(" & ")) {
-            parts = name.split(" & ");
-          } else if (name.includes(" / ")) {
-            parts = name.split(" / ");
-          } else if (name.includes(" - ")) {
-            parts = name.split(" - ");
-          } else if (name.includes("/")) {
-            parts = name.split("/");
-          } else {
-            parts = [name];
-          }
-          return parts.map((p) => p.trim());
-        };
-
-        iscrizioni.forEach(isc => {
-          if (isc.giocatori && isc.stato === "Approvata") {
-            // Divide la coppia per estrarre i singoli nomi
-            const nomi = splitNames(isc.giocatori);
-            nomi.forEach(n => {
-              if (n) playersSet.add(n);
-            });
-          }
-        });
-
-        // Converte in array ordinato alfabeticamente
-        const sortedPlayers = Array.from(playersSet).sort();
-        setAvailablePlayers(sortedPlayers);
+        const allIscrizioni = await getIscrizioni();
+        setIscrizioni(allIscrizioni);
       } catch (err) {
-        console.error("Errore caricamento iscritti:", err);
+        console.error("Errore nel caricamento dei dati:", err);
       } finally {
         setLoading(false);
       }
     };
 
     loadMvpData();
-    loadRegisteredPlayers();
+    loadData();
   }, []);
+
+  // Effetto per aggiornare la lista dei candidati in base al torneo selezionato
+  useEffect(() => {
+    const playersSet = new Set();
+    const splitNames = (name) => {
+      if (!name) return [];
+      let parts = [];
+      if (name.includes(" & ")) {
+        parts = name.split(" & ");
+      } else if (name.includes(" / ")) {
+        parts = name.split(" / ");
+      } else if (name.includes(" - ")) {
+        parts = name.split(" - ");
+      } else if (name.includes("/")) {
+        parts = name.split("/");
+      } else {
+        parts = [name];
+      }
+      return parts.map((p) => p.trim());
+    };
+
+    iscrizioni.forEach(isc => {
+      if (isc.giocatori && isc.stato === "Approvata") {
+        const match = selectedTorneo === "Tutti" || (isc.torneo || "").toLowerCase().trim() === selectedTorneo.toLowerCase().trim();
+        if (match) {
+          const nomi = splitNames(isc.giocatori);
+          nomi.forEach(n => {
+            if (n) playersSet.add(n);
+          });
+        }
+      }
+    });
+
+    setAvailablePlayers(Array.from(playersSet).sort());
+  }, [selectedTorneo, iscrizioni]);
 
   const handleToggleActive = (e) => {
     setMvpForm(prev => ({ ...prev, attivo: e.target.checked }));
@@ -129,6 +141,22 @@ export default function StaffMvp() {
       [field]: value
     };
     setMvpForm(prev => ({ ...prev, candidati: updatedCandidati }));
+  };
+
+  const handleCandidatePhotoUpload = (index, e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 1024 * 1024) {
+        alert("L'immagine è troppo grande. Seleziona un file inferiore a 1MB.");
+        e.target.value = "";
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        handleCandidateChange(index, "fotoUrl", reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSaveMvp = async (e) => {
@@ -308,17 +336,32 @@ export default function StaffMvp() {
             <form onSubmit={handleSaveMvp} className="bg-white p-6 md:p-10 rounded-[2.5rem] shadow-xl border border-gray-100 space-y-6">
               <h3 className="text-xl font-black uppercase tracking-tight text-[#295dab]">Configura Candidati (Top 8) 👥</h3>
               
-              {/* Campo Titolo */}
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Titolo Sezione Voto</label>
-                <input 
-                  type="text" 
-                  value={mvpForm.titolo}
-                  onChange={handleChangeTitle}
-                  placeholder="es. Vota l'MVP del Torneo!"
-                  required
-                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] transition-all text-sm shadow-sm"
-                />
+              {/* Campo Titolo e Selettore Torneo */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Titolo Sezione Voto</label>
+                  <input 
+                    type="text" 
+                    value={mvpForm.titolo}
+                    onChange={handleChangeTitle}
+                    placeholder="es. Vota l'MVP del Torneo!"
+                    required
+                    className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] transition-all text-sm shadow-sm"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Seleziona Torneo Candidati</label>
+                  <select
+                    value={selectedTorneo}
+                    onChange={(e) => setSelectedTorneo(e.target.value)}
+                    className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab] transition-all text-sm shadow-sm cursor-pointer appearance-none"
+                  >
+                    <option value="Tutti">Tutti i Tornei</option>
+                    {tornei.map(t => (
+                      <option key={t.id} value={t.nome}>{t.nome}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               {/* Lista 8 Candidati */}
@@ -361,15 +404,25 @@ export default function StaffMvp() {
                       )}
                     </div>
 
-                    {/* Immagine URL */}
+                    {/* Caricamento Foto */}
                     <div className="space-y-1">
-                      <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider ml-1">Link Foto / Avatar URL</label>
+                      <div className="flex justify-between items-center">
+                        <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider ml-1">Carica Foto (Max 1MB)</label>
+                        {candidato.fotoUrl && (
+                          <button
+                            type="button"
+                            onClick={() => handleCandidateChange(index, "fotoUrl", "")}
+                            className="text-[8px] font-black text-red-500 hover:text-red-700 uppercase tracking-widest"
+                          >
+                            Rimuovi ✕
+                          </button>
+                        )}
+                      </div>
                       <input 
-                        type="url" 
-                        placeholder="https://link-immagine.com/foto.jpg" 
-                        value={candidato.fotoUrl}
-                        onChange={(e) => handleCandidateChange(index, "fotoUrl", e.target.value)}
-                        className="w-full bg-white border-none rounded-xl px-4 py-2.5 text-xs font-bold text-[#295dab] focus:ring-2 focus:ring-[#295dab]"
+                        type="file" 
+                        accept="image/*"
+                        onChange={(e) => handleCandidatePhotoUpload(index, e)}
+                        className="w-full bg-white border-none rounded-xl px-4 py-2 text-xs font-bold text-[#295dab] file:mr-3 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[9px] file:font-black file:uppercase file:bg-[#295dab]/10 file:text-[#295dab] hover:file:bg-[#295dab]/20 cursor-pointer"
                       />
                     </div>
 
