@@ -138,42 +138,7 @@ export default function Home() {
         }}
       />
 
-      {/* Header */}
-      <header
-        style={{ backgroundImage: "linear-gradient(to right, #295dab, #1e3a8a)" }}
-        className="relative text-white py-5 px-8 flex flex-col sm:flex-row justify-center items-center shadow-lg gap-4"
-      >
-        <div className="flex items-center gap-3.5">
-          <h1 className="text-2xl sm:text-3xl font-black tracking-wider text-white uppercase">
-            Baia Beach Cup
-          </h1>
-        </div>
-        <nav className="sm:absolute sm:right-8 flex items-center">
-          {countdownData.enabled && !timeLeft.expired ? (
-            <div className="flex items-center gap-2 sm:gap-3 bg-white/15 backdrop-blur-lg px-5 py-3 rounded-full border border-white/15 shadow-xl text-sm sm:text-base font-black">
-              <span className="text-gray-300 uppercase tracking-widest text-[10px]">
-                {countdownData.label || "Inizio"}:
-              </span>
-              <span className="font-mono text-white tracking-wide flex items-center gap-1.5 sm:gap-2">
-                <span>{timeLeft.days}<span className="text-yellow-300 text-xs sm:text-sm ml-0.5 font-bold">g</span></span>
-                <span className="text-white/20 font-light">:</span>
-                <span>{timeLeft.hours}<span className="text-yellow-300 text-xs sm:text-sm ml-0.5 font-bold">o</span></span>
-                <span className="text-white/20 font-light">:</span>
-                <span>{timeLeft.minutes}<span className="text-yellow-300 text-xs sm:text-sm ml-0.5 font-bold">m</span></span>
-                <span className="text-white/20 font-light">:</span>
-                <span className="text-red-400">{timeLeft.seconds}<span className="text-red-400/80 text-xs sm:text-sm ml-0.5 font-bold">s</span></span>
-              </span>
-            </div>
-          ) : (
-            <a
-              href="/staff"
-              className="text-xs font-black uppercase tracking-widest text-gray-200 hover:text-white transition-all bg-white/10 hover:bg-white/20 px-4 py-2.5 rounded-full border border-white/10 hover:border-white/30 hover:scale-[1.03] active:scale-[0.97]"
-            >
-              Area Staff
-            </a>
-          )}
-        </nav>
-      </header>
+
 
       {/* Logo Centrato (Al posto del vecchio countdown) */}
       <div className="w-full flex justify-center mt-10 px-4 relative z-20">
@@ -375,6 +340,16 @@ export default function Home() {
           setUserHasVoted(true);
         }}
       />
+
+      {/* Footer */}
+      <footer className="w-full text-center py-6 mt-10 relative z-20">
+        <a
+          href="/staff"
+          className="text-[10px] font-black uppercase tracking-widest text-slate-700 hover:text-slate-900 bg-white/50 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30 transition-all"
+        >
+          Area Staff
+        </a>
+      </footer>
 
     </main>
   );
