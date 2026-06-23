@@ -86,42 +86,26 @@ export default function MvpVotingModal({ isOpen, onClose, mvpData, onVoteSuccess
         {/* Contenuto principale */}
         <div className="p-8 flex-1">
           {hasVoted ? (
-            /* SE L'UTENTE HA GIÀ VOTATO: Mostra i Risultati Live */
-            <div className="space-y-6 max-w-2xl mx-auto">
-              <div className="bg-blue-50 border border-blue-100/70 p-6 rounded-3xl text-center shadow-inner">
-                <span className="text-3xl">🗳️</span>
-                <h3 className="text-lg font-black text-[#295dab] mt-2 uppercase">Risultati in Tempo Reale</h3>
-                <p className="text-xs text-gray-500 font-medium mt-1">Voti totali raccolti: {totalVotes}</p>
-              </div>
+            /* SE L'UTENTE HA GIÀ VOTATO: Mostra Messaggio di Conferma */
+            <div className="space-y-6 max-w-lg mx-auto py-4 text-center">
+              <div className="bg-green-50 border border-green-200/70 p-8 rounded-[2rem] shadow-sm space-y-4">
+                <span className="text-5xl animate-bounce inline-block">🎉</span>
+                <h3 className="text-xl font-black text-green-700 uppercase tracking-tight">Voto Registrato con Successo!</h3>
+                
+                {votedCandidateId && (
+                  <div className="text-sm font-bold text-gray-600">
+                    Hai espresso la tua preferenza per:<br />
+                    <span className="text-lg font-black text-[#295dab] uppercase tracking-wide mt-2 inline-block bg-white px-5 py-2.5 rounded-2xl border border-green-100 shadow-sm">
+                      {activeCandidates.find(c => String(c.id) === String(votedCandidateId))?.nome || "Candidato"}
+                    </span>
+                  </div>
+                )}
 
-              <div className="space-y-5">
-                {activeCandidates
-                  .sort((a, b) => (b.voti || 0) - (a.voti || 0))
-                  .map((c, index) => {
-                    const percentage = totalVotes > 0 ? Math.round(((c.voti || 0) / totalVotes) * 100) : 0;
-                    const isYourVote = String(c.id) === String(votedCandidateId);
+                <div className="w-16 h-0.5 bg-green-200 mx-auto my-4" />
 
-                    return (
-                      <div key={c.id} className={`p-4 rounded-2xl border transition-all ${isYourVote ? 'bg-green-50/50 border-green-200/80 shadow-md' : 'bg-gray-50/50 border-gray-100'}`}>
-                        <div className="flex justify-between items-center text-xs font-bold mb-2">
-                          <span className="text-gray-700 flex items-center gap-2">
-                            <span className="font-mono text-gray-400">{index + 1}.</span> 
-                            {c.nome} 
-                            {isYourVote && <span className="text-[9px] font-black uppercase text-green-600 bg-green-100 px-2.5 py-0.5 rounded-full ml-1.5">Il tuo voto ✔️</span>}
-                          </span>
-                          <span className="font-mono text-[#295dab]">
-                            {c.voti || 0} voti ({percentage}%)
-                          </span>
-                        </div>
-                        <div className="w-full bg-gray-200/60 h-3 rounded-full overflow-hidden">
-                          <div 
-                            className={`h-full rounded-full transition-all duration-700 ${isYourVote ? 'bg-green-500' : 'bg-[#295dab]'}`}
-                            style={{ width: `${percentage}%` }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
+                <p className="text-xs text-gray-500 font-bold uppercase tracking-widest leading-relaxed">
+                  I voti sono segreti. I risultati ufficiali saranno annunciati dallo staff al termine del torneo!
+                </p>
               </div>
             </div>
           ) : (

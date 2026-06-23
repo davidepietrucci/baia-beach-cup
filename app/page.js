@@ -175,7 +175,7 @@ export default function Home() {
               onClick={() => setIsMvpModalOpen(true)}
               className="relative z-10 px-6 py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all shadow-md hover:scale-[1.05] active:scale-[0.95] cursor-pointer bg-[#C3562B] hover:bg-orange-600 text-white w-full sm:w-auto text-center font-bold"
             >
-              {userHasVoted ? "Classifica Voti 📊" : "Vota Ora 🗳️"}
+              {userHasVoted ? "Voto Registrato ✔️" : "Vota Ora 🗳️"}
             </button>
           </div>
         </div>
